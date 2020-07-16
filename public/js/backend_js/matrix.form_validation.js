@@ -1,14 +1,15 @@
 
 $(document).ready(function(){
-	$("#access").hide();
-	$("#type").change(function(){
-		var type = $("#type").val();
-		if(type == "Admin"){
-			$("#access").hide();
-		}else{
-			$("#access").show();
-		}
-	})
+	
+	// $("#access").hide();
+	// $("#type").change(function(){
+	// 	var type = $("#type").val();
+	// 	if(type == "Admin"){
+	// 		$("#access").hide();
+	// 	}else{
+	// 		$("#access").show();
+	// 	}
+	// })
 
 	$("#current_pwd").keyup(function(){
 		var current_pwd = $("#current_pwd").val();
@@ -18,9 +19,9 @@ $(document).ready(function(){
 			data:{current_pwd:current_pwd},
 			success:function(resp){
 				if(resp=="false"){
-					$("#chkPwd").html("<font color='red'>Current Password is incorrect</font>");
+					$("#chkPwd").html("<font color='red'>Mot de passe actuel incorrect</font>");
 				}else if(resp=="true"){
-					$("#chkPwd").html("<font color='green'>Current Password is correct</font>");
+					$("#chkPwd").html("<font color='green'>Mot de passe actuel correct</font>");
 				}
 			},error:function(){
 				alert("Error");
@@ -67,6 +68,9 @@ $(document).ready(function(){
 	$("#add_category").validate({
 		rules:{
 			category_name:{
+				required:true
+			},
+			description:{
 				required:true
 			},
 			url:{
