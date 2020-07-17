@@ -64,7 +64,7 @@ $(document).ready(function(){
 	});
 
 
-    // Category Validation
+    //Edit and Add Category Validation
 	$("#add_category").validate({
 		rules:{
 			category_name:{
@@ -216,13 +216,13 @@ $(document).ready(function(){
 		}
 	});
 
-	/*$("#delCat").click(function(){
+	$("#delCat").click(function(){
 		if(confirm('Are you sure to delete the Category?')){
             return true;
         }
         return false;
 	});
-*/
+
 	/*$("#delProduct").click(function(){
 		if(confirm('Are you sure to delete the Product?')){
             return true;
