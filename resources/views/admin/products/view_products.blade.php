@@ -6,8 +6,8 @@
     <div id="content-header">
         <div id="breadcrumb"> <a href="index.html" title="Aller à l'accueil" class="tip-bottom"><i
                     class="icon-home"></i>
-                Accueil</a> <a href="#">Catégories</a> <a href="#" class="current">Voir les catégories</a> </div>
-        <h1>Catégories</h1>
+                Accueil</a> <a href="#">Produits</a> <a href="#" class="current">Voir les produits</a> </div>
+        <h1>Produits</h1>
 
         @if (Session::has('flash_message_error'))
         <div class="alert alert-danger alert-block">
@@ -30,29 +30,41 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
-                        <h5>Voir les catégories</h5>
+                        <h5>Voir les produits</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <table class="table table-bordered data-table">
                             <thead>
                                 <tr>
+                                    <th>ID du produit</th>
                                     <th>ID de la Catégorie</th>
                                     <th>Nom de la Catégorie</th>
-                                    <th>Niveau de la Catégorie</th>
-                                    <th>URL de la Catégorie</th>
+                                    <th>Nom du produit</th>
+                                    <th>Code du produit</th>
+                                    <th>Couleur du produit</th>
+                                    <th>Prix</th>
+                                    <th>Image</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($categories as $category)
+                                @foreach ($products as $product)
                                 <tr class="gradeX">
-                                    <td>{{ $category->id }}</td>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->parent_id }}</td>
-                                    <td>{{ $category->url }}</td>
+                                    <td>{{ $product->id }}</td>
+                                    <td>{{ $product->category_id }}</td>
+                                    <td>{{ $product->category_name }}</td>
+                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ $product->product_code }}</td>
+                                    <td>{{ $product->product_color }}</td>
+                                    <td>{{ $product->getprice() }}</td>
+                                    <td>
+                                        @if (!empty($product->image))
+                                            <img src="{{ asset('/images/backend_images/product/small/'.$product->image) }}" style="width: 60px;">
+                                        @endif
+                                    </td>
                                     <td class="center">
-                                        <a href="{{ url('/admin/edit-category/' .$category->id) }}" class="btn btn-primary btn-mini">Edit</a>
-                                        <a id="delCat" href="{{ url('/admin/delete-category/' .$category->id) }}" class="btn btn-danger btn-mini">Delete</a>
+                                        <a href="{{ url('/admin/edit-product/' .$product->id) }}" class="btn btn-primary btn-mini">Edit</a>
+                                        <a id="delCat" href="{{ url('/admin/delete-product/' .$product->id) }}" class="btn btn-danger btn-mini">Delete</a>
                                     </td>
                                 </tr>
                                 @endforeach
