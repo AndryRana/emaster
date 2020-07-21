@@ -122,7 +122,7 @@ $(document).ready(function(){
 		}
 	});
 
-	// Product Validation
+	// Edit Product Validation
 	$("#edit_product").validate({
 		rules:{
 			category_id:{
@@ -215,36 +215,43 @@ $(document).ready(function(){
 			$(element).parents('.control-group').addClass('success');
 		}
 	});
-
-	$("#delCat").click(function(){
-		if(confirm('Are you sure to delete the Category?')){
+	
+	$(".delCat").click(function(){
+		if(confirm('Êtes-vous sur de vouloir supprimer cette catégorie?')){
             return true;
         }
         return false;
 	});
 
-	/*$("#delProduct").click(function(){
-		if(confirm('Are you sure to delete the Product?')){
-            return true;
-        }
-        return false;
-	});*/
+	// $("#delProduct").click(function(){
+	// 	if(confirm('Êtes-vous sur de vouloir supprimer ce produit?')){
+    //         return true;
+    //     }
+    //     return false;
+	// });
 
 	$(document).on('click','.deleteRecord',function(e){
-        var id = $(this).attr('rel');
-        var deleteFunction = $(this).attr('rel1');
-        swal({
-          title: "Are you sure?",
-          text: "Your will not be able to recover this Record Again!",
-          type: "warning",
+		e.preventDefault();
+		var id = $(this).attr('rel');
+		var deleteFunction = $(this).attr('rel1');
+		var path = 	'/admin/'+deleteFunction+'/'+id;
+		
+        swal.fire({
+          title: '<h4>Vous-êtes sûr de vouloir supprimer ce produit?</h4>',
+          text: "Vous ne pourrez plus récupérer cet enregistrement!",
+          icon: "warning",
           showCancelButton: true,
           confirmButtonClass: "btn-danger",
-          confirmButtonText: "Yes, delete it!",
+		  confirmButtonText: "Oui, Supprimer le produit!",
+		  cancelButtonText:'Annuler',
           closeOnConfirm: false
-        },
-        function(){
-            window.location.href="/admin/"+deleteFunction+"/"+id;
-        });
+		}).then( function(value){
+			if(value) {
+				window.location.href= path;
+			}
+			
+		});
+	
     });
 
     $(document).ready(function(){

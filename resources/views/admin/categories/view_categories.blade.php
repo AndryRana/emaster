@@ -51,8 +51,8 @@
                                     <td>{{ $category->parent_id }}</td>
                                     <td>{{ $category->url }}</td>
                                     <td class="center">
-                                        <a href="{{ url('/admin/edit-category/' .$category->id) }}" class="btn btn-primary btn-mini">Edit</a>
-                                        <a id="delCat" href="{{ url('/admin/delete-category/' .$category->id) }}" class="btn btn-danger btn-mini">Delete</a>
+                                        <a href="{{ url('/admin/edit-category/' .$category->id) }}" class="btn btn-primary btn-mini">Modifier</a>
+                                        <a  href="{{ url('/admin/delete-category/' .$category->id) }}" class="btn btn-danger btn-mini delCat">Supprimer</a>
                                     </td>
                                 </tr>
                                 @endforeach

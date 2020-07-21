@@ -22,7 +22,7 @@
             <strong>{!! session('flash_message_success') !!}</strong>
         </div>
         @endif
-        
+
     </div>
     <div class="container-fluid">
         <hr>
@@ -59,14 +59,40 @@
                                     <td>{{ $product->getprice() }}</td>
                                     <td>
                                         @if (!empty($product->image))
-                                            <img src="{{ asset('/images/backend_images/product/small/'.$product->image) }}" style="width: 60px;">
+                                        <img src="{{ asset('/images/backend_images/product/small/'.$product->image) }}"
+                                            style="width: 60px;">
                                         @endif
                                     </td>
                                     <td class="center">
-                                        <a href="{{ url('/admin/edit-product/' .$product->id) }}" class="btn btn-primary btn-mini">Edit</a>
-                                        <a id="delCat" href="{{ url('/admin/delete-product/' .$product->id) }}" class="btn btn-danger btn-mini">Delete</a>
+                                        <a href="#myModal{{ $product->id }}" data-toggle="modal"
+                                            class="btn btn-success btn-mini">Voir les détails</a>
+                                        <a href="{{ url('/admin/edit-product/' .$product->id) }}"
+                                            class="btn btn-primary btn-mini">Modifier</a>
+                                        <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product" 
+                                        href="/admin/delete-product/{{ $product->id }}"
+                                            href="javascript:"
+                                            class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
                                     </td>
                                 </tr>
+
+                                <div id="myModal{{ $product->id }}" class="modal hide">
+                                    <div class="modal-header">
+                                        <button data-dismiss="modal" class="close" type="button">×</button>
+                                        <h3>Les détails du {{ $product->product_name }} </h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>ID du produit: {{ $product->id }}</p>
+                                        <p>ID de la Catégorie: {{ $product->category_id }}</p>
+                                        <p>Nom de la Catégorie: {{ $product->category_name }} </p>
+                                        <p>Code du produit: {{ $product->product_code }}</p>
+                                        <p>Couleur du produit: {{ $product->product_color }}</p>
+                                        <p>Prix: {{ $product->getprice() }}</p>
+                                        <p>Fabrication:</p>
+                                        <p>Materiel:</p>
+                                        <p>Description: {{ $product->description }}</p>
+                                    </div>
+                                </div>
+
                                 @endforeach
                             </tbody>
                         </table>
