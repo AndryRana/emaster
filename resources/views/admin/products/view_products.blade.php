@@ -66,10 +66,15 @@
                                     <td class="center">
                                         <a href="#myModal{{ $product->id }}" data-toggle="modal"
                                             class="btn btn-success btn-mini">Voir les détails</a>
+
                                         <a href="{{ url('/admin/edit-product/' .$product->id) }}"
                                             class="btn btn-primary btn-mini">Modifier</a>
-                                        <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product" 
-                                        <?php /*href="/admin/delete-product/{{ $product->id }}"*/ ?>
+
+                                        <a href="{{ url('/admin/add-attributes/' .$product->id) }}"
+                                            class="btn btn-success btn-mini">Ajouter des attributs</a>
+
+                                        <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product"
+                                            <?php /*href="/admin/delete-product/{{ $product->id }}"*/ ?>
                                             href="javascript:"
                                             class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
                                     </td>

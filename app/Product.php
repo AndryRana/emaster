@@ -11,4 +11,9 @@ class Product extends Model
         $price = $this->price ;
         return number_format($price, 2, ',', ' ') . ' €';
     }
+
+    public function attributes()
+    {
+        return $this->hasMany('App\ProductsAttribute', 'product_id');
+    }
 }

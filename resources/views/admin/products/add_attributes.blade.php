@@ -6,7 +6,8 @@
     <div id="content-header">
         <div id="breadcrumb"> <a href="index.html" title="Aller à l'accueil" class="tip-bottom"><i
                     class="icon-home"></i>
-                Accueil</a> <a href="#">Attributs</a> <a href="#" class="current">Ajouter un produit</a> </div>
+                Accueil</a> <a href="#">Attributs</a> <a href="#" class="current">Ajouter les attributs du produit</a>
+        </div>
         <h1>Produits</h1>
         @if (Session::has('flash_message_error'))
         <div class="alert alert-danger alert-block">
@@ -28,53 +29,94 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-info-sign"></i> </span>
-                        <h5>Ajouter les Attributs</h5>
+                        <h5>Ajouter les Attributs du produit</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="{{ url('/admin/add-product') }}"
-                            name="add_product" id="add_product" novalidate="novalidate">
+                        <form enctype="multipart/form-data" class="form-horizontal" method="post"
+                            action="{{ url('/admin/add-attributes/'.$productDetails->id) }}" name="add-attribute"
+                            id="add-attribute" >
                             @csrf
+
+                            <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
+
                             <div class="control-group">
-                                <div class="control-group">
-                                    <label class="control-label">SKU</label>
-                                    <div class="controls">
-                                        <input type="text" name="product_name" id="product_name">
-                                    </div>
+                                <label class="control-label">Nom de la catégorie</label>
+                                <label class="control-label">
+                                    {{-- {{ $category_name }} --}}
+                                </label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Nom du produit</label>
+                                <label class=" control-label">{{ $productDetails->product_name }}</label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Code du produit</label>
+                                <label class=" control-label">{{ $productDetails->product_code }}</label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Couleur du produit</label>
+                                <label class=" control-label">{{ $productDetails->product_color }}</label>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"></label>
+                                <div class="controls field_wrapper">
+                                    <input required type="text" name="sku[]" id="sku" placeholder="SKU" style="width:120px;"  />
+                                    <input required type="text" name="size[]" id="size" placeholder="Size"
+                                        style="width:120px;"  />
+                                    <input required type="text" name="price[]" id="price" placeholder="Price"
+                                        style="width:120px;"  />
+                                    <input required type="text" name="stock[]" id="stock" placeholder="Stock"
+                                        style="width:120px;"  />
+                                    <a href="javascript:void(0);" class="add_button" title="Add field">
+                                        Ajouter
+                                    </a>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label">Code du produit</label>
-                                    <div class="controls">
-                                        <input type="text" name="product_code" id="product_code">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Couleur du produit</label>
-                                    <div class="controls">
-                                        <input type="text" name="product_color" id="product_color">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Description</label>
-                                    <div class="controls">
-                                        <textarea type="text" name="description" id="description" rows="5"></textarea>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Prix</label>
-                                    <div class="controls">
-                                        <input type="text" name="price" id="price">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">Image</label>
-                                    <div class="controls">
-                                        <input type="file" name="image" id="image">
-                                    </div>
-                                </div>
-                                <div class="form-actions">
-                                    <input type="submit" value="Ajouter les attributs" class="btn btn-success">
-                                </div>
+
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" value="Ajouter les attributs" class="btn btn-success">
+                            </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+                        <h5>Voir Ajouter les attributs du produit</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <table class="table table-bordered data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID de l'attribut</th>
+                                    <th>SKU</th>
+                                    <th>Taille</th>
+                                    <th>Prix</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($productDetails['attributes'] as $attribute)
+                                <tr class="gradeX">
+                                    <td>{{ $attribute->id }}</td>
+                                    <td>{{ $attribute->sku }}</td>
+                                    <td>{{ $attribute->size }}</td>
+                                    <td>{{ $attribute->price }}</td>
+                                    <td>{{ $attribute->stock }}</td>
+                                    <td class="center">
+                                        <a rel="{{ $attribute->id }}" rel1="delete-attribute"
+                                            href="javascript:"
+                                            class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

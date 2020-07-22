@@ -216,7 +216,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	// Delete Category & Product
+	// Delete Category & Product & Product Attribute
 
 	$(document).on('click','.deleteRecord',function(e){
 		e.preventDefault();
@@ -262,7 +262,7 @@ $(document).ready(function(){
 	    var maxField = 10; //Input fields increment limitation
 	    var addButton = $('.add_button'); //Add button selector
 	    var wrapper = $('.field_wrapper'); //Input field wrapper
-	    var fieldHTML = '<div class="controls field_wrapper" style="margin-left:-2px;"><input type="text" name="sku[]" style="width:120px"/>&nbsp;<input type="text" name="size[]" style="width:120px"/>&nbsp;<input type="text" name="price[]" style="width:120px"/>&nbsp;<input type="text" name="stock[]" style="width:120px"/><a href="javascript:void(0);" class="remove_button" title="Remove field">Remove</a></div>'; //New input field html 
+	    var fieldHTML = '<div class="controls field_wrapper" style="margin-left:-2px;"><input type="text" name="sku[]" id="sku" placeholder="SKU" style="width:120px"/>&nbsp;<input type="text" name="size[]" id="size" placeholder="Size" style="width:120px"/>&nbsp;<input type="text" name="price[]" id="price" placeholder="Price" style="width:120px"/>&nbsp;<input type="text" name="stock[]" id="stock" placeholder="Stock" style="width:120px"/><a href="javascript:void(0);" class="remove_button" title="Remove field">Supprimer</a></div>'; //New input field html 
 	    var x = 1; //Initial field counter is 1
 	    $(addButton).click(function(){ //Once add button is clicked
 	        if(x < maxField){ //Check maximum number of input fields
