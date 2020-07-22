@@ -69,7 +69,7 @@
                                         <a href="{{ url('/admin/edit-product/' .$product->id) }}"
                                             class="btn btn-primary btn-mini">Modifier</a>
                                         <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product" 
-                                        href="/admin/delete-product/{{ $product->id }}"
+                                        <?php /*href="/admin/delete-product/{{ $product->id }}"*/ ?>
                                             href="javascript:"
                                             class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
                                     </td>

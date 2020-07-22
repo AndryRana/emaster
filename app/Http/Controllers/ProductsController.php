@@ -160,4 +160,10 @@ class ProductsController extends Controller
         Product::where(['id' => $id])->update(['image' => '']);
         return redirect()->back()->with('flash_message_success', 'L\'image du produit a été supprimée avec succès!');
     }
+
+
+    public function addAttributes(Request $request, $id = null)
+    {
+        return view('admin.products.add_attributes');
+    }
 }

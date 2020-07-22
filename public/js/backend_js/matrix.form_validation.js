@@ -216,19 +216,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".delCat").click(function(){
-		if(confirm('Êtes-vous sur de vouloir supprimer cette catégorie?')){
-            return true;
-        }
-        return false;
-	});
-
-	// $("#delProduct").click(function(){
-	// 	if(confirm('Êtes-vous sur de vouloir supprimer ce produit?')){
-    //         return true;
-    //     }
-    //     return false;
-	// });
+	// Delete Category & Product
 
 	$(document).on('click','.deleteRecord',function(e){
 		e.preventDefault();
@@ -253,6 +241,22 @@ $(document).ready(function(){
 		});
 	
     });
+	
+	// $(".delCat").click(function(){
+	// 	if(confirm('Êtes-vous sur de vouloir supprimer cette catégorie?')){
+    //         return true;
+    //     }
+    //     return false;
+	// });
+
+	// $("#delProduct").click(function(){
+	// 	if(confirm('Êtes-vous sur de vouloir supprimer ce produit?')){
+    //         return true;
+    //     }
+    //     return false;
+	// });
+
+	
 
     $(document).ready(function(){
 	    var maxField = 10; //Input fields increment limitation

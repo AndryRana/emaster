@@ -47,7 +47,7 @@ class CategoryController extends Controller
     {
         if(!empty($id)){
             Category::where(['id'=>$id])->delete();
-            return redirect()->back()->with('flash_message_success', 'La Catégorie a été supprimée avec succès');
+            return redirect()->back()->with('flash_message_success', 'La catégorie a été supprimée avec succès');
         }
     }
 
