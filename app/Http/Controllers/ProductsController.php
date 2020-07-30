@@ -92,19 +92,16 @@ class ProductsController extends Controller
                 } else {
                     $filename = $data['current_image'];
                 }
-
+            }
 
                 if (empty($data['description'])) {
                     $data['description'] = '';
                 }
 
-                Product::where(['id' => $id])->update(
-                    [
-                        'category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
+                Product::where(['id' => $id])->update(['category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
                         'product_color' => $data['product_color'], 'description' => $data['description'], 'price' => $data['price'], 'image' => $filename
-                    ]
-                );
-            }
+                    ]);
+            
                 return redirect()->back()->with('flash_message_success', 'Le produit a été modifié avec succès!');
         }
 
@@ -206,5 +203,18 @@ class ProductsController extends Controller
     {
         ProductsAttribute::where(['id' => $id])->delete();
         return redirect()->back()->with('flash_message_success', 'Les attributs de ce produit ont été supprimés avec succès!');
+    }
+
+
+    public function products($url = null)
+    {
+        //  Get all Categories and Sub Categories
+        $categories =  Category::with('categories')->where(['parent_id'=>0])->get();
+
+        $categoryDetails = Category::where(['url' => $url])->first();
+        // echo $categoryDetails->id; die;
+
+        $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
     }
 }

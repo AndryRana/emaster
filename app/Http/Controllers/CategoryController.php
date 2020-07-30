@@ -52,7 +52,6 @@ class CategoryController extends Controller
     }
 
 
-
     public function viewCategories() 
     {
         $categories = Category::get();

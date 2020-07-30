@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+
+// Home Page
 Route::get('/', 'IndexController@index');
 
 Route::match(['get', 'post'], '/admin', 'AdminController@login');
@@ -24,6 +26,9 @@ Route::match(['get', 'post'], '/admin', 'AdminController@login');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Category / Listing Page
+Route::get('/products/{url}', 'ProductsController@products');
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/admin/dashboard', 'AdminController@dashboard');
