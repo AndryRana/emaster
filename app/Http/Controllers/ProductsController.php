@@ -81,16 +81,16 @@ class ProductsController extends Controller
                 $image_tmp = $request->file('image');
                 if ($image_tmp->isValid()) {
                     $extension = $image_tmp->getClientOriginalExtension();
-                    $filename = rand(111, 99999) . '.' . $extension;
-                    $large_image_path = 'images/backend_images/product/large/' . $filename;
-                    $medium_image_path = 'images/backend_images/product/medium/' . $filename;
-                    $small_image_path = 'images/backend_images/product/small/' . $filename;
+                    $fileName = rand(111, 99999) . '.' . $extension;
+                    $large_image_path = 'images/backend_images/product/large/' . $fileName;
+                    $medium_image_path = 'images/backend_images/product/medium/' . $fileName;
+                    $small_image_path = 'images/backend_images/product/small/' . $fileName;
                     // Resize Image code
                     Image::make($image_tmp)->save($large_image_path);
                     Image::make($image_tmp)->resize(600, 600)->save($medium_image_path);
                     Image::make($image_tmp)->resize(300, 300)->save($small_image_path);
                 } else {
-                    $filename = $data['current_image'];
+                    $fileName = $data['current_image'];
                 }
             }
 
@@ -99,7 +99,7 @@ class ProductsController extends Controller
                 }
 
                 Product::where(['id' => $id])->update(['category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
-                        'product_color' => $data['product_color'], 'description' => $data['description'], 'price' => $data['price'], 'image' => $filename
+                        'product_color' => $data['product_color'], 'description' => $data['description'], 'price' => $data['price'], 'image' => $fileName
                     ]);
             
                 return redirect()->back()->with('flash_message_success', 'Le produit a été modifié avec succès!');
@@ -210,11 +210,22 @@ class ProductsController extends Controller
     {
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id'=>0])->get();
-
         $categoryDetails = Category::where(['url' => $url])->first();
-        // echo $categoryDetails->id; die;
+        // echo $categoryDetails; die;
+        
+        if($categoryDetails->parent_id == 0){
+            
+            $subCategories = Category::where(['parent_id'=> $categoryDetails->id])->get();
+            foreach($subCategories as $subcat) {
+                $cat_ids[] = $subcat->id;
+            }
+            
+            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->get();
+        }else{
+            $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
 
-        $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        }
+
         return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
     }
 }
