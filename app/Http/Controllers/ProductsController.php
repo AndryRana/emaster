@@ -208,6 +208,12 @@ class ProductsController extends Controller
 
     public function products($url = null)
     {
+        // show 404 page if Category URL doesn't exist
+        $countCategory = Category::where(['url' => $url, 'status'=>1])->count();
+        // echo "<pre>";print_r($countCategory);die;
+        if($countCategory==0){
+            abort(404);
+        }
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id'=>0])->get();
         $categoryDetails = Category::where(['url' => $url])->first();

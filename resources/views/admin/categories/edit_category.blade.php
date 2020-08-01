@@ -49,6 +49,13 @@
                                     <input type="text" name="url" id="url" value="{{ $categoryDetails->url }}">
                                 </div>
                             </div>
+                            <div class="control-group">
+                                <label class="control-label">Afficher</label>
+                                <div class="controls">
+                                    <input type="checkbox" name="status" id="status" @if($categoryDetails->status=="1") checked
+                                    @endif value="1" >
+                                </div>
+                            </div>
                             <div class="form-actions">
                                 <input type="submit" value="Ajouter la catégorie" class="btn btn-success">
                             </div>
