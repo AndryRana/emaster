@@ -155,6 +155,33 @@ class ProductsController extends Controller
 
     public function deleteProductImage($id = null)
     {
+        //  Get Product Image Name
+        $productImage = Product::where(['id' => $id])->first();
+        // echo $productImage->image;die;
+        
+        // Get Product Image PAths
+        $large_image_path = 'images/backend_images/product/large/';
+        $medium_image_path = 'images/backend_images/product/medium/';
+        $small_image_path = 'images/backend_images/product/small/';
+        
+        // Delete Large Image if not exists in Folder
+        if(file_exists($large_image_path.$productImage->image)){
+            // echo $large_image_path.$productImage->image;die;
+            unlink($large_image_path.$productImage->image);
+        }
+        
+        // Delete medium Image if not exists in Folder
+        if(file_exists($medium_image_path.$productImage->image)){
+            // echo $medium_image_path.$productImage->image;die;
+            unlink($medium_image_path.$productImage->image);
+        }
+        
+        // Delete small Image if not exists in Folder
+        if(file_exists($small_image_path.$productImage->image)){
+            // echo $small_image_path.$productImage->image;die;
+            unlink($small_image_path.$productImage->image);
+        }
+
         Product::where(['id' => $id])->update(['image' => '']);
         return redirect()->back()->with('flash_message_success', 'L\'image du produit a été supprimée avec succès!');
     }
@@ -233,5 +260,16 @@ class ProductsController extends Controller
         }
 
         return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
+    }
+
+    public function product($id = null)
+    {
+        //  Get Product Details
+        $productDetails = Product::where('id',$id)->first();
+
+        //  Get all Categories and Sub Categories
+        $categories =  Category::with('categories')->where(['parent_id'=>0])->get();
+
+        return view('products.detail')->with(compact('productDetails','categories'));
     }
 }

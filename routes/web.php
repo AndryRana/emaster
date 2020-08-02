@@ -30,6 +30,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Category / Listing Page
 Route::get('/products/{url}', 'ProductsController@products');
 
+// Product Detail Page
+Route::get('/product/{id}', 'ProductsController@product');
+
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings', 'AdminController@settings');

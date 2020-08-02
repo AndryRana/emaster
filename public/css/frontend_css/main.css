@@ -1165,15 +1165,13 @@ h2.title {
   margin-top: 10px;
 }
 
-
-
 .view-product {
   position: relative;
 }
 
 .view-product img {
   border: 1px solid #F7F7F0;
-  height: 380px;
+  /* height: 380px; */
   width: 100%;
 }
 
