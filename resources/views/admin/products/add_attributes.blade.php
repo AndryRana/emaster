@@ -86,7 +86,7 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
-                        <h5>Voir Ajouter les attributs du produit</h5>
+                        <h5>Voir les attributs du produit</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <table class="table table-bordered data-table">

@@ -7,7 +7,6 @@
 	};	
 		
 /*scroll to top*/
-
 $(document).ready(function(){
 	$(function () {
 		$.scrollUp({
@@ -28,3 +27,5 @@ $(document).ready(function(){
 		});
 	});
 });
+
+
