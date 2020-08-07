@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <title>Home | E-Shopper</title>
     <link href="{{ asset('css/frontend_css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/frontend_css/font-awesome.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/frontend_css/font-awesome.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/frontend_css/prettyPhoto.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/price-range.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/animate.css') }}" rel="stylesheet">
