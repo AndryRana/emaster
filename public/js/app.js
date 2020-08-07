@@ -49929,6 +49929,7 @@ $(document).ready(function () {
   });
 });
 $(document).ready(function () {
+  // Change Price with size
   $("#selSize").change(function () {
     var idSize = $(this).val();
 
@@ -49950,6 +49951,13 @@ $(document).ready(function () {
         alert("error");
       }
     });
+  });
+});
+$(document).ready(function () {
+  // Replace main Image with Alternate Image
+  $(".changeImage").click(function () {
+    var image = $(this).attr("src");
+    $(".mainImage").attr('src', image);
   });
 });
 

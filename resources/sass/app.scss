@@ -11,8 +11,15 @@
 
 @import '../css/frontend_css/bootstrap.min.css';
 
-// @import '../css/frontend_css/font-awesome.min.css';
+// fontawesome
 
-// fontawsome
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
+$fa-font-path: "../webfonts";
+
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+@import '~@fortawesome/fontawesome-free/scss/regular.scss';
 

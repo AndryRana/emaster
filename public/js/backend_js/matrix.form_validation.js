@@ -216,26 +216,29 @@ $(document).ready(function(){
 		}
 	});
 	
-	// Delete Category & Product & Product Attribute
+	// Delete Category & Product & Product Attribute & Product Image alternate
 
 	$(document).on('click','.deleteRecord',function(e){
-		e.preventDefault();
+		// e.preventDefault();
 		var id = $(this).attr('rel');
 		var deleteFunction = $(this).attr('rel1');
 		var path = 	'/admin/'+deleteFunction+'/'+id;
 		
         swal.fire({
-          title: '<h4>Vous-êtes sûr de vouloir supprimer ce produit?</h4>',
+          title: '<h4>Vous-êtes sûr de vouloir supprimer?</h4>',
           text: "Vous ne pourrez plus récupérer cet enregistrement!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonClass: "btn-danger",
-		  confirmButtonText: "Oui, Supprimer le produit!",
+		  confirmButtonText: "Oui, Supprimer!",
 		  cancelButtonText:'Annuler',
-          closeOnConfirm: false
-		}).then( function(value){
-			if(value) {
+		  closeOnConfirm: false
+		  
+		}).then( function(result){
+			if(result.value) {
 				window.location.href= path;
+			}else {
+				swal.fire("Cancelled", "Votre fichier n'est pas supprimé!")
 			}
 			
 		});
