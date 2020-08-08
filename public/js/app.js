@@ -49734,7 +49734,7 @@ __webpack_require__.r(__webpack_exports__);
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
+ // import './easyzoom.js';
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -49887,10 +49887,10 @@ __webpack_require__.r(__webpack_exports__);
 var _require = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"),
     get = _require.get;
 
-$('#sl2').slider();
+$("#sl2").slider();
 
 var RGBChange = function RGBChange() {
-  $('#RGB').css('background', 'rgb(' + r.getValue() + ',' + g.getValue() + ',' + b.getValue() + ')');
+  $("#RGB").css("background", "rgb(" + r.getValue() + "," + g.getValue() + "," + b.getValue() + ")");
 };
 /*scroll to top*/
 
@@ -49898,17 +49898,17 @@ var RGBChange = function RGBChange() {
 $(document).ready(function () {
   $(function () {
     $.scrollUp({
-      scrollName: 'scrollUp',
+      scrollName: "scrollUp",
       // Element ID
       scrollDistance: 300,
       // Distance from top/bottom before showing element (px)
-      scrollFrom: 'top',
+      scrollFrom: "top",
       // 'top' or 'bottom'
       scrollSpeed: 300,
       // Speed back to top (ms)
-      easingType: 'linear',
+      easingType: "linear",
       // Scroll to top easing (see http://easings.net/)
-      animation: 'fade',
+      animation: "fade",
       // Fade, slide, none
       animationSpeed: 200,
       // Animation in speed (ms)
@@ -49938,8 +49938,8 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      type: 'get',
-      url: '/get-product-price',
+      type: "get",
+      url: "/get-product-price",
       data: {
         idSize: idSize
       },
@@ -49957,8 +49957,32 @@ $(document).ready(function () {
   // Replace main Image with Alternate Image
   $(".changeImage").click(function () {
     var image = $(this).attr("src");
-    $(".mainImage").attr('src', image);
+    $(".mainImage").attr("src", image);
   });
+}); // Instantiate EasyZoom instances
+
+var $easyzoom = $(".easyzoom").easyZoom(); // Setup thumbnails example
+
+var api1 = $easyzoom.filter(".easyzoom--with-thumbnails").data("easyZoom");
+$(".thumbnails").on("click", "a", function (e) {
+  var $this = $(this);
+  e.preventDefault(); // Use EasyZoom's `swap` method
+
+  api1.swap($this.data("standard"), $this.attr("href"));
+}); // Setup toggles example
+
+var api2 = $easyzoom.filter(".easyzoom--with-toggle").data("easyZoom");
+$(".toggle").on("click", function () {
+  var $this = $(this);
+
+  if ($this.data("active") === true) {
+    $this.text("Switch on").data("active", false);
+    api2.teardown();
+  } else {
+    $this.text("Switch off").data("active", true);
+
+    api2._init();
+  }
 });
 
 /***/ }),

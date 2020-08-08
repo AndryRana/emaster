@@ -237,6 +237,19 @@ class ProductsController extends Controller
     }
 
 
+    public function editAttributes(Request $request, $id = null)
+    {
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data);die;
+            foreach ($data['idAttr'] as $key => $attr) {
+               ProductsAttribute::where(['id' =>$data['idAttr'][$key]])->update(['price'=>$data['price'][$key], 'stock'=>$data['stock'][$key]]);
+            }
+            return redirect()->back()->with('flash_message_success', 'Mise à jour de(s) attribut(s) de produits avec succès!');
+        }
+    }
+
+
     public function addImages(Request $request, $id = null)
     {
         $productDetails = Product::with('attributes')->where(['id' => $id])->first();

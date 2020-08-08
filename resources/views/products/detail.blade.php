@@ -14,20 +14,30 @@
                     <!--product-details-->
                     <div class="col-sm-5">
                         <div class="view-product">
-                            <img class="mainImage"
-                                src="{{ asset('images/backend_images/product/medium/'. $productDetails->image) }}"
-                                alt="image" />
-                            {{-- <h3>ZOOM</h3> --}}
+                            <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails">
+                                <a href="{{ asset('images/backend_images/product/large/'. $productDetails->image) }}">
+                                    <img style="width:300px;" class="mainImage"
+                                        src="{{ asset('images/backend_images/product/medium/'. $productDetails->image) }}"
+                                        alt="image" />
+                                </a>
+                            </div>
                         </div>
                         <div id="similar-product" class="carousel slide" data-ride="carousel">
 
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
-                                <div class="item active">
+                                <div class="item active thumbnails">
+                                    <a href="{{ asset('images/backend_images/product/large/'. $productDetails->image) }}" data-standard="{{ asset('images/backend_images/product/small/'. $productDetails->image) }}">
+                                        <img class="changeImage" style="width:80px;"
+                                            src="{{ asset('images/backend_images/product/small/'. $productDetails->image) }}"
+                                            alt="image" />
+                                    </a>
                                     @foreach ($productAltImages as $altimage)
-                                    <img class="changeImage" style="width: 80px; cursor:pointer;"
-                                        src="{{ asset('images/backend_images/product/small/'. $altimage->image) }}"
-                                        alt="">
+                                    <a href="{{ asset('images/backend_images/product/large/'. $altimage->image) }}" data-standard="{{ asset('images/backend_images/product/small/'. $altimage->image) }}">
+                                        <img class="changeImage" style="width: 80px; cursor:pointer;"
+                                            src="{{ asset('images/backend_images/product/small/'. $altimage->image) }}"
+                                            alt="">
+                                    </a>
                                     @endforeach
                                 </div>
                             </div>

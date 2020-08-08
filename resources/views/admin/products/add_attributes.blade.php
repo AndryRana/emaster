@@ -34,7 +34,7 @@
                     <div class="widget-content nopadding">
                         <form enctype="multipart/form-data" class="form-horizontal" method="post"
                             action="{{ url('/admin/add-attributes/'.$productDetails->id) }}" name="add-attribute"
-                            id="add-attribute" >
+                            id="add-attribute">
                             @csrf
 
                             <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
@@ -60,13 +60,14 @@
                             <div class="control-group">
                                 <label class="control-label"></label>
                                 <div class="controls field_wrapper">
-                                    <input required type="text" name="sku[]" id="sku" placeholder="SKU" style="width:120px;"  />
+                                    <input required type="text" name="sku[]" id="sku" placeholder="SKU"
+                                        style="width:120px;" />
                                     <input required type="text" name="size[]" id="size" placeholder="Size"
-                                        style="width:120px;"  />
+                                        style="width:120px;" />
                                     <input required type="text" name="price[]" id="price" placeholder="Price"
-                                        style="width:120px;"  />
+                                        style="width:120px;" />
                                     <input required type="text" name="stock[]" id="stock" placeholder="Stock"
-                                        style="width:120px;"  />
+                                        style="width:120px;" />
                                     <a href="javascript:void(0);" class="add_button" title="Add field">
                                         Ajouter
                                     </a>
@@ -89,34 +90,37 @@
                         <h5>Voir les attributs du produit</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <table class="table table-bordered data-table">
-                            <thead>
-                                <tr>
-                                    <th>ID de l'attribut</th>
-                                    <th>SKU</th>
-                                    <th>Taille</th>
-                                    <th>Prix</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($productDetails['attributes'] as $attribute)
-                                <tr class="gradeX">
-                                    <td>{{ $attribute->id }}</td>
-                                    <td>{{ $attribute->sku }}</td>
-                                    <td>{{ $attribute->size }}</td>
-                                    <td>{{ $attribute->price }}</td>
-                                    <td>{{ $attribute->stock }}</td>
-                                    <td class="center">
-                                        <a rel="{{ $attribute->id }}" rel1="delete-attribute"
-                                            href="javascript:"
-                                            class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <form action="{{ url('/admin/edit-attributes/'.$productDetails->id) }}" method="POST">
+                            @csrf
+                            <table class="table table-bordered data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID de l'attribut</th>
+                                        <th>SKU</th>
+                                        <th>Taille</th>
+                                        <th>Prix</th>
+                                        <th>Stock</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($productDetails['attributes'] as $attribute)
+                                    <tr class="gradeX">
+                                        <td><input type="hidden" name="idAttr[]" value="{{ $attribute->id }}" >{{ $attribute->id }}</td>
+                                        <td>{{ $attribute->sku }}</td>
+                                        <td>{{ $attribute->size }}</td>
+                                        <td><input type="text" name="price[]" value="{{ $attribute->price }}"></td>
+                                        <td><input type="text" name="stock[]" value="{{ $attribute->stock }}"></td>
+                                        <td class="center">
+                                            <input type="submit" value="Update" class="btn btn-primary btn-mini">
+                                            <a rel="{{ $attribute->id }}" rel1="delete-attribute" href="javascript:"
+                                                class="btn btn-danger btn-mini deleteRecord">Supprimer</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </div>
             </div>
