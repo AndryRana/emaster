@@ -360,6 +360,18 @@ class ProductsController extends Controller
         // $productDetails = json_decode(json_encode($productDetails));
         // echo "<pre>";print_r($productDetails);die;
         
+        $relatedProducts = Product::where('id','!=',$id)->where(['category_id'=>$productDetails->category_id])->get();
+        // $relatedProducts = json_decode(json_encode($relatedProducts));
+        // echo "<pre>";print_r($relatedProducts);die;
+        
+        // foreach($relatedProducts->chunk(3) as $chunk) {
+        //     foreach($chunk as $item){
+        //         echo $item; echo "<br>";
+        //     }
+        //     echo "<br><br><br>";
+        // }
+        // die;
+
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
         
@@ -368,8 +380,9 @@ class ProductsController extends Controller
         // $productAltImages = json_decode(json_encode($productAltImages));
         // echo "<pre>";print_r($productAltImages);die;
 
+       $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock');
 
-        return view('products.detail')->with(compact('productDetails', 'categories','productAltImages'));
+        return view('products.detail')->with(compact('productDetails', 'categories','productAltImages', 'total_stock','relatedProducts'));
     }
 
 
@@ -381,6 +394,8 @@ class ProductsController extends Controller
         // echo $proArr[0]; echo $proArr[1]; die;
         $proAttr = ProductsAttribute::where(['product_id' => $proArr[0], 'size' => $proArr[1]])->first();
         // echo $proAttr->getAttrPrice();
-        return $proAttr->getAttrPrice();
+        echo $proAttr->getAttrPrice();
+        echo "#";
+        echo $proAttr->stock;
     }
 }

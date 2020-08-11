@@ -27,13 +27,15 @@
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
                                 <div class="item active thumbnails">
-                                    <a href="{{ asset('images/backend_images/product/large/'. $productDetails->image) }}" data-standard="{{ asset('images/backend_images/product/small/'. $productDetails->image) }}">
+                                    <a href="{{ asset('images/backend_images/product/large/'. $productDetails->image) }}"
+                                        data-standard="{{ asset('images/backend_images/product/small/'. $productDetails->image) }}">
                                         <img class="changeImage" style="width:80px;"
                                             src="{{ asset('images/backend_images/product/small/'. $productDetails->image) }}"
                                             alt="image" />
                                     </a>
                                     @foreach ($productAltImages as $altimage)
-                                    <a href="{{ asset('images/backend_images/product/large/'. $altimage->image) }}" data-standard="{{ asset('images/backend_images/product/small/'. $altimage->image) }}">
+                                    <a href="{{ asset('images/backend_images/product/large/'. $altimage->image) }}"
+                                        data-standard="{{ asset('images/backend_images/product/small/'. $altimage->image) }}">
                                         <img class="changeImage" style="width: 80px; cursor:pointer;"
                                             src="{{ asset('images/backend_images/product/small/'. $altimage->image) }}"
                                             alt="">
@@ -64,13 +66,15 @@
                                 <span id="getPrice">{{ $productDetails->getprice() }}</span>
                                 <label>Quantité:</label>
                                 <input type="text" value="1" />
-                                <button type="button" class="btn btn-fefault cart">
-                                    <i class="fa fa-shopping-cart"></i>
-                                    Ajouter au panier
-                                </button>
+                                @if ($total_stock>0)
+                                    <button type="button" class="btn btn-fefault cart " id="cartButton">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        Ajouter au panier
+                                    </button>
+                                @endif
                             </span>
-                            <p><b>Disponibilité:</b> In Stock</p>
-                            <p><b>Condition:</b> New</p>
+                            <p><b>Disponibilité:</b> <span id="Availability" > @if ($total_stock>0) En Stock @else Produit indisponible @endif </p></span>
+                            <p><b>Condition:</b> Neuf</p>
                             <a href=""><img src="images/product-details/share.png" class="share img-responsive"
                                     alt="" /></a>
                         </div>
@@ -142,92 +146,30 @@
 
                 <div class="recommended_items">
                     <!--recommended_items-->
-                    <h2 class="title text-center">recommended items</h2>
+                    <h2 class="title text-center">Les clients ayant consulté cet article ont également regardé</h2>
 
                     <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="item active">
+                            <?php $count=1; ?>
+                            @foreach($relatedProducts->chunk(3) as $chunk)
+                            <div <?php if($count==1){ ?> class="item active" <?php } else { ?> class="item" <?php } ?>>	
+                                @foreach($chunk as $item)
                                 <div class="col-sm-4">
                                     <div class="product-image-wrapper">
                                         <div class="single-products">
                                             <div class="productinfo text-center">
-                                                <img src="images/home/recommend1.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
+                                                <img style=" width:200px; " src="{{ asset('images/backend_images/product/small/'.$item->image) }}" alt="" />
+                                                <h2>{{ $item->getprice() }}</h2>
+                                                <p>{{ $item->product_name }}</p>
+                                                <a href="{{ url('/product/'.$item->id) }}"><button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Ajouter au panier</button></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="product-image-wrapper">
-                                        <div class="single-products">
-                                            <div class="productinfo text-center">
-                                                <img src="images/home/recommend2.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="product-image-wrapper">
-                                        <div class="single-products">
-                                            <div class="productinfo text-center">
-                                                <img src="images/home/recommend3.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
-                            <div class="item">
-                                <div class="col-sm-4">
-                                    <div class="product-image-wrapper">
-                                        <div class="single-products">
-                                            <div class="productinfo text-center">
-                                                <img src="images/home/recommend1.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="product-image-wrapper">
-                                        <div class="single-products">
-                                            <div class="productinfo text-center">
-                                                <img src="images/home/recommend2.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="product-image-wrapper">
-                                        <div class="single-products">
-                                            <div class="productinfo text-center">
-                                                <img src="images/home/recommend3.jpg" alt="" />
-                                                <h2>$56</h2>
-                                                <p>Easy Polo Black Edition</p>
-                                                <button type="button" class="btn btn-default add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i>Add to cart</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php $count++; ?>
+                            @endforeach
                         </div>
                         <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
                             <i class="fa fa-angle-left"></i>

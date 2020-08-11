@@ -49929,7 +49929,7 @@ $(document).ready(function () {
   });
 });
 $(document).ready(function () {
-  // Change Price with size
+  // Change Price & Stock with size
   $("#selSize").change(function () {
     var idSize = $(this).val();
 
@@ -49944,8 +49944,17 @@ $(document).ready(function () {
         idSize: idSize
       },
       success: function success(resp) {
-        // alert(resp);
-        $("#getPrice").html(resp);
+        // alert(resp); return false;
+        var arr = resp.split('#');
+        $("#getPrice").html(arr[0]);
+
+        if (arr[1] == 0) {
+          $("#cartButton").hide();
+          $("#Availability").text("Produit indisponible");
+        } else {
+          $("#cartButton").show();
+          $("#Availability").text("En stock");
+        }
       },
       error: function error() {
         alert("error");
