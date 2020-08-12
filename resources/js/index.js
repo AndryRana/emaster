@@ -47,7 +47,12 @@ $(document).ready(function() {
             success: function(resp) {
                 // alert(resp); return false;
                 var arr = resp.split('#');
-                $("#getPrice").html(arr[0]);
+                // alert(arr[0]+" €"); return false;
+                var arr1 = parseFloat(arr[0]).toFixed(2) ;
+                var arr2 = arr1.split('.');
+                // alert(arr2); return false;
+                $("#getPrice").html(arr2+" €");
+                $("#price").val(arr[0]);
                 if(arr[1]==0){
                     $("#cartButton").hide();
                     $("#Availability").text("Produit indisponible")

@@ -33,6 +33,10 @@ Route::get('/products/{url}', 'ProductsController@products');
 // Product Detail Page
 Route::get('/product/{id}', 'ProductsController@product');
 
+// Add to Cart Route
+Route::match(['get', 'post'], '/add-cart', 'ProductsController@addtocart');
+
+
 // get product Attribute price
 Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
@@ -63,6 +67,7 @@ Route::group(['middleware' => ['auth']], function(){
     // Product Alternate Images (Admin)
     Route::match(['get', 'post'],'/admin/add-images/{id}', 'ProductsController@addImages');
     Route::get('/admin/delete-alt-image/{id}', 'ProductsController@deleteAltImage');
+    
 });
 
 Route::get('/logout', 'AdminController@logout');

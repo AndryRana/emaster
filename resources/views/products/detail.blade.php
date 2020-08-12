@@ -47,38 +47,48 @@
 
                     </div>
                     <div class="col-sm-7">
-                        <div class="product-information">
-                            <!--/product-information-->
-                            <img src="images/product-details/new.jpg" class="newarrival" alt="" />
-                            <h2>{{ $productDetails->product_name }}</h2>
-                            <p>Code: {{ $productDetails->product_code }}</p>
-                            <p>
-                                <select id="selSize" name="size" class="attributesize">
-                                    <option value="">Selectionner la taille</option>
-                                    @foreach ($productDetails->attributes as $sizes)
-                                    <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </p>
-                            <img src="images/product-details/rating.png" alt="" />
-                            <span>
-                                <span id="getPrice">{{ $productDetails->getprice() }}</span>
-                                <label>Quantité:</label>
-                                <input type="text" value="1" />
-                                @if ($total_stock>0)
-                                    <button type="button" class="btn btn-fefault cart " id="cartButton">
+                        <form name="addtocartForm" id="addtocartForm" action="{{ url('/add-cart') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $productDetails->id }}" />
+                            <input type="hidden" name="product_name" value="{{ $productDetails->product_name }}" />
+                            <input type="hidden" name="product_code" value="{{ $productDetails->product_code }}" />
+                            <input type="hidden" name="product_color" value="{{ $productDetails->product_color }}" />
+                            <input type="hidden" name="price" id="price" value="{{ $productDetails->price}}" />
+
+                            <div class="product-information">
+                                <!--/product-information-->
+                                <img src="images/product-details/new.jpg" class="newarrival" alt="" />
+                                <h2>{{ $productDetails->product_name }}</h2>
+                                <p>Code: {{ $productDetails->product_code }}</p>
+                                <p>
+                                    <select id="selSize" name="size" class="attributesize">
+                                        <option value="">Selectionner la taille</option>
+                                        @foreach ($productDetails->attributes as $sizes)
+                                        <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </p>
+                                <img src="images/product-details/rating.png" alt="" />
+                                <span>
+                                    <span id="getPrice">{{ $productDetails->getprice() }}</span>
+                                    <label>Quantité:</label>
+                                    <input type="text" name="quantity" value="1" />
+                                    @if ($total_stock>0)
+                                    <button type="submit" class="btn btn-fefault cart " id="cartButton">
                                         <i class="fa fa-shopping-cart"></i>
                                         Ajouter au panier
                                     </button>
-                                @endif
-                            </span>
-                            <p><b>Disponibilité:</b> <span id="Availability" > @if ($total_stock>0) En Stock @else Produit indisponible @endif </p></span>
-                            <p><b>Condition:</b> Neuf</p>
-                            <a href=""><img src="images/product-details/share.png" class="share img-responsive"
-                                    alt="" /></a>
-                        </div>
-                        <!--/product-information-->
+                                    @endif
+                                </span>
+                                <p><b>Disponibilité:</b> <span id="Availability"> @if ($total_stock>0) En Stock @else
+                                        Produit indisponible @endif </p></span>
+                                <p><b>Condition:</b> Neuf</p>
+                                <a href=""><img src="images/product-details/share.png" class="share img-responsive"
+                                        alt="" /></a>
+                            </div>
+                            <!--/product-information-->
+                        </form>
                     </div>
                 </div>
                 <!--/product-details-->
@@ -152,16 +162,21 @@
                         <div class="carousel-inner">
                             <?php $count=1; ?>
                             @foreach($relatedProducts->chunk(3) as $chunk)
-                            <div <?php if($count==1){ ?> class="item active" <?php } else { ?> class="item" <?php } ?>>	
+                            <div <?php if($count==1){ ?> class="item active" <?php } else { ?> class="item" <?php } ?>>
                                 @foreach($chunk as $item)
                                 <div class="col-sm-4">
                                     <div class="product-image-wrapper">
                                         <div class="single-products">
                                             <div class="productinfo text-center">
-                                                <img style=" width:200px; " src="{{ asset('images/backend_images/product/small/'.$item->image) }}" alt="" />
+                                                <img style=" width:200px; "
+                                                    src="{{ asset('images/backend_images/product/small/'.$item->image) }}"
+                                                    alt="" />
                                                 <h2>{{ $item->getprice() }}</h2>
                                                 <p>{{ $item->product_name }}</p>
-                                                <a href="{{ url('/product/'.$item->id) }}"><button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Ajouter au panier</button></a>
+                                                <a href="{{ url('/product/'.$item->id) }}"><button type="button"
+                                                        class="btn btn-default add-to-cart"><i
+                                                            class="fa fa-shopping-cart"></i>Ajouter au
+                                                        panier</button></a>
                                             </div>
                                         </div>
                                     </div>

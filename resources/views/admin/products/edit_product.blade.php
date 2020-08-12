@@ -88,6 +88,13 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="control-group">
+                                    <label class="control-label">Afficher</label>
+                                    <div class="controls">
+                                        <input type="checkbox" name="status" id="status" @if($productDetails->status=="1") checked
+                                        @endif value="1" >
+                                    </div>
+                                </div>
                                 <div class="form-actions">
                                     <input type="submit" value="Modifier le produit" class="btn btn-success">
                                 </div>
