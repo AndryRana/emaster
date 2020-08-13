@@ -6,9 +6,11 @@ use App\Category;
 use App\Product;
 use App\ProductsAttribute;
 use App\ProductsImage;
+use Illuminate\Contracts\Session\Session;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductsController extends Controller
 {
@@ -423,7 +425,7 @@ class ProductsController extends Controller
 
     public function addtocart(Request $request)
     {
-        $data = $request->all();
+        $data = $request->all(); 
         // echo "<pre>";print_r($data);die;
 
         if(empty($data['user_email'])){
@@ -434,12 +436,30 @@ class ProductsController extends Controller
             $data['session_id'] = '' ;
         }
 
+        $session_id = session()->get('session_id');
+        if(empty($session_id)){
+            $session_id = Str::random(40);
+            session()->put('session_id',$session_id);
+        }
+
         $sizeArr = explode("-", $data['size']);
 
         DB::table('cart')->insert(['product_id'=>$data['product_id'],'product_name'=>$data['product_name'],
         'product_code'=>$data['product_code'],'product_color'=>$data['product_color'],'price'=>$data['price'],'size'=>$sizeArr[1],
-        'quantity'=>$data['quantity'],'user_email' => $data['user_email'],'session_id' => $data['session_id']
+        'quantity'=>$data['quantity'],'user_email' => $data['user_email'],'session_id' => $session_id
          ]);
-        die;
+        
+         return redirect('cart')->with('flash_message_success','Le produit a bien été ajouté au panier!');
     }
+
+
+    public function cart(Request $request)
+    {
+        $session_id = session()->get('session_id');
+        $userCart = DB::table('cart')->where(['session_id'=>$session_id])->get();
+        // echo "<pre>"; print_r($userCart); die;
+
+        return view('products.cart')->with(compact('userCart'));
+    }
+
 }

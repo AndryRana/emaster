@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-// Home Page
-Route::get('/', 'IndexController@index');
-
 Route::match(['get', 'post'], '/admin', 'AdminController@login');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Index Page
+Route::get('/', 'IndexController@index');
 
 // Category / Listing Page
 Route::get('/products/{url}', 'ProductsController@products');
@@ -36,6 +36,8 @@ Route::get('/product/{id}', 'ProductsController@product');
 // Add to Cart Route
 Route::match(['get', 'post'], '/add-cart', 'ProductsController@addtocart');
 
+// Cart Page
+Route::match(['get', 'post'], '/cart', 'ProductsController@cart');
 
 // get product Attribute price
 Route::get('/get-product-price', 'ProductsController@getProductPrice');
