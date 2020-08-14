@@ -1651,6 +1651,10 @@ h2.title {
 }
 
 
+.cart_img {
+  width: 80px;
+}
+
 .cart_delete  {
   display: block;
   margin-right: -12px;

@@ -6,8 +6,8 @@
     <div id="content-header">
         <div id="breadcrumb"> <a href="index.html" title="Aller à l'accueil" class="tip-bottom"><i
                     class="icon-home"></i>
-                Accueil</a> <a href="#">Produits</a> <a href="#" class="current">Ajouter un produit</a> </div>
-        <h1>Produits</h1>
+                Accueil</a> <a href="#">Coupons</a> <a href="#" class="current">Ajouter un coupon</a> </div>
+        <h1>Coupons</h1>
         @if (Session::has('flash_message_error'))
         <div class="alert alert-danger alert-block">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -28,61 +28,39 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-info-sign"></i> </span>
-                        <h5>Ajouter un produit</h5>
+                        <h5>Ajouter un coupon</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form enctype="multipart/form-data" class="form-horizontal" method="post"
-                            action="{{ url('/admin/add-product') }}" name="add_product" id="add_product"
+                            action="{{ url('/admin/add-coupon') }}" name="add_coupon" id="add_coupon"
                             novalidate="novalidate">
                             @csrf
+                            
                             <div class="control-group">
-                                <label class="control-label">Choisir une catégorie</label>
+                                <label class="control-label">Code du coupon</label>
                                 <div class="controls">
-                                    <select name="category_id" id="category_id" style="width: 220px;">
-                                        <?php echo $categories_drop_down; ?>
+                                    <input type="text" name="coupon_code" id="coupon_code">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Montant</label>
+                                <div class="controls">
+                                    <input type="text" name="amount" id="amount">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Type de coupon</label>
+                                <div class="controls">
+                                    <select name="amount_type" id="amount_type" style="width: 220px;">
+                                        <option value="Percentage">Percentage</option>
+                                        <option value="Fixed">Fixe</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Nom du produit</label>
+                                <label class="control-label">Date de validation</label>
                                 <div class="controls">
-                                    <input type="text" name="product_name" id="product_name">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Code du produit</label>
-                                <div class="controls">
-                                    <input type="text" name="product_code" id="product_code">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Couleur du produit</label>
-                                <div class="controls">
-                                    <input type="text" name="product_color" id="product_color">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Description</label>
-                                <div class="controls">
-                                    <textarea type="text" name="description" id="description" rows="5"></textarea>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Matériel et entretien</label>
-                                <div class="controls">
-                                    <textarea type="text" name="care" id="care" rows="5"></textarea>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Prix</label>
-                                <div class="controls">
-                                    <input type="text" name="price" id="price">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Image</label>
-                                <div class="controls">
-                                    <input type="file" name="image" id="image">
+                                    <input type="text" name="expiry_date" id="expiry_date">
                                 </div>
                             </div>
                             <div class="control-group">
@@ -92,7 +70,7 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <input type="submit" value="Ajouter un produit" class="btn btn-success">
+                                <input type="submit" value="Ajouter un coupon" class="btn btn-success">
                             </div>
                         </form>
                     </div>
