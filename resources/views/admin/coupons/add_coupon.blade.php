@@ -31,21 +31,20 @@
                         <h5>Ajouter un coupon</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form enctype="multipart/form-data" class="form-horizontal" method="post"
-                            action="{{ url('/admin/add-coupon') }}" name="add_coupon" id="add_coupon"
-                            novalidate="novalidate">
+                        <form  class="form-horizontal" method="post"
+                            action="{{ url('/admin/add-coupon') }}" name="add_coupon" id="add_coupon">
                             @csrf
                             
                             <div class="control-group">
                                 <label class="control-label">Code du coupon</label>
                                 <div class="controls">
-                                    <input type="text" name="coupon_code" id="coupon_code">
+                                    <input type="text" name="coupon_code" id="coupon_code" minlength="5" maxlength="15" required>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Montant</label>
                                 <div class="controls">
-                                    <input type="text" name="amount" id="amount">
+                                    <input type="number" name="amount" id="amount" min="1" required>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -53,14 +52,14 @@
                                 <div class="controls">
                                     <select name="amount_type" id="amount_type" style="width: 220px;">
                                         <option value="Percentage">Percentage</option>
-                                        <option value="Fixed">Fixe</option>
+                                        <option value="Fixe">Fixe</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Date de validation</label>
                                 <div class="controls">
-                                    <input type="text" name="expiry_date" id="expiry_date">
+                                    <input type="text" name="expiry_date" id="expiry_date" autocomplete="off" required >
                                 </div>
                             </div>
                             <div class="control-group">
