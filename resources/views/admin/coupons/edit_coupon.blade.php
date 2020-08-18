@@ -28,48 +28,53 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-info-sign"></i> </span>
-                        <h5>Ajouter un coupon</h5>
+                        <h5>Modifier le coupon</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form  class="form-horizontal" method="post"
-                            action="{{ url('/admin/add-coupon') }}" name="add_coupon" id="add_coupon">
+                            action="{{ url('/admin/edit-coupon/'. $couponDetails->id) }}" name="edit_coupon" id="edit_coupon">
                             @csrf
                             
                             <div class="control-group">
                                 <label class="control-label">Code du coupon</label>
                                 <div class="controls">
-                                    <input type="text" name="coupon_code" id="coupon_code" minlength="5" maxlength="15" required>
+                                    <input type="text" name="coupon_code" id="coupon_code" minlength="5" maxlength="15" value="{{ $couponDetails->coupon_code }}" required>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Montant</label>
+                                <label class="control-label">Valeur du coupon en @if($couponDetails->amount_type=="Pourcentage")
+                                    %  @else € @endif</label>
                                 <div class="controls">
-                                    <input type="number" name="amount" id="amount" min="1" required>
+                                    <input type="number" name="amount" id="amount" min="1" value ="{{ $couponDetails->amount }}"  required>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Type de coupon</label>
                                 <div class="controls">
                                     <select name="amount_type" id="amount_type" style="width: 220px;">
-                                        <option value="Pourcentage">Pourcentage</option>
-                                        <option value="Fixe">Fixe</option>
+                                        <option @if ( $couponDetails->amount_type=="Pourcentage") selected
+                                        @endif value="Pourcentage">Pourcentage</option>
+                                        <option @if ( $couponDetails->amount_type=="Fixe") selected
+                                        @endif value="Fixe">Fixe</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Date de validation</label>
                                 <div class="controls">
-                                    <input type="text" name="expiry_date" id="expiry_date" autocomplete="off" required >
+                                    <input value="{{ $couponDetails->expiry_date }}"  type="text" name="expiry_date" id="expiry_date" autocomplete="off" required >
+                                    {{-- <input value="{{ \Carbon\Carbon::parse($couponDetails->expiry_date)->format('d-m-Y') }}" name="expiry_date" id="expiry_date" type="text" autocomplete="off" required > --}}
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Afficher</label>
                                 <div class="controls">
-                                    <input type="checkbox" name="status" id="status" value="1">
+                                    <input  type="checkbox" name="status" id="status" value="1" @if ($couponDetails->status=="1") checked
+                                    @endif>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <input type="submit" value="Ajouter un coupon" class="btn btn-success">
+                                <input type="submit" value="Modifier le coupon" class="btn btn-success">
                             </div>
                         </form>
                     </div>

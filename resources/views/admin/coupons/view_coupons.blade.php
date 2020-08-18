@@ -38,7 +38,7 @@
                                 <tr>
                                     <th>ID du coupon</th>
                                     <th>Code du coupon</th>
-                                    <th>Montant</th>
+                                    <th>Valeur du coupon</th>
                                     <th>Type de coupon</th>
                                     <th>Date de validité</th>
                                     <th>Date de création</th>
@@ -53,7 +53,7 @@
                                     <td>{{ $coupon->coupon_code }}</td>
                                     <td>
                                        
-                                        @if($coupon->amount_type=="Percentage")
+                                        @if($coupon->amount_type=="Pourcentage")
                                         {{ $coupon->amount }} % @else {{ number_format($coupon->amount, 2, ',', ' ') . ' €'  }} @endif
                                     </td>
                                     <td>{{ $coupon->amount_type }}</td>
@@ -63,8 +63,6 @@
                                         @if ($coupon->status==1) Activé @else Désactivé @endif
                                     </td>
                                     <td class="center">
-                                        <a href="#myModal{{ $coupon->id }}" data-toggle="modal"
-                                            class="btn btn-success btn-mini" title="Voir les coupons">Voir les détails</a>
 
                                         <a href="{{ url('/admin/edit-coupon/' .$coupon->id) }}"
                                             class="btn btn-primary btn-mini" title="Modifier le coupons">Modifier</a>
@@ -75,23 +73,6 @@
                                             class="btn btn-danger btn-mini deleteRecord" title="Supprimer le coupon" >Supprimer</a>
                                     </td>
                                 </tr>
-
-                                {{-- <div id="myModal{{ $coupon->id }}" class="modal hide">
-                                    <div class="modal-header">
-                                        <button data-dismiss="modal" class="close" type="button">×</button>
-                                        <h3>Les détails du {{ $coupon->coupon_name }} </h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>ID du coupon: {{ $coupon->id }}</p>
-                                        <p>ID de la Catégorie: {{ $coupon->category_id }}</p>
-                                        <p>Nom de la Catégorie: {{ $coupon->category_name }} </p>
-                                        <p>Code du coupon: {{ $coupon->coupon_code }}</p>
-                                        <p>Couleur du coupon: {{ $coupon->coupon_color }}</p>
-                                        <p>Fabrication:</p>
-                                        <p>Materiel:</p>
-                                        <p>Description: {{ $coupon->description }}</p>
-                                    </div>
-                                </div> --}}
 
                                 @endforeach
                             </tbody>
