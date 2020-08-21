@@ -48,6 +48,10 @@ Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCa
 // get product Attribute price
 Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
+// Apply Coupon
+Route::post('cart/apply-coupon', 'ProductsController@applyCoupon');
+
+
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings', 'AdminController@settings');
@@ -79,8 +83,9 @@ Route::group(['middleware' => ['auth']], function(){
     // Coupon Route
     Route::match([ 'get','post'],'/admin/add-coupon', 'CouponsController@addCoupon');
     Route::match(['get', 'post'],'/admin/edit-coupon/{id}', 'CouponsController@editCoupon');
+    Route::get('/admin/delete-coupon/{id}', 'CouponsController@deleteCoupon');
     Route::get('admin/view-coupons', 'CouponsController@viewCoupons');
-    
+   
 });
 
 Route::get('/logout', 'AdminController@logout');

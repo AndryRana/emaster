@@ -58,6 +58,12 @@ class CouponsController extends Controller
    }
 
 
+   public function deleteCoupon($id = null)
+   {
+        Coupon::where(['id'=> $id])->delete();
+        return redirect()->back()->with('flash_message_success', 'Le coupon a été supprimé avec succès!');
+   }
+
    public function viewCoupons()
    {
        $coupons = Coupon::get();
