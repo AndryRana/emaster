@@ -3,7 +3,7 @@
 @section('content')
 <section id="slider">
     <!--slider-->
-    <div class="container">
+    <div class="container"> 
         <div class="row">
             <div class="col-sm-12">
                 <div id="slider-carousel" class="carousel slide" data-ride="carousel">
@@ -15,49 +15,14 @@
 
                     <div class="carousel-inner">
                         <div class="item active">
-                            <div class="col-sm-6">
-                                <h1><span>E</span>-SHOPPER ANDRY</h1>
-                                <h2> E-Commerce </h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. </p>
-                                <button type="button" class="btn btn-default get">Get it now</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <img src="{{ asset('images/frontend_images/home/girl1.jpg') }}"
-                                    class="girl img-responsive" alt="" />
-                                <img src="{{ asset('images/frontend_images/home/pricing') }}" class="pricing" alt="" />
-                            </div>
+                            <img src="{{ asset('images/frontend_images/banners/banner1.png') }}" >
                         </div>
                         <div class="item">
-                            <div class="col-sm-6">
-                                <h1><span>E</span>-SHOPPER ANDRY</h1>
-                                <h2>Design by ANDRY</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. </p>
-                                <button type="button" class="btn btn-default get">Get it now</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <img src="{{ asset('images/frontend_images/home/girl2.jpg') }}"
-                                    class="girl img-responsive" alt="" />
-                                <img src="{{ asset('images/frontend_images/home/pricing.png') }}" class="pricing"
-                                    alt="" />
-                            </div>
+                            <img src="{{ asset('images/frontend_images/banners/banner2.png') }}" >
                         </div>
 
                         <div class="item">
-                            <div class="col-sm-6">
-                                <h1><span>E</span>-SHOPPER ANDRY</h1>
-                                <h2>Ecommerce </h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. </p>
-                                <button type="button" class="btn btn-default get">Get it now</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <img src="{{ asset('images/frontend_images/home/girl3.jpg') }}"
-                                    class="girl img-responsive" alt="" />
-                                <img src="{{ asset('images/frontend_images/home/pricing.png') }}" class="pricing"
-                                    alt="" />
-                            </div>
+                            <img src="{{ asset('images/frontend_images/banners/banner3.png') }}" >
                         </div>
 
                     </div>

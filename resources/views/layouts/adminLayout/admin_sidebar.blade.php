@@ -26,6 +26,14 @@
         <li><a href="{{ url('/admin/view-coupons') }}">Voir les coupons</a></li>
       </ul>
     </li>
+
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Bannières</span> <span
+          class="label label-important">2</span></a>
+      <ul>
+        <li><a href="{{ url('/admin/add-banner') }}">Ajouter une bannière</a></li>
+        <li><a href="{{ url('/admin/view-banners') }}">Voir les bannières</a></li>
+      </ul>
+    </li>
   </ul>
 </div>
 <!--sidebar-menu-->

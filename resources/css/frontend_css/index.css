@@ -581,7 +581,7 @@ ul.sub-menu {
 }
 
 .item {
-  padding-left: 100px;
+  padding-left: 0;
 }
 
 
@@ -1549,7 +1549,7 @@ h2.title {
   border-color:transparent transparent transparent #FE980F;
   position: absolute;
   top: 11px;
-  left:48px;
+  left:62px;
 
 }
 

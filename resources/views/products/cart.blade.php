@@ -6,7 +6,8 @@
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
-                <li><a href="{{ asset('/') }}"><i class="fa fa-home"></i></a></li>
+                <li><a href="{{ asset('/') }}">Accueil</a></li>
+                {{-- <i class="fa fa-home"></i> --}}
                 <li class="active">Votre panier</li>
             </ol>
         </div>
