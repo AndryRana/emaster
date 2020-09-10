@@ -106,3 +106,41 @@ $(".toggle").on("click", function() {
         api2._init();
     }
 });
+
+
+
+// Validate Register form
+$("#registerForm").validate({
+    rules:{
+        name:{
+            required:true,
+            minlength:2,
+            accept:"[a-zA-Z]+",
+        },
+        password:{
+            required:true,
+            minlength:6,
+        },
+        email:{
+            required:true,
+            email:true,
+            remote:"/check-email"
+        }
+    },
+    messages:{
+        name:{
+            required:"Merci de saisir votre nom",
+            minlength:"Votre nom doit contenir 2 caractères au minimum",
+            accept:"Votre nom doit contenir seulement des lettres"
+        },
+        password:{
+            required:"Merci de saisir votre mot de passe",
+            minlength:"Votre mot de passe doit contenir 6 caractères au minimum"
+        },
+        email:{
+            required:"Merci de saisir votre Email",
+            email:"Merci de saisir une adresse email valide",
+            remote:"L'adresse email est déjà utilisé!"
+        }
+    }
+});

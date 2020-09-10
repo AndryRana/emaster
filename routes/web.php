@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::match(['get', 'post'], '/admin', 'AdminController@login');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
 // Index Page
 Route::get('/', 'IndexController@index');
@@ -50,6 +48,12 @@ Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
 // Apply Coupon
 Route::post('cart/apply-coupon', 'ProductsController@applyCoupon');
+
+// register/Login
+Route::match([ 'get','post'],'/login-register', 'UsersController@register');
+
+// Check if user already exists
+Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
 
 
 Route::group(['middleware' => ['auth']], function(){
@@ -88,7 +92,15 @@ Route::group(['middleware' => ['auth']], function(){
 
     // Admin Banners Route 
     Route::match(['get','post'],'/admin/add-banner', 'BannersController@addBanner');
+    Route::match(['get','post'], '/admin/edit-banner/{id}', 'BannersController@editBanners');
+    Route::get('/admin/view-banners','BannersController@viewBanners');
+    Route::get('/admin/delete-banner/{id}', 'BannersController@deleteBanner');
     
 });
 
 Route::get('/logout', 'AdminController@logout');
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

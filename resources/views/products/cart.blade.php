@@ -1,6 +1,5 @@
 @extends('layouts.frontLayout.front_design')
 
-
 @section('content')
 <section id="cart_items">
     <div class="container">
