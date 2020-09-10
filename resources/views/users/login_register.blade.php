@@ -23,14 +23,14 @@
                 <div class="login-form">
                     <!--login form-->
                     <h2>S'identifier</h2>
-                    <form  action="#">
+                    <form id="loginForm" name="loginForm"  action="{{ url('/user-login') }}" method="POST">
                         @csrf
-                        <input type="text" placeholder="Nom" />
-                        <input type="email" placeholder="Adresse Email " />
-                        <span>
+                        <input name="email" type="email" placeholder="Adresse email" />
+                        <input name="password" type="password" placeholder="Mot de passe" />
+                        {{-- <span>
                             <input type="checkbox" class="checkbox">
                             Garder la connexion
-                        </span>
+                        </span> --}}
                         <button type="submit" class="btn btn-default">Continuer</button>
                     </form>
                 </div>
@@ -43,11 +43,11 @@
                 <div class="signup-form">
                     <!--sign up form-->
                     <h2>Créer un compte!</h2>
-                    <form id="registerForm" name="registerForm" action="{{ url('login-register') }}" method="POST">
+                    <form id="registerForm" name="registerForm" action="{{ url('/user-register') }}"  method="POST">
                         @csrf
                         <input id="name" name="name" type="text" placeholder="Nom" />
-                        <input id="emamil" name="email" type="email" placeholder="Adresse Email" />
-                        <input id="password" name="password" type="password" placeholder="Mot de passe" />
+                        <input id="emamil" name="email" type="email" placeholder="Adresse email" />
+                        <input id="myPassword" name="password" type="password" placeholder="Mot de passe" />
                         <button type="submit" class="btn btn-default">S'inscrire</button>
                     </form>
                 </div>

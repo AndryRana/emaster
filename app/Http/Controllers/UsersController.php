@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Auth;
 
 class UsersController extends Controller
 {
+
+    public function userLoginRegister()
+    {
+        return view('users.login_register');
+    }
+    
 
    public function register(Request $request)
    {
@@ -18,11 +25,42 @@ class UsersController extends Controller
             if($usersCount>0){
                 return redirect()->back()->with('flash_message_error','L\'adresse email existe déjà!');
             }else{
-                echo "Success";die;
+                $user = new User;
+                $user->name = $data['name'];
+                $user->email = $data['email'];
+                $user->admin = "0";
+                $user->password = bcrypt($data['password']);
+                $user->save();
+                if(Auth::attempt(['email'=>$data['email'],'password'=>$data['password']])){
+                    return redirect('/cart');
+
+                }
             }
         }
-        return view('users.login_register');
+     
    }
+
+
+    public function login(Request $request)
+    {
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>";print_r($data);die;
+            if(Auth::attempt(['email'=>$data['email'], 'password'=>$data['password']])){
+                return redirect('/cart');
+            }else{
+                return redirect()->back()->with('flash_message_error', 'Identifiant ou mot de passe invalide!');
+            }
+        }
+    }
+
+
+   public function logout()
+   {
+       Auth::logout();
+       return redirect('/');
+   }
+
 
    public function checkEmail(Request $request)
    {
@@ -32,7 +70,7 @@ class UsersController extends Controller
        if($usersCount>0){
           echo "false";
        }else{
-           echo "Success";die;
+           echo "true";die;
        }
        
    }

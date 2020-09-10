@@ -49935,10 +49935,10 @@ $(document).ready(function () {
       },
       success: function success(resp) {
         // alert(resp); return false;
-        var arr = resp.split('#'); // alert(arr[0]+" €"); return false;
+        var arr = resp.split("#"); // alert(arr[0]+" €"); return false;
 
         var arr1 = parseFloat(arr[0]).toFixed(2);
-        var arr2 = arr1.split('.'); // alert(arr2); return false;
+        var arr2 = arr1.split("."); // alert(arr2); return false;
 
         $("#getPrice").html(arr2 + " €");
         $("#price").val(arr[0]);
@@ -49987,7 +49987,7 @@ $(".toggle").on("click", function () {
 
     api2._init();
   }
-}); // Validate Register form
+}); // Validate Register form on keyup and submit
 
 $("#registerForm").validate({
   rules: {
@@ -50022,6 +50022,35 @@ $("#registerForm").validate({
       remote: "L'adresse email est déjà utilisé!"
     }
   }
+}); // Validate Login form on keyup and submit
+
+$("#loginForm").validate({
+  rules: {
+    email: {
+      required: true,
+      email: true
+    },
+    password: {
+      required: true
+    }
+  },
+  messages: {
+    email: {
+      required: "Merci de saisir votre Email",
+      email: "Merci de saisir une adresse email valide"
+    },
+    password: {
+      required: "Merci de saisir votre mot de passe"
+    }
+  }
+}); // Password Strength script
+
+$("#myPassword").passtrength({
+  minChars: 6,
+  passwordToggle: true,
+  tooltip: true,
+  eyeImg: "/images/frontend_images/eye.svg" // toggle icon
+
 });
 
 /***/ }),
