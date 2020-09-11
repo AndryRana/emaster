@@ -1,6 +1,6 @@
 /*price range*/
 
-const { get } = require("jquery");
+// const { get } = require("jquery");
 
 $("#sl2").slider();
 
@@ -107,70 +107,119 @@ $(".toggle").on("click", function() {
 });
 
 
-// Validate Register form on keyup and submit
+    // Validate Register form on keyup and submit
+    $("#registerForm").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2,
+                accept: "[a-zA-Z]+"
+            },
+            password: {
+                required: true,
+                minlength: 6
+            },
+            email: {
+                required: true,
+                email: true,
+                remote: "/check-email"
+            }
+        },
+        messages: {
+            name: {
+                required: "Merci de saisir votre nom",
+                minlength: "Votre nom doit contenir 2 caractères au minimum",
+                accept: "Votre nom doit contenir seulement des lettres"
+            },
+            password: {
+                required: "Merci de saisir votre mot de passe",
+                minlength:
+                    "Votre mot de passe doit contenir 6 caractères au minimum"
+            },
+            email: {
+                required: "Merci de saisir votre Email",
+                email: "Merci de saisir une adresse email valide",
+                remote: "L'adresse email est déjà utilisé!"
+            }
+        }
+    });
 
-$("#registerForm").validate({
-    rules: {
-        name: {
-            required: true,
-            minlength: 2,
-            accept: "[a-zA-Z]+"
+    // Validate Login form on keyup and submit
+    $("#loginForm").validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true
+            }
         },
-        password: {
-            required: true,
-            minlength: 6
-        },
-        email: {
-            required: true,
-            email: true,
-            remote: "/check-email"
+        messages: {
+            email: {
+                required: "Merci de saisir votre Email",
+                email: "Merci de saisir une adresse email valide"
+            },
+            password: {
+                required: "Merci de saisir votre mot de passe"
+            }
         }
-    },
-    messages: {
-        name: {
-            required: "Merci de saisir votre nom",
-            minlength: "Votre nom doit contenir 2 caractères au minimum",
-            accept: "Votre nom doit contenir seulement des lettres"
-        },
-        password: {
-            required: "Merci de saisir votre mot de passe",
-            minlength:
-                "Votre mot de passe doit contenir 6 caractères au minimum"
-        },
-        email: {
-            required: "Merci de saisir votre Email",
-            email: "Merci de saisir une adresse email valide",
-            remote: "L'adresse email est déjà utilisé!"
-        }
-    }
-});
+    });
 
-// Validate Login form on keyup and submit
-$("#loginForm").validate({
-    rules: {
-        email: {
-            required: true,
-            email: true
-        },
-        password: {
-            required: true
-        }
-    },
-    messages: {
-        email: {
-            required: "Merci de saisir votre Email",
-            email: "Merci de saisir une adresse email valide"
-        },
-        password: {
-            required: "Merci de saisir votre mot de passe"
-        }
-    }
-});
+    // Validate Account form on keyup and submit
+    $("#accountForm").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2,
+                accept: "[a-zA-Z]+"
+            },
+            address: {
+                required: true,
+                minlength: 6
+            },
+            city: {
+                required: true,
+                minlength:2
+            },
+            state: {
+                required: true,
+                minlength:2
+            },
+            country: {
+                required: true,
+            }
 
-// Password Strength script
-$("#myPassword").passtrength({
-    minChars: 6,
-    passwordToggle: true,
-    tooltip: true,
-    eyeImg: "/images/frontend_images/eye.svg" // toggle icon
-});
+        },
+        messages: {
+            name: {
+                required: "Merci de saisir votre nom",
+                minlength: "Votre nom doit contenir 2 caractères au minimum",
+                accept: "Votre nom doit contenir seulement des lettres"
+            },
+            address: {
+                required: "Merci de saisir votre adresse",
+                minlength: "Ce champ doit contenir 10 caractères au minimum"
+            },
+            city: {
+                required: "Merci de saisir votre ville",
+                minlength: "Ce champ doit contenir 2 caractères au minimum"
+            },
+            state: {
+                required: "Merci de saisir votre Région",
+                minlength: "Ce champ doit contenir 2 caractères au minimum"
+            },
+            country: {
+                required: "Merci de selectionner votre Pays"
+            }
+        }
+    });
+
+    // Password Strength script
+    $("#myPassword").passtrength({
+        minChars: 6,
+        passwordToggle: true,
+        tooltip: true,
+        eyeImg: "/images/frontend_images/eye.svg" // toggle icon
+    });
+

@@ -61,6 +61,13 @@ Route::get('/user-logout', 'UsersController@logout');
 // Users Login
 Route::post('user-login', 'UsersController@login');
 
+
+// All Routes after login
+Route::group(['middleware' => ['frontlogin']],function(){
+    // Users Account
+    Route::match(['get','post'],'/account','UsersController@account');
+});
+
 // Check if user already exists
 Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
 
@@ -104,6 +111,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get','post'], '/admin/edit-banner/{id}', 'BannersController@editBanners');
     Route::get('/admin/view-banners','BannersController@viewBanners');
     Route::get('/admin/delete-banner/{id}', 'BannersController@deleteBanner');
+
     
 });
 

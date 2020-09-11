@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Country;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Session;
 
 class UsersController extends Controller
 {
@@ -32,6 +34,7 @@ class UsersController extends Controller
                 $user->password = bcrypt($data['password']);
                 $user->save();
                 if(Auth::attempt(['email'=>$data['email'],'password'=>$data['password']])){
+                    Session::put('frontSession',$data['email']);
                     return redirect('/cart');
 
                 }
@@ -47,6 +50,7 @@ class UsersController extends Controller
             $data = $request->all();
             // echo "<pre>";print_r($data);die;
             if(Auth::attempt(['email'=>$data['email'], 'password'=>$data['password']])){
+                Session::put('frontSession',$data['email']);
                 return redirect('/cart');
             }else{
                 return redirect()->back()->with('flash_message_error', 'Identifiant ou mot de passe invalide!');
@@ -55,13 +59,68 @@ class UsersController extends Controller
     }
 
 
+    public function account(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $userDetails = User::find($user_id);
+        // echo "<pre>";print_r($userDetails);die;
+        $countries = Country::get();
+
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>";print_r($data);die;
+
+            if(empty($data['name'])){
+                return redirect()->back()->with('flash_message_error', 'Merci de saisir votre Nom pour modifier votre compte!');
+            }
+            
+            if(empty($data['address'])){
+                $data['address'] = "";
+            }
+
+            if(empty($data['city'])){
+                $data['city'] = "";
+            }
+
+            if(empty($data['state'])){
+                $data['state'] = "";
+            }
+
+            if(empty($data['country'])){
+                $data['country'] = "";
+            }
+
+            if(empty($data['pincode'])){
+                $data['pincode'] = "";
+            }
+
+            if(empty($data['mobile'])){
+                $data['mobile'] = "";
+            }
+            $user = User::find($user_id);
+            $user->name = $data['name'];
+            $user->address = $data['address'];
+            $user->city = $data['city'];
+            $user->state = $data['state'];
+            $user->country = $data['country'];
+            $user->pincode = $data['pincode'];
+            $user->mobile = $data['mobile'];
+            $user->save();
+            return redirect()->back()->with('flash_message_success', 'Votre compte a été mise à jour avec succès!');
+
+        }
+        return view('users.account')->with(compact('countries','userDetails'));
+    }
+
+
    public function logout()
    {
        Auth::logout();
+       Session::forget('frontSession');
        return redirect('/');
    }
 
-
+    
    public function checkEmail(Request $request)
    {
        // Check if user already exists
@@ -74,4 +133,6 @@ class UsersController extends Controller
        }
        
    }
+
+
 }

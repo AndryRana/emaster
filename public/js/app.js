@@ -49871,12 +49871,10 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./resources/js/index.js ***!
   \*******************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /*price range*/
-var _require = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"),
-    get = _require.get;
-
+// const { get } = require("jquery");
 $("#sl2").slider();
 
 var RGBChange = function RGBChange() {
@@ -50041,6 +50039,53 @@ $("#loginForm").validate({
     },
     password: {
       required: "Merci de saisir votre mot de passe"
+    }
+  }
+}); // Validate Account form on keyup and submit
+
+$("#accountForm").validate({
+  rules: {
+    name: {
+      required: true,
+      minlength: 2,
+      accept: "[a-zA-Z]+"
+    },
+    address: {
+      required: true,
+      minlength: 6
+    },
+    city: {
+      required: true,
+      minlength: 2
+    },
+    state: {
+      required: true,
+      minlength: 2
+    },
+    country: {
+      required: true
+    }
+  },
+  messages: {
+    name: {
+      required: "Merci de saisir votre nom",
+      minlength: "Votre nom doit contenir 2 caractères au minimum",
+      accept: "Votre nom doit contenir seulement des lettres"
+    },
+    address: {
+      required: "Merci de saisir votre adresse",
+      minlength: "Ce champ doit contenir 10 caractères au minimum"
+    },
+    city: {
+      required: "Merci de saisir votre ville",
+      minlength: "Ce champ doit contenir 2 caractères au minimum"
+    },
+    state: {
+      required: "Merci de saisir votre Région",
+      minlength: "Ce champ doit contenir 2 caractères au minimum"
+    },
+    country: {
+      required: "Merci de selectionner votre Pays"
     }
   }
 }); // Password Strength script
