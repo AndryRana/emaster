@@ -482,6 +482,8 @@ class ProductsController extends Controller
         return view('products.cart')->with(compact('userCart'));
     }
 
+
+
     public function deleteCartProduct($id = null)
     {
 
@@ -569,4 +571,9 @@ class ProductsController extends Controller
         }
     }
 
+
+    public function checkout()
+    {
+        return view('products.checkout');
+    }
 }

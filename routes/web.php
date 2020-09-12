@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +67,13 @@ Route::post('user-login', 'UsersController@login');
 Route::group(['middleware' => ['frontlogin']],function(){
     // Users Account
     Route::match(['get','post'],'/account','UsersController@account');
+    // Check User Current Password
+    Route::post('/check-user-pwd', 'UsersController@chkUserPassword');
+    // Update User Password
+    Route::post('/update-user-pwd','UsersController@updatePassword');
+    // Checkout Page
+    Route::match(['get','post'],'/checkout','ProductsController@checkout');
+
 });
 
 // Check if user already exists

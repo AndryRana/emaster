@@ -48,8 +48,15 @@
             </div>
             <div class="col-sm-4">
                 <div class="signup-form">
-                   
                     <h2>Modifier votre mot de passe</h2>
+                    <form id="passwordForm" name="passwordForm" action="{{ url('/update-user-pwd') }}" method="post">
+                    @csrf
+                    <input type="password" name="current_pwd" id="current_pwd" placeholder="Mot de passe actuel">
+                    <span id="chkPwd"></span>
+                    <input type="password" name="new_pwd" id="new_pwd" placeholder="Nouveau mot de passe">
+                    <input type="password" name="confirm_pwd" id="confirm_pwd" placeholder="Confirmer le mot de passe">
+                    <button type="submit" class="btn btn-default">Modifier le mot de passe</button>
+                    </form>
                 </div>
                 
             </div>

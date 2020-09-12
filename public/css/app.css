@@ -1472,6 +1472,16 @@ h2.title {
   padding: 6px 25px;
 }
 
+.signup-form button {
+  background: #FE980F;
+  border: medium none;
+  border-radius: 0;
+  color: #FFFFFF;
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  padding: 6px 25px;
+}
+
 .login-form label{
 
 }
@@ -1897,6 +1907,16 @@ h2.title {
   width: 100%;
   font-weight: 300
 }
+
+.form-one  input {
+  background:#F0F0E9;
+  border: 0 none;
+  margin-bottom:10px;
+  padding: 10px;
+  width: 100%;
+  font-weight: 300
+}
+
 
 .form-two > form > select {
   padding:10px 5px

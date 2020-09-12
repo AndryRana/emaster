@@ -115,7 +115,7 @@
                         @endif
                     </ul>
                     <a class="btn btn-default update" href="">Update</a>
-                    <a class="btn btn-default check_out" href="">Check Out</a>
+                    <a class="btn btn-default check_out" href="{{ url('/checkout') }}">Passer la commande</a>
                 </div>
             </div>
         </div>

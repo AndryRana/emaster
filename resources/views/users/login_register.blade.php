@@ -3,7 +3,7 @@
 @section('content')
 
 
-<section id="form">
+<section id="form" style="margin-top: 20px;">
     <!--form-->
     <div class="container">
         <div class="row">
