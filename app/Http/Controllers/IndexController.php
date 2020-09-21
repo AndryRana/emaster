@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Banner;
 use App\Category;
 use App\Product;
+use BeyondCode\DumpServer\Dumper;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -24,7 +25,7 @@ class IndexController extends Controller
         
         // In Random order
         $productsAll = Product::inRandomOrder()->where('status',1)->get();
-
+    //    dump($productsAll);
 
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id'=>0])->get();
