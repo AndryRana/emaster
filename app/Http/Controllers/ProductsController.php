@@ -590,6 +590,11 @@ class ProductsController extends Controller
             $shippingDetails = DeliveryAddress::where('user_id',$user_id)->first();
         }
 
+        // Update cart table with user email
+        $session_id = session()->get('session_id');
+        DB::table('cart')->where(['session_id'=>$session_id])->update(['user_email'=>$user_email]);
+
+
         if($request->isMethod('post')){
             $data = $request->all();
             // echo "<pre>";print_r($data);die;
@@ -626,9 +631,29 @@ class ProductsController extends Controller
                 $shipping->mobile = $data['shipping_mobile'];
                 $shipping->save();
             }
-           echo "Redirect to Order Review page";die;
+            return redirect()->action('ProductsController@orderReview');
         }
 
         return view('products.checkout')->with(compact('userDetails','countries','shippingDetails'));
+    }
+
+
+    public function orderReview()
+    {
+        $user_id = Auth::user()->id;
+        $user_email = Auth::user()->email;
+        $userDetails = User::where('id',$user_id)->first();
+        $shippingDetails = DeliveryAddress::where('user_id',$user_id)->first();
+        // $shippingDetails = json_decode(json_encode($shippingDetails));
+        // echo "<pre>";print_r($shippingDetails);die;
+        // dump($userDetails);
+        $userCart = DB::table('cart')->where(['user_email'=>$user_email])->get();
+        foreach ($userCart as $key => $product) {
+            // echo $product->product_id;
+            $productDetails = Product::where('id',$product->product_id)->first();
+            $userCart[$key]->image = $productDetails->image;
+        }
+        // echo "<pre>";print_r($userCart);die;
+        return view('products.order_review')->with(compact('userDetails', 'shippingDetails','userCart'));
     }
 }

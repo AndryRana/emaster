@@ -18,7 +18,7 @@ class Frontlogin
     {
 
         // echo Session::get('frontSession');die;
-        if(empty(Session::has('frontSession'))){
+        if (empty(Session::has('frontSession'))) {
             return redirect('/login-register');
         }
         return $next($request);
