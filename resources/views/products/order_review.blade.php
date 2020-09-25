@@ -80,17 +80,17 @@
 
 
         <div class="review-payment">
-            <h2>Détails & Paiement</h2>
+            <h2>Détails de votre commande & Paiement</h2>
         </div>
 
         <div class="table-responsive cart_info">
             <table class="table table-condensed">
                 <thead>
                     <tr class="cart_menu">
-                        <td class="image">Item</td>
+                        <td class="image">Articles</td>
                         <td class="description"></td>
-                        <td class="price">Price</td>
-                        <td class="quantity">Quantity</td>
+                        <td class="price">Prix</td>
+                        <td class="quantity">Quantité</td>
                         <td class="total">Total</td>
                     </tr> 
                 </thead>
@@ -128,6 +128,10 @@
                                     <td>Sous-total</td>
                                     <td>{{ number_format($total_amount , 2, ',', ' ') . ' €' }}</td>
                                 </tr>
+                                <tr>
+                                    <td>TVA</td>
+                                    <td>{{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</td>
+                                </tr>
                                 <tr class="shipping-cost">
                                     <td>Livraison (+)</td>
                                     <td>{{ number_format(0 , 2, ',', ' ') . ' €'  }}</td>
@@ -145,7 +149,7 @@
                                 </tr>
                                 <tr>
                                     <td>Total</td>
-                                    <td><span>{{ number_format($total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span></td>
+                                    <td><span>{{ number_format($grand_total = $total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span></td>
                                 </tr>
                             </table>
                         </td>
@@ -153,17 +157,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="payment-options">
-            <span>
-                <label><input type="checkbox"> Direct Bank Transfer</label>
-            </span>
-            <span>
-                <label><input type="checkbox"> Check Payment</label>
-            </span>
-            <span>
-                <label><input type="checkbox"> Paypal</label>
-            </span>
-        </div>
+        <form name="paymentForm" id="paymentForm" action="{{ url('/place-order') }}" method="POST">
+            @csrf
+            <input type="hidden" name="grand_total" value="{{ $grand_total }}">
+            <div class="payment-options">
+                    <label><strong>Selectionner le mode de Paiement:</strong> </label>
+                </span>
+                <span>
+                    <label><input type="radio" name="payment_method" id="CB" value="CB"> <strong> Carte Bancaire</strong> </label>
+                </span>
+                <span>
+                    <label><input type="radio" name="payment_method" id="Paypal" value="Paypal"> <strong> Paypal</strong> </label>
+                </span>
+                <span style="float: right;">
+                    <button type="submit" class="btn btn-primary" id="selectPaymentMethod">Procéder au paiement</button>
+                </span>
+            </div>
+        </form>
     </div>
 </section>
 <!--/#cart_items-->

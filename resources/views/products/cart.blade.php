@@ -85,8 +85,8 @@
 <section id="do_action">
     <div class="container">
         <div class="heading">
-            <h3>What would you like to do next?</h3>
-            <p>Choisissez si vous avez un code de réduction.</p>
+            <h3>Que devriez-vous faire ensuite?</h3>
+            <p>Choisissez un code de réduction si vous en avez.</p>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -108,9 +108,11 @@
                     <ul>
                         @if (!empty(session()->get('CouponAmount')))
                             <li>Sous-total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
+                            <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
                             <li>Coupon de réduction <span> {{ number_format(session()->get('CouponAmount') , 2, ',', ' ') . ' €'  }}</span></li>
                             <li>Total <span> {{ number_format($total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span></li>
-                        @else
+                            @else
+                            <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
                             <li>Total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
                         @endif
                     </ul>

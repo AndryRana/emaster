@@ -50172,6 +50172,13 @@ $('#billtoship').click(function () {
     $('#shipping_mobile').val('');
   }
 });
+$('#selectPaymentMethod').click(function () {
+  if ($('#Paypal').is(':checked') || $('#CB').is(':checked')) {// alert('checked');
+  } else {
+    alert('Merci de sélectionner un mode de paiement');
+    return false;
+  }
+});
 
 /***/ }),
 
