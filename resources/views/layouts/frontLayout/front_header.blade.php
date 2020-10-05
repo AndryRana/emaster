@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\Controller;
 $mainCategories = Controller::mainCategories();
+use App\Cart;
+
 ?>
 
 <header id="header">
@@ -70,12 +72,21 @@ $mainCategories = Controller::mainCategories();
                         <ul class="nav navbar-nav">
                             <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                             <li><a href="{{ url('/orders') }}"><i class="fa fa-crosshairs"></i> Vos commandes</a></li>
-                            <li><a href="{{ asset(url('/cart')) }}"><i class="fa fa-shopping-cart"></i> Panier</a></li>
+                            <li><a href="{{ asset(url('/cart')) }}"><i class="fa fa-shopping-cart"></i> Panier
+                                @if (Cart::count()>0)
+                                    <span class=" badge badge-pill badge-secondary">
+                                        <span>{{ Cart::count() }}</span>
+                                       
+                                    </span>
+                                @endif
+                                </a>
+                            </li>
                             @if (@empty(Auth::check()))
                             <li><a href="{{ url('/login-register') }}"><i class="fa fa-lock"></i> S'identifier</a></li>
                             @else
-                                <li><a href="{{ url('/account') }}"><i class="fa fa-user"></i>Mon Compte</a></li>
-                                <li><a href="{{ url('/user-logout') }}"><i class="fa fa-sign-out-alt"></i>Se déconnecter</a></li>
+                            <li><a href="{{ url('/account') }}"><i class="fa fa-user"></i>Mon Compte</a></li>
+                            <li><a href="{{ url('/user-logout') }}"><i class="fa fa-sign-out-alt"></i>Se déconnecter</a>
+                            </li>
                             @endif
                         </ul>
                     </div>

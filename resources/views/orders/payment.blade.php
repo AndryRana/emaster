@@ -1,0 +1,162 @@
+@extends('layouts.frontLayout.front_design')
+
+@section('content')
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="{{ asset('/') }}">Accueil</a></li>
+                <li class="active">Paiement</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section id="do_action">
+        <div class="flex flex-col items-center text-center">
+    
+                <h1 class="text-3xl font-normal">Votre numéro de commande est le {{session()->get('order_id')}} et le montant total de la commande est de
+                    {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €' }}</h1>
+                <p class="text-3xl my-10" >Veuillez compléter le présent formulaire pour procéder au paiement par carte bancaire</p>
+                <p class="text-2xl text-orange-300 my-10 w-3/12">
+                    Nous ne conservons aucune de ces informatios sur notre site, elles sont directement transmises à notre prestataire de paiment Stripe.
+                    La transmission de ces informations est entièrement sécurisée.
+                </p>
+                <form action="{{ route('checkout.payment') }}" method="POST" id="payment-form" class="my-6 w-3/12 ">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label for="card-element" class="flex text-2xl font-normal">
+                          Carte de crédit ou de débit
+                        </label>
+                        <div id="card-element" class="border-solid border-2 border-gray-300 py-4 px-2" >
+                        
+                        </div>
+                    
+                        <!-- We'll put the error messages in this element -->
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                    <button type="submit" class="bg-orange-400 hover:bg-gray-300 text-white py-2 px-4 my-6 " id="submit">Procéder au paiement (  {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €' }})</button>
+                </form>
+                <div class="my-10">
+                    <span> <img src="{{ asset('images/frontend_images/credit-card/site-paiement-securise.png') }}" alt="Paiement sécurisé" style="width: 250px;"></span>
+                </div>
+            
+        </div>
+</section>
+
+@endsection
+
+<?php
+session()->forget('grand_total');
+session()->forget('order_id'); 
+?>
+@section('extra-js')
+<script>
+     (function(){
+        // Create a Stripe client.
+        var stripe = Stripe('{{ config('stripe.publishable_key') }}');
+
+        // Create an instance of Elements.
+        var elements = stripe.elements();
+
+        // Custom styling can be passed to options when creating an Element.
+        // (Note that this demo uses a wider set of styles than the guide below.)
+        var style = {
+            base: {
+            color: "#32325d",
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: "antialiased",
+            fontSize: "16px",
+            "::placeholder": {
+                color: "#aab7c4"
+            }
+            },
+            invalid: {
+            color: "#fa755a",
+            iconColor: "#fa755a"
+            }
+    };
+
+        // Create an instance of the card Element.
+        var card = elements.create("card", { 
+            style: style,
+            hidePostalCode: true
+        });
+
+        // Add an instance of the card Element into the `card-element` <div>.
+        card.mount("#card-element");
+
+       // Handle real-time validation errors from the card Element.
+        card.on('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.classList.add('alert','alert-warning');
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.classList.remove('alert','alert-warning');
+                displayError.textContent = '';
+            }
+        });
+        // Handle form submission.
+        var form = document.getElementById('payment-form');
+
+        form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        form.disabled = true;
+        stripe.confirmCardPayment("{{ $clientSecret ?? '' }}", {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    address: {
+                        line1: '{{ $orderDetails->address }}',
+                        line2: '{{  $orderDetails->country}}',
+                        postal_code: '{{ $orderDetails->pincode }}',
+                        city: '{{ $orderDetails->city }}',
+                        state: '{{ $orderDetails->state }}',
+                    },
+                    name: '{{ $orderDetails->name }}'
+                }
+            }
+        }).then(function(result) {
+            if (result.error) {
+            // Show error to your customer (e.g., insufficient funds)
+            form.disabled = false;
+            console.log(result.error.message);
+            } else {
+                // The payment has been processed!
+                if (result.paymentIntent.status === 'succeeded') {
+                    var paymentIntent = result.paymentIntent;
+                    var token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    var form = document.getElementById('payment-form');
+                    var url = form.action;
+                    var redirect = '/thanks'
+
+                    fetch(
+                        url,
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json, text-plain, */*",
+                                "X-Request-With": "XMLHttpRequest",
+                                "X-CSRF-TOKEN": token
+                            },
+                            method: 'POST',
+                            body: JSON.stringify({
+                                paymentIntent:paymentIntent
+                            })
+                        }
+                    ).then((data)=>{
+                        console.log(data)
+                        window.location.href = redirect;
+
+                    }).catch((error)=>{
+                        console.log(error)
+                    })
+                }
+            }
+        });
+    });
+    })();
+</script>  
+@endsection

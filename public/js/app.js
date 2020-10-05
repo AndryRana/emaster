@@ -49708,6 +49708,17 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/css/main.css":
+/*!********************************!*\
+  !*** ./resources/css/main.css ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -50171,14 +50182,14 @@ $('#billtoship').click(function () {
     $('#shipping_pincode').val('');
     $('#shipping_mobile').val('');
   }
-});
-$('#selectPaymentMethod').click(function () {
-  if ($('#Paypal').is(':checked') || $('#CB').is(':checked')) {// alert('checked');
-  } else {
-    alert('Merci de sélectionner un mode de paiement');
-    return false;
-  }
-});
+}); // $('#selectPaymentMethod').click(function(){
+//     if($('#Paypal').is(':checked') || $('#CB').is(':checked') ){
+//         // alert('checked');
+//     }else{
+//         alert('Merci de sélectionner un mode de paiement');
+//         return false;
+//     }
+// });
 
 /***/ }),
 
@@ -50194,14 +50205,15 @@ $('#selectPaymentMethod').click(function () {
 /***/ }),
 
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!**************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/css/main.css ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! /Users/andryranarison/code/emaster/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/andryranarison/code/emaster/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/andryranarison/code/emaster/resources/sass/app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! /Users/andryranarison/code/emaster/resources/css/main.css */"./resources/css/main.css");
 
 
 /***/ })

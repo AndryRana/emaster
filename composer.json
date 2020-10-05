@@ -16,7 +16,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
-        "realrashid/sweet-alert": "^3.1"
+        "realrashid/sweet-alert": "^3.1",
+        "stripe/stripe-php": "^7.57"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.5",

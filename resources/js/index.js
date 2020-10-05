@@ -304,11 +304,11 @@ $(".toggle").on("click", function() {
         }
     });
 
-    $('#selectPaymentMethod').click(function(){
-        if($('#Paypal').is(':checked') || $('#CB').is(':checked') ){
-            // alert('checked');
-        }else{
-            alert('Merci de sélectionner un mode de paiement');
-            return false;
-        }
-    });
+    // $('#selectPaymentMethod').click(function(){
+    //     if($('#Paypal').is(':checked') || $('#CB').is(':checked') ){
+    //         // alert('checked');
+    //     }else{
+    //         alert('Merci de sélectionner un mode de paiement');
+    //         return false;
+    //     }
+    // });

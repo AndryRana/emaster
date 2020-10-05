@@ -7,12 +7,14 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Home | E-Shopper</title>
+    <script src="https://js.stripe.com/v3/"></script>
     <link href="{{ asset('css/frontend_css/bootstrap.min.css') }}" rel="stylesheet">
     {{-- <link href="{{ asset('css/frontend_css/font-awesome.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/frontend_css/prettyPhoto.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/price-range.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/animate.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/main.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/frontend_css/responsive.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/easyzoom.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/passtrength.css') }}" rel="stylesheet">
@@ -37,7 +39,6 @@
     @include('layouts.frontLayout.front_footer')
 	
 
-    
 	<script src="{{ asset('js/frontend_js/bootstrap.min.js') }}"></script>
 	<script src="{{ asset('js/frontend_js/jquery.scrollUp.min.js') }}"></script>
     <script src="{{ asset('js/frontend_js/price-range.js') }}"></script>
@@ -46,5 +47,7 @@
     <script src="{{ asset('js/frontend_js/easyzoom.js') }}"></script>
     <script src="{{ asset('js/frontend_js/passtrength.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    @yield('extra-js')
+    
 </body>
 </html>

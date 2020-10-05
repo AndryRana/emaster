@@ -12,13 +12,15 @@ use App\Product;
 use App\ProductsAttribute;
 use App\ProductsImage;
 use App\User;
-// use Illuminate\Contracts\Session\Session;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 use function GuzzleHttp\json_decode;
 
@@ -434,8 +436,8 @@ class ProductsController extends Controller
 
     public function addtocart(Request $request)
     {
-        Session::forget('CouponAmount');
-        Session::forget('CouponCode');
+        session()->forget('CouponAmount');
+        session()->forget('CouponCode');
 
         $data = $request->all();
         //  echo "<pre>";print_r($data);die;
@@ -450,28 +452,34 @@ class ProductsController extends Controller
             $data['session_id'] = '';
         }
 
-        $session_id = Session::get('session_id');
+        $session_id = session()->get('session_id');
         if (empty($session_id)) {
             $session_id = Str::random(40);
-            Session::put('session_id', $session_id);
+            session()->put('session_id', $session_id);
         }
 
-        $sizeArr = explode("-", $data['size']);
 
-        $countProducts = DB::table('cart')->where([
+        $countProducts = DB::table('carts')->where([
             'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
-            'size' => $sizeArr[1], 'session_id' => $session_id
+            'size' => $data['size'], 'session_id' => $session_id
         ])->count();
         // echo $countProducts;die;
         if ($countProducts > 0) {
             return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
+        } elseif ($data['size'] == null) {
+            return redirect()->back()->with('flash_message_error', 'Merci de selectionner la taille du produit!');
         } else {
 
-            $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $sizeArr[1]])->first();
 
-            DB::table('cart')->insert([
+            $sizeIDArr = explode("-", $data['size']);
+            $product_size = $sizeIDArr[1];
+
+            // echo $product_size;
+            $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
+
+            DB::table('carts')->insert([
                 'product_id' => $data['product_id'], 'product_name' => $data['product_name'],
-                'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $sizeArr[1],
+                'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $product_size,
                 'quantity' => $data['quantity'], 'user_email' => $data['user_email'], 'session_id' => $session_id
             ]);
         }
@@ -484,10 +492,10 @@ class ProductsController extends Controller
     {
         if (Auth::check()) {
             $user_email = Auth::user()->email;
-            $userCart = DB::table('cart')->where(['user_email' => $user_email])->get();
+            $userCart = DB::table('carts')->where(['user_email' => $user_email])->get();
         } else {
-            $session_id = Session::get('session_id');
-            $userCart = DB::table('cart')->where(['session_id' => $session_id])->get();
+            $session_id = session()->get('session_id');
+            $userCart = DB::table('carts')->where(['session_id' => $session_id])->get();
         }
 
         foreach ($userCart as $key => $product) {
@@ -504,25 +512,26 @@ class ProductsController extends Controller
     public function deleteCartProduct($id = null)
     {
 
-        Session::forget('CouponAmount');
-        Session::forget('CouponCode');
+        session()->forget('CouponAmount');
+        session()->forget('CouponCode');
         // echo $id;die;
-        DB::table('cart')->where('id', $id)->delete();
+        DB::table('carts')->where('id', $id)->delete();
         return redirect('cart')->with('flash_message_success', 'Le produit a bien été supprimer du panier!');
+        // return redirect()->back()->with('flash_message_success', 'Le produit a bien été supprimer du panier!');
     }
 
 
     public function updateCartQuantity($id = null, $quantity = null)
     {
-        Session::forget('CouponAmount');
-        Session::forget('CouponCode');
+        session()->forget('CouponAmount');
+        session()->forget('CouponCode');
 
-        $getCartDetails = DB::table('cart')->where('id', $id)->first();
+        $getCartDetails = DB::table('carts')->where('id', $id)->first();
         $getAttributeStock = ProductsAttribute::where('sku', $getCartDetails->product_code)->first();
         // echo $getAttributeStock->stock; echo "--";
         $updated_quantity = $getCartDetails->quantity + $quantity;
         if ($getAttributeStock->stock >= $updated_quantity) {
-            DB::table('cart')->where('id', $id)->increment('quantity', $quantity);
+            DB::table('carts')->where('id', $id)->increment('quantity', $quantity);
             return redirect('cart')->with('flash_message_success', 'La quantité a été mise à jour avec succès!');
         } else {
             return redirect('cart')->with('flash_message_error', 'La quantité du produit demandée n\'est pas disponible!');
@@ -533,8 +542,8 @@ class ProductsController extends Controller
     public function applyCoupon(Request $request)
     {
 
-        Session::forget('CouponAmount');
-        Session::forget('CouponCode');
+        session()->forget('CouponAmount');
+        session()->forget('CouponCode');
 
 
         $data = $request->all();
@@ -562,14 +571,14 @@ class ProductsController extends Controller
             // Coupon is valid for Discount
 
             // Get cart Total amount
-            $session_id = Session::get('session_id');
+            $session_id = session()->get('session_id');
 
             if (Auth::check()) {
                 $user_email = Auth::user()->email;
-                $userCart = DB::table('cart')->where(['user_email' => $user_email])->get();
+                $userCart = DB::table('carts')->where(['user_email' => $user_email])->get();
             } else {
-                $session_id = Session::get('session_id');
-                $userCart = DB::table('cart')->where(['session_id' => $session_id])->get();
+                $session_id = session()->get('session_id');
+                $userCart = DB::table('carts')->where(['session_id' => $session_id])->get();
             }
 
             $total_amount = 0;
@@ -589,8 +598,8 @@ class ProductsController extends Controller
             // echo $couponAmount; die;
 
             // Add coupon code and Amount
-            Session::put('CouponAmount', $couponAmount);
-            Session::put('CouponCode', $data['coupon_code']);
+            session()->put('CouponAmount', $couponAmount);
+            session()->put('CouponCode', $data['coupon_code']);
 
             return redirect()->back()->with('flash_message_success', 'La réduction s\'est bien appliquée!');
         }
@@ -599,6 +608,11 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
+        $session_id = session()->get('session_id');
+        $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
+        if($cartCount<=0){
+            return redirect()->route('index');
+        }
         $user_id =  Auth::user()->id;
         $user_email = Auth::user()->email;
         $userDetails = User::find($user_id);
@@ -612,8 +626,8 @@ class ProductsController extends Controller
         }
 
         // Update cart table with user email
-        $session_id = Session::get('session_id');
-        DB::table('cart')->where(['session_id' => $session_id])->update(['user_email' => $user_email]);
+        $session_id = session()->get('session_id');
+        DB::table('carts')->where(['session_id' => $session_id])->update(['user_email' => $user_email]);
 
 
         if ($request->isMethod('post')) {
@@ -666,6 +680,11 @@ class ProductsController extends Controller
 
     public function orderReview()
     {
+        $session_id = session()->get('session_id');
+        $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
+        if($cartCount<=0){
+            return redirect()->route('index');
+        }
         $user_id = Auth::user()->id;
         $user_email = Auth::user()->email;
         $userDetails = User::where('id', $user_id)->first();
@@ -673,7 +692,7 @@ class ProductsController extends Controller
         // $shippingDetails = json_decode(json_encode($shippingDetails));
         // echo "<pre>";print_r($shippingDetails);die;
         // dump($userDetails);
-        $userCart = DB::table('cart')->where(['user_email' => $user_email])->get();
+        $userCart = DB::table('carts')->where(['user_email' => $user_email])->get();
         foreach ($userCart as $key => $product) {
             // echo $product->product_id;
             $productDetails = Product::where('id', $product->product_id)->first();
@@ -697,16 +716,16 @@ class ProductsController extends Controller
             // echo "<pre>";print_r($shippingDetails);die;
             // echo "<pre>";print_r($data);die;
 
-            if (empty(Session::get('CouponCode'))) {
+            if (empty(session()->get('CouponCode'))) {
                 $coupon_code = '';
             } else {
-                $coupon_code = Session::get('CouponCode');
+                $coupon_code = session()->get('CouponCode');
             }
 
-            if (empty(Session::get('CouponAmount'))) {
+            if (empty(session()->get('CouponAmount'))) {
                 $coupon_amount = '';
             } else {
-                $coupon_amount = Session::get('CouponAmount');
+                $coupon_amount = session()->get('CouponAmount');
             }
 
             $order = new Order;
@@ -728,7 +747,7 @@ class ProductsController extends Controller
 
             $order_id = DB::getPdo()->lastInsertId();
 
-            $cartProducts = DB::table('cart')->where(['user_email' => $user_email])->get();
+            $cartProducts = DB::table('carts')->where(['user_email' => $user_email])->get();
             foreach ($cartProducts as $pro) {
                 $cartPro = new OrdersProduct;
                 $cartPro->order_id = $order_id;
@@ -742,40 +761,116 @@ class ProductsController extends Controller
                 $cartPro->product_qty = $pro->quantity;
                 $cartPro->save();
             }
-            Session::put('order_id', $order_id);
-            Session::put('grand_total', $data['grand_total']);
-            
-            if($data['payment_method']=="CB"){
-                //CB Redirect user to thanks page after saving order
-                return redirect('/thanks');
-            }else{
-                //PAYPAL Redirect user to thanks page after saving order
-                return redirect('/paypal');
+            session()->put('order_id', $order_id);
+            session()->put('grand_total', $data['grand_total']);
 
-            }
+            // if ($data['payment_method'] == "CB") {
+            //     //CB Redirect user to thanks page after saving order
+            //     return redirect('/thanks');
+            // } else {
+            //     //PAYPAL Redirect user to thanks page after saving order
+            //     return redirect('/paypal');
+            // }
+
+            return redirect('/paiement');
         }
+    }
+
+
+
+    public function payment(Request $request)
+    {
+        $session_id = session()->get('session_id');
+        $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
+        if($cartCount<=0){
+            return redirect()->route('index');
+        }
+        // dd($request->all());
+        $user_email = Auth::user()->email;
+        // DB::table('carts')->where('user_email', $user_email)->delete();
+
+        $orderDetails = Order::getOrderDetails(session()->get('order_id'));
+        // echo"<pre>";print_r($orderDetails);die;
+
+        $orderProducts = OrdersProduct::getOrderProducts(session()->get('order_id'));
+        // echo"<pre>";print_r($orderProducts);die;
+
+        $content = $orderProducts->map(function($item){
+            return ' || '.$item->product_name.','.' code_pdt = '.$item->product_code.','.' Prix = '.$item->product_price.','.' Qty = '.$item->product_qty;
+        })->values()->toJson();
+
+        // $getCountryCode = Order::getCountryCode($orderDetails->country);
+        //    echo"<pre>";print_r($getCountryCode->country_name);die;
+        // $grand_total = session()->get('grand_total');
+        $grand_total = number_format(session()->get('grand_total'), 2, '', ' ');
+        // echo "<pre>";print_r($grand_total);die;
+        Stripe::setApiKey(config('stripe.secret_key'));
+        $intent = PaymentIntent::create([
+            'amount' => $grand_total,
+            'currency' => 'EUR',
+            'description' => 'Commande',
+            // Verify your integration in this guide by including this parameter
+            'metadata' => [
+                'Contenu' => $content,
+                
+            ],
+          ]);
+
+          $clientSecret = Arr::get($intent, 'client_secret');
+        //   echo "<pre>";print_r($intent);die;
+
+        return view('orders.payment')->with(compact('clientSecret','orderDetails'));
+
+    }
+
+
+    public function checkoutPayment(Request $request)
+    {
+        $user_email = Auth::user()->email;
+        DB::table('carts')->where('user_email', $user_email)->delete();
+        $data = $request->json()->all();
+
+        return $data['paymentIntent'];
     }
 
 
     public function thanks(Request $request)
     {
         $user_email = Auth::user()->email;
-        DB::table('cart')->where('user_email', $user_email)->delete();
+        // DB::table('carts')->where('user_email', $user_email)->delete();
+       
         return view('orders.thanks');
     }
 
 
+    // public function thanksPaypal()
+    // {
+    //     return view('orders.thanks_paypal');
+    // }
+
+
+    // public function cancelPaypal()
+    // {
+    //     return view('orders.cancel_paypal');
+    // }
+
     public function paypal(Request $request)
     {
-        
-        return view('orders.paypal');   
+        $user_email = Auth::user()->email;
+        DB::table('carts')->where('user_email', $user_email)->delete();
+        $orderDetails = Order::getOrderDetails(session()->get('order_id'));
+        $nameArr = explode(' ', $orderDetails->name);
+        // $orderDetails = json_decode(json_encode($orderDetails));
+        // echo"<pre>";print_r($orderDetails);die;
+        $getCountryCode = Order::getCountryCode($orderDetails->country);
+        return view('orders.paypal')->with(compact('orderDetails', 'nameArr', 'getCountryCode'));
     }
 
 
     public function userOrders()
     {
         $user_id = Auth::user()->id;
-        $orders = Order::with('orders')->where('user_id', $user_id)->get();
+        $orders = Order::with('orders')->where('user_id', $user_id)->latest()->get();
         // $orders = json_decode(json_encode($orders));
         // echo "<pre>";print_r($orders);die;
 
@@ -790,6 +885,5 @@ class ProductsController extends Controller
         // $orderDetails = json_decode(json_encode($orderDetails));
         // echo "<pre>";print_r($orderDetails);die;
         return view('orders.user_order_details')->with(compact('orderDetails'));
-
     }
 }

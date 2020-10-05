@@ -24,7 +24,7 @@ Route::match(['get', 'post'], '/admin', 'AdminController@login');
 
 
 // Index Page
-Route::get('/', 'IndexController@index');
+Route::get('/', 'IndexController@index')->name('index')  ;
 
 // Category / Listing Page
 Route::get('/products/{url}', 'ProductsController@products');
@@ -60,7 +60,7 @@ Route::post('/user-register','UsersController@register');
 Route::get('/user-logout', 'UsersController@logout');
 
 // Users Login
-Route::post('user-login', 'UsersController@login');
+Route::post('/user-login', 'UsersController@login');
 
 
 // All Routes after login
@@ -77,14 +77,22 @@ Route::group(['middleware' => ['frontlogin']],function(){
     Route::match(['get','post'],'/order-review','ProductsController@orderReview');
     // Place Order Page
     Route::match(['get','post'],'/place-order','ProductsController@placeOrder');
+    // Payment Page
+    Route::get('/paiement','ProductsController@payment');
+    // Checkout Payment Page
+    Route::post('/paiement','ProductsController@checkoutPayment')->name('checkout.payment');
     // Thanks Page
     Route::get('/thanks','ProductsController@thanks');
     // Paypal Page
-    Route::get('/paypal','ProductsController@paypal');
+    // Route::get('/paypal','ProductsController@paypal');
     // Users Orders Page
     Route::get('/orders','ProductsController@userOrders');
     // User order Products details page
     Route::get('/orders/{id}','ProductsController@userOrdersDetails');
+    // Paypal Thanks
+    // Route::get('/paypal/thanks','ProductsController@thanksPaypal');
+    // Paypal Cancel Page
+    // Route::get('/paypal/cancel','ProductsController@cancelPaypal');
 
 
 

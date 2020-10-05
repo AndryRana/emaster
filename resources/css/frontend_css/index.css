@@ -2545,3 +2545,16 @@ h2.title {
 .attributesize {
   width: 170px;
 }
+
+/* .cardpayment{
+  float: right;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+} */
+
+.cardstripe{
+  margin-top: 25px;
+}
+

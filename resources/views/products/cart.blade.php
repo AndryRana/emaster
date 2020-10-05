@@ -95,9 +95,9 @@
                         <li>
                             <form action="{{ url('cart/apply-coupon') }}" method="post">
                                 @csrf
-                                <label>Code du coupon</label>
-                                <input type="text" name="coupon_code">
-                                <input type="submit" value="Appliquer" class="btn btn-default">
+                                <label for="code_coupon">Code du coupon</label>
+                                <input type="text" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 " name="coupon_code" placeholder="Code coupon" />
+                                <input type="submit" value="Appliquer" class="btn btn-default"/>
                             </form>
                         </li>
                     </ul>
