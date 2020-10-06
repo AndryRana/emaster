@@ -102,7 +102,7 @@ Route::group(['middleware' => ['frontlogin']],function(){
 Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
 
 
-Route::group(['middleware' => ['auth']], function(){
+Route::group(['middleware' => ['adminlogin']], function(){
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings', 'AdminController@settings');
     Route::get('/admin/check-pwd', 'AdminController@chkPassword');
@@ -130,17 +130,26 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get', 'post'],'/admin/add-images/{id}', 'ProductsController@addImages');
     Route::get('/admin/delete-alt-image/{id}', 'ProductsController@deleteAltImage');
     
-    // Coupon Route
+    // Coupon Routes
     Route::match([ 'get','post'],'/admin/add-coupon', 'CouponsController@addCoupon');
     Route::match(['get', 'post'],'/admin/edit-coupon/{id}', 'CouponsController@editCoupon');
     Route::get('/admin/delete-coupon/{id}', 'CouponsController@deleteCoupon');
     Route::get('admin/view-coupons', 'CouponsController@viewCoupons');
 
-    // Admin Banners Route 
+    // Admin Banners Routes
     Route::match(['get','post'],'/admin/add-banner', 'BannersController@addBanner');
     Route::match(['get','post'], '/admin/edit-banner/{id}', 'BannersController@editBanners');
     Route::get('/admin/view-banners','BannersController@viewBanners');
     Route::get('/admin/delete-banner/{id}', 'BannersController@deleteBanner');
+
+    // Admin Orders Routes
+    Route::get('/admin/view-orders', 'ProductsController@viewOrders');
+ 
+    // Admin Order Details Route
+    Route::get('/admin/view-orders/{id}', 'ProductsController@viewOrdersDetails');
+
+    // Upadate the order status
+    Route::post('/admin/update-order-status','ProductsController@updateOrderStatus');
 
     
 });

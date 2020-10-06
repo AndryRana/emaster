@@ -2,27 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
+use function GuzzleHttp\Psr7\hash;
+
 class AdminController extends Controller
 {
     public function login(Request $request)
     {
         if ($request->isMethod('post')) {
-            $data = $request->input();
-            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'admin' => '1'])) {
-                // echo "Success"; die;
-                // Adding session variable with Session::put
-                // Session::put('adminSession', $data['email']);
-                return redirect('admin/dashboard');
-            } else {
-                // 
-                return redirect('/admin')->with('flash_message_error', 'Votre e-mail ou votre mot de passe n’est pas correct.');
+                $data = $request->input();
+                $adminCount = Admin::where(['username'=> $data['username'], 'password'=>md5($data['password']), 'status'=>1])->count();
+
+            if($adminCount > 0){
+                session()->put('adminSession', $data['username']);
+                return redirect('/admin/dashboard');
+            }else{
+                return redirect('/admin')->with('flash_message_error', 'Identifiant ou mot de passe incorrect');
             }
+
         }
         return view('admin.admin_login');
     }

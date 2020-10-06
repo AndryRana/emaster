@@ -34,14 +34,14 @@
                 <div class="control-group">
                     <div class="controls">
                         <div class="main_input_box">
-                            <span class="add-on bg_lg"><i class="icon-user"> </i></span><input type="email" name="email" placeholder="E-mail" />
+                            <span class="add-on bg_lg"><i class="icon-user"> </i></span><input id="username" type="text" name="username" placeholder="Username" required="" />
                         </div>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
                         <div class="main_input_box">
-                            <span class="add-on bg_ly"><i class="icon-lock"></i></span><input type="password" name="password" placeholder="Mot de passe" />
+                            <span class="add-on bg_ly"><i class="icon-lock"></i></span><input type="password" name="password" placeholder="Mot de passe" required=""/>
                         </div>
                     </div>
                 </div>

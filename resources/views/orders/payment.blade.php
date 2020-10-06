@@ -36,7 +36,10 @@
                         <!-- We'll put the error messages in this element -->
                         <div id="card-errors" role="alert"></div>
                     </div>
-                    <button type="submit" class="bg-orange-400 hover:bg-gray-300 text-white py-2 px-4 my-6 " id="submit">Procéder au paiement (  {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €' }})</button>
+                    <button type="submit" class=" buttonspin bg-orange-400 hover:bg-gray-300 text-white py-2 px-4 my-6 " id="submit">
+                        <i class="loading-icon fa fa-spinner fa-spin hide"></i>
+                        <span class="btn-txt">Procéder au paiement (  {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €' }})</span> 
+                    </button>
                 </form>
                 <div class="my-10">
                     <span> <img src="{{ asset('images/frontend_images/credit-card/site-paiement-securise.png') }}" alt="Paiement sécurisé" style="width: 250px;"></span>
@@ -104,6 +107,17 @@ session()->forget('order_id');
         form.addEventListener('submit', function(ev) {
         ev.preventDefault();
         form.disabled = true;
+     
+        document.querySelector('.loading-icon').classList.remove('hide');
+        document.querySelector('.buttonspin').getAttribute('disabled', true);
+        document.querySelector('.btn-txt').innerHTML = 'Paiement en cours...';
+
+        setTimeout(function(){
+            document.querySelector('.loading-icon').classList.add('hide');
+            document.querySelector('.buttonspin').getAttribute('disabled', false);
+            document.querySelector('.btn-txt').innerHTML = 'Procéder au paiement {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €'  }}';
+        }, 2000);
+   
         stripe.confirmCardPayment("{{ $clientSecret ?? '' }}", {
             payment_method: {
                 card: card,

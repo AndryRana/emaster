@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
 // use Illuminate\Support\Facades\Session;
 
 class UsersController extends Controller
@@ -164,6 +166,7 @@ class UsersController extends Controller
    {
        Auth::logout();
        session()->forget('frontSession');
+       session()->forget('session_id');
        return redirect('/');
    }
 
