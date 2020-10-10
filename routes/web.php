@@ -56,6 +56,9 @@ Route::get('/login-register','UsersController@userLoginRegister');
 // Users Register Form Submit
 Route::post('/user-register','UsersController@register');
 
+// Confirm Account
+Route::get('confirm/{code}','UsersController@confirmAccount');
+
 // Users Logout
 Route::get('/user-logout', 'UsersController@logout');
 
@@ -80,7 +83,7 @@ Route::group(['middleware' => ['frontlogin']],function(){
     // Payment Page
     Route::get('/paiement','ProductsController@payment');
     // Checkout Payment Page
-    Route::post('/paiement','ProductsController@checkoutPayment')->name('checkout.payment');
+    Route::post('/paiement','ProductsController@checkoutPayment')->name('stripe.payment');
     // Thanks Page
     Route::get('/thanks','ProductsController@thanks');
     // Paypal Page

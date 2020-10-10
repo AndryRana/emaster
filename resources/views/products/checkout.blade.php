@@ -69,7 +69,7 @@
                     <h2></h2>
                 </div>
                 <div class="col-sm-4">
-                    <div class="signup-form">
+                    <div class="login-form">
                         <h2>Adresse de livraison</h2>
                         <div class="form-group">
                             <input name="shipping_name" id="shipping_name" @if(!empty($shippingDetails->name)) value="{{ $shippingDetails->name }}" @endif type="text" placeholder="Nom sur la livraison" class="form-control" />

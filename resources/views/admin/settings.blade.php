@@ -40,6 +40,12 @@
                                 name="password_validate" id="password_validate" novalidate="novalidate">
                                 @csrf
                                 <div class="control-group">
+                                    <label class="control-label">Username</label>
+                                    <div class="controls">
+                                      <input type="text" value="{{ $adminDetails->username }}" readonly="" />
+                                    </div>
+                                  </div>
+                                <div class="control-group">
                                     <label class="control-label">Mot de passe actuel</label>
                                     <div class="controls">
                                         <input type="password" name="current_pwd" id="current_pwd" />

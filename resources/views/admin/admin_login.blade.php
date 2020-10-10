@@ -34,7 +34,7 @@
                 <div class="control-group">
                     <div class="controls">
                         <div class="main_input_box">
-                            <span class="add-on bg_lg"><i class="icon-user"> </i></span><input id="username" type="text" name="username" placeholder="Username" required="" />
+                            <span class="add-on bg_lg"><i class="icon-user"> </i></span><input id="username" type="text" name="username" placeholder="Pseudo" required="" />
                         </div>
                     </div>
                 </div>

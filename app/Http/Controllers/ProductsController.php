@@ -12,13 +12,18 @@ use App\Product;
 use App\ProductsAttribute;
 use App\ProductsImage;
 use App\User;
+use Cartalyst\Stripe\Exception\CardErrorException;
+use Cartalyst\Stripe\Laravel\Facades\Stripe as FacadesStripe;
+use DateTime;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use Stripe\Charge;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -608,11 +613,11 @@ class ProductsController extends Controller
 
     public function checkout(Request $request)
     {
-        $session_id = session()->get('session_id');
-        $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
-        if($cartCount<=0){
-            return redirect()->route('index');
-        }
+        // $session_id = session()->get('session_id');
+        // $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
+        // if($cartCount<=0){
+        //     return redirect()->route('index');
+        // }
         $user_id =  Auth::user()->id;
         $user_email = Auth::user()->email;
         $userDetails = User::find($user_id);
@@ -781,6 +786,7 @@ class ProductsController extends Controller
     public function payment(Request $request)
     {
         $session_id = session()->get('session_id');
+        $user_id = Auth::user()->id;
         $cartCount = DB::table('carts')->where(['session_id' => $session_id])->count();
         if($cartCount<=0){
             return redirect()->route('index');
@@ -790,7 +796,7 @@ class ProductsController extends Controller
         // DB::table('carts')->where('user_email', $user_email)->delete();
 
         $orderDetails = Order::getOrderDetails(session()->get('order_id'));
-        // echo"<pre>";print_r($orderDetails);die;
+        //  echo"<pre>";print_r($orderDetails);die;
 
         $orderProducts = OrdersProduct::getOrderProducts(session()->get('order_id'));
         // echo"<pre>";print_r($orderProducts);die;
@@ -804,33 +810,88 @@ class ProductsController extends Controller
         // $grand_total = session()->get('grand_total');
         $grand_total = number_format(session()->get('grand_total'), 2, '', ' ');
         // echo "<pre>";print_r($grand_total);die;
-        Stripe::setApiKey(config('stripe.secret_key'));
-        $intent = PaymentIntent::create([
-            'amount' => $grand_total,
-            'currency' => 'EUR',
-            'description' => 'Commande',
-            // Verify your integration in this guide by including this parameter
-            'metadata' => [
-                'Contenu' => $content,
+        // Stripe::setApiKey(config('services.stripe.secret_key'));
+        // $intent = PaymentIntent::create([
+        //     'amount' => $grand_total,
+        //     'currency' => 'EUR',
+        //     'description' => 'Commande',
+        //     // Verify your integration in this guide by including this parameter
+        //     'metadata' => [
+        //         'Contenu' => $content,
                 
-            ],
-          ]);
+        //     ],
+        //   ]);
 
-          $clientSecret = Arr::get($intent, 'client_secret');
+        //   $clientSecret = Arr::get($intent, 'client_secret');
         //   echo "<pre>";print_r($intent);die;
 
-        return view('orders.payment')->with(compact('clientSecret','orderDetails'));
+        return view('orders.payment')->with(compact('orderDetails','orderProducts'));
 
     }
 
 
     public function checkoutPayment(Request $request)
     {
-        $user_email = Auth::user()->email;
-        DB::table('carts')->where('user_email', $user_email)->delete();
-        $data = $request->json()->all();
+        $email = Auth::user()->email;
+        $user_id = Auth::user()->id;
+        $userDetails = User::where('id',$user_id)->first();
 
-        return $data['paymentIntent'];
+        $data= $request->all();
+        // dd($data);
+        $order_id = $data['order_id'];
+
+        // Get shipping address of User
+        $shippingDetails = DeliveryAddress::where(['user_email' => $email])->first();
+
+        $grand_total = number_format($data['grand_total'], 2, '', ' ');
+        
+        $productDetails = Order::with('orders')->where('id',$order_id)->first();
+        // echo"<pre>";print_r($productDetails);die;
+
+        $orderProducts = OrdersProduct::getOrderProducts($order_id);
+        // echo"<pre>";print_r($orderProducts);die;
+        
+        $contents = $orderProducts->map(function($item){
+            return ' || '.$item->product_name.','.' code_pdt = '.$item->product_code.','.' Prix = '.number_format($item->product_price , 2, ',', ' ') . ' €' .','.' Qty = '.$item->product_qty;
+        })->values()->toJson();
+        // echo"<pre>";print_r($contents);die;
+        
+        
+        /**
+        * handling payment with POST
+        */
+        $stripe = Stripe::setApiKey(config('services.stripe.secret_key'));
+
+        $charges = Charge::create([
+                'amount' => $grand_total,
+                'currency' => 'EUR',
+                'source' => $request->stripeToken,
+                'description' => 'Order',
+                'receipt_email' => $request->user_email,
+                'metadata' => [
+                    'contents' => $contents,
+                ]
+            ]);
+        
+        // Code for order Email Start
+        $messageData = [
+            'email' => $email,
+            'name' => $shippingDetails->name,
+            'order_id' => $order_id,
+            'productDetails' => $productDetails,
+            'userDetails' => $userDetails
+        ];
+            Mail::send('email.order',$messageData,function($message) use($email){
+                $message->to($email)->subject('Votre commande a été traité avec succès - Equipe Emaster');
+            });
+
+        // Code for Order Email Ends
+        
+        DB::table('carts')->where('user_email', $email)->delete();
+        session()->forget('CouponAmount');
+
+        return redirect('/thanks')->with('flash_message_success', 'Merci! Votre paiement a bien été accepté !');
+      
     }
 
 
