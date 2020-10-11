@@ -44,6 +44,7 @@
                                     <th>Couleur du produit</th>
                                     <th>Prix</th>
                                     <th>Image</th>
+                                    <th>Caractéristique</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -63,6 +64,7 @@
                                             style="width: 60px;">
                                         @endif
                                     </td>
+                                    <td> @if ($product->feature_item == 1) Oui @else Non @endif</td>
                                     <td class="center">
                                         <a href="#myModal{{ $product->id }}" data-toggle="modal"
                                             class="btn btn-success btn-mini" title="Voir les produits">Voir les détails</a>

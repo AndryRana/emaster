@@ -132,7 +132,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="submit" value="Mise à jour Statut">
+                                                <input type="submit" class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-1 px-2 border border-gray-400 rounded shadow" value="Mise à jour Statut">
                                             </td>
                                         </tr>
                                     </table>

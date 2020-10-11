@@ -86,6 +86,12 @@
                                 </div>
                             </div>
                             <div class="control-group">
+                                <label class="control-label">Caractéristique</label>
+                                <div class="controls">
+                                    <input type="checkbox" name="feature_item" id="feature_item" value="1">
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label">Afficher</label>
                                 <div class="controls">
                                     <input type="checkbox" name="status" id="status" value="1">

@@ -23,8 +23,8 @@ class IndexController extends Controller
         // In Descneding order
         // $productsAll = Product::orderBy('id', 'DESC')->get();
         
-        // In Random order
-        $productsAll = Product::inRandomOrder()->where('status',1)->get();
+        // In Random order Get all products
+        $productsAll = Product::inRandomOrder()->where('status',1)->where('feature_item', '1')->simplePaginate(3);
     //    dump($productsAll);
 
         //  Get all Categories and Sub Categories

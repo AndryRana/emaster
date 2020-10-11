@@ -73,12 +73,12 @@ use App\Cart;
                             <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                             <li><a href="{{ url('/orders') }}"><i class="fa fa-crosshairs"></i> Vos commandes</a></li>
                             <li><a href="{{ asset(url('/cart')) }}"><i class="fa fa-shopping-cart"></i> Panier
-                                @if (Cart::count()>0)
+                                    @if (Cart::count()>0)
                                     <span class=" badge badge-pill badge-secondary">
                                         <span>{{ Cart::count() }}</span>
-                                       
+
                                     </span>
-                                @endif
+                                    @endif
                                 </a>
                             </li>
                             @if (@empty(Auth::check()))
@@ -112,7 +112,7 @@ use App\Cart;
                     </div>
                     <div class="mainmenu pull-left">
                         <ul class="nav navbar-nav collapse navbar-collapse">
-                            <li><a href="index.html" class="active">Accueil</a></li>
+                            <li><a href="{{ asset('/') }}" class="active">Accueil</a></li>
                             <li class="dropdown"><a href="#">Tous nos rayons<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
                                     @foreach ($mainCategories as $cat)
@@ -134,9 +134,15 @@ use App\Cart;
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="search_box pull-right">
-                        <input type="text" placeholder="Recherche" />
+
+                    <div class=" search_box pull-right">
+                        <form action="{{ url('/search-product') }}" method="post" class="flex justify-end items-center">
+                            @csrf
+                            <input type="text" placeholder="Rechercher un produit" value="{{ request()->input('query') }}" name="product" id="product" />
+                            <button type="submit" class=" p-3 bg-orange-400 hover:bg-orange-300 focus:outline-none "><i class="fa fa-search"></i></button>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>

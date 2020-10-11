@@ -9,7 +9,7 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 // use Illuminate\Support\Facades\Session;
 
@@ -20,6 +20,32 @@ class UsersController extends Controller
     {
         return view('users.login_register');
     }
+
+
+    public function login(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            // echo "<pre>";print_r($data);die;
+            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+                $userStatus = User::where('email', $data['email'])->first();
+                if ($userStatus->status == 0) {
+                    return redirect()->back()->with('flash_message_error', 'Votre compte n\'est pas activé\! Veuillez confirmer votre email pour l\'activer.');
+                }
+
+                session()->put('frontSession', $data['email']);
+                if (!empty(session()->get('session_id'))) {
+                    $session_id = session()->get('session_id');
+                    DB::table('carts')->where('session_id', $session_id)->update(['user_email' => $data['email']]);
+                }
+
+                return redirect('/cart');
+            } else {
+                return redirect()->back()->with('flash_message_error', 'Identifiant ou mot de passe invalide!');
+            }
+        }
+    } 
+
 
 
     public function register(Request $request)
@@ -70,6 +96,48 @@ class UsersController extends Controller
     }
 
 
+    public function forgotPassword(Request $request)
+    {
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>";print_r($data);die;
+            $userCount = User::where('email',$data['email'])->count();
+
+            if($userCount == 0){
+                return redirect()->back()->with('flash_message_error', 'Aucun compte n\'est attaché à cet email!' );
+            }
+
+            // Get user Details
+            $userDetails = User::where('email', $data['email'])->first();
+
+            // Generate random password
+            $random_password = Str::random(8);
+
+            // Encode/secure Password
+            $new_password = bcrypt($random_password);
+
+            // Update password
+            User::where('email',$data['email'])->update([ 'password'=> $new_password]);
+
+            // Send Forgot password Email code
+            $email = $data['email'];
+            $name = $userDetails->name;
+            $messageData = [
+                'email'=>$email,
+                'name'=>$name,
+                'password'=>$random_password
+            ];
+            Mail::send('email.forgotpassword',$messageData,function($message) use($email){
+                $message->to($email)->subject('Votre nouveau mot de passe sur le site Emaster' );
+            });
+
+            return redirect('login-register')->with('flash_message_success','Votre nouveau mot de passe a été envoyé par email');
+            
+        }
+        return view('users.forgot_password');
+    }
+
+    
     public function confirmAccount($email)
     {
         $email = base64_decode($email);
@@ -94,30 +162,6 @@ class UsersController extends Controller
         }
     }
 
-
-    public function login(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $data = $request->all();
-            // echo "<pre>";print_r($data);die;
-            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-                $userStatus = User::where('email', $data['email'])->first();
-                if ($userStatus->status == 0) {
-                    return redirect()->back()->with('flash_message_error', 'Votre compte n\'est pas activé\! Veuillez confirmer votre email pour l\'activer.');
-                }
-
-                session()->put('frontSession', $data['email']);
-                if (!empty(session()->get('session_id'))) {
-                    $session_id = session()->get('session_id');
-                    DB::table('carts')->where(['session_id', $session_id])->update(['user_email' => $data['email']]);
-                }
-
-                return redirect('/cart');
-            } else {
-                return redirect()->back()->with('flash_message_error', 'Identifiant ou mot de passe invalide!');
-            }
-        }
-    }
 
 
     public function account(Request $request)
@@ -228,5 +272,12 @@ class UsersController extends Controller
             echo "true";
             die;
         }
+    }
+
+
+    public function viewUsers()
+    {
+        $users = User::get();
+        return view('admin.users.view_users')->with(compact('users'));
     }
 }

@@ -22,19 +22,15 @@
             <div class="col-sm-4 col-sm-offset-1">
                 <div class="login-form">
                     <!--login form-->
-                    <h2>S'identifier</h2>
-                    <form id="loginForm" name="loginForm"  action="{{ url('/user-login') }}" method="POST">
+                    <h2>Mot de passe oublié?</h2>
+                    <form id="forgotPasswordForm" name="forgotPasswordForm"  action="{{ url('/forgot-password') }}" method="POST">
                         @csrf
                         <input name="email" type="email" placeholder="Adresse email" required />
-                        <input name="password" type="password" placeholder="Mot de passe" required />
                         {{-- <span>
                             <input type="checkbox" class="checkbox">
                             Garder la connexion
                         </span> --}}
-                        <button type="submit" class="btn btn-default">Continuer</button>
-                        <div class=" mt-6">
-                            <a  href="{{ url('/forgot-password') }}">Mot de passe oublié?</a>
-                        </div>
+                        <button type="submit" class="btn btn-default">Continuer</button><br>
                     </form>
                 </div>
                 <!--/login form-->

@@ -63,7 +63,8 @@
                                     <td class="center">{{ $order->order_status }}</td>
                                     <td class="center">{{ $order->payment_method}}</td>
                                     <td class="center">
-                                        <a href="{{ url('/admin/view-orders/' .$order->id) }}"  class="btn btn-success btn-mini" title="Voir les produits">Voir les détails</a>
+                                        <a href="{{ url('/admin/view-orders/' .$order->id) }}"  class="btn btn-success btn-mini" title="Voir les produits">Détails</a>
+                                        <a href="{{ url('/admin/view-orders-invoice/' .$order->id) }}"  class="btn btn btn-primary btn-mini btn-mini" title="Voir les produits">Facture</a>
                                     </td>
                                 </tr>
 

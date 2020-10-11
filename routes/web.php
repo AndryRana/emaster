@@ -53,6 +53,9 @@ Route::post('cart/apply-coupon', 'ProductsController@applyCoupon');
 // Users Login/Register Page
 Route::get('/login-register','UsersController@userLoginRegister');
 
+// Forgot password
+Route::match(['get','post'], 'forgot-password','UsersController@forgotPassword');
+
 // Users Register Form Submit
 Route::post('/user-register','UsersController@register');
 
@@ -62,6 +65,9 @@ Route::get('confirm/{code}','UsersController@confirmAccount');
 // Users Logout
 Route::get('/user-logout', 'UsersController@logout');
 
+// Search Products
+Route::match(['get', 'post'],'/search-product', 'ProductsController@searchProducts');
+
 // Users Login
 Route::post('/user-login', 'UsersController@login');
 
@@ -70,30 +76,42 @@ Route::post('/user-login', 'UsersController@login');
 Route::group(['middleware' => ['frontlogin']],function(){
     // Users Account
     Route::match(['get','post'],'/account','UsersController@account');
+
     // Check User Current Password
     Route::post('/check-user-pwd', 'UsersController@chkUserPassword');
+
     // Update User Password
     Route::post('/update-user-pwd','UsersController@updatePassword');
+
     // Checkout Page
     Route::match(['get','post'],'/checkout','ProductsController@checkout');
+
     // Order review Page
     Route::match(['get','post'],'/order-review','ProductsController@orderReview');
+
     // Place Order Page
     Route::match(['get','post'],'/place-order','ProductsController@placeOrder');
+
     // Payment Page
     Route::get('/paiement','ProductsController@payment');
+
     // Checkout Payment Page
     Route::post('/paiement','ProductsController@checkoutPayment')->name('stripe.payment');
+
     // Thanks Page
     Route::get('/thanks','ProductsController@thanks');
+
     // Paypal Page
     // Route::get('/paypal','ProductsController@paypal');
+
     // Users Orders Page
     Route::get('/orders','ProductsController@userOrders');
     // User order Products details page
     Route::get('/orders/{id}','ProductsController@userOrdersDetails');
+
     // Paypal Thanks
     // Route::get('/paypal/thanks','ProductsController@thanksPaypal');
+
     // Paypal Cancel Page
     // Route::get('/paypal/cancel','ProductsController@cancelPaypal');
 
@@ -150,10 +168,21 @@ Route::group(['middleware' => ['adminlogin']], function(){
  
     // Admin Order Details Route
     Route::get('/admin/view-orders/{id}', 'ProductsController@viewOrdersDetails');
+    
+    // Admin Order Invoice Route
+    Route::get('/admin/view-orders-invoice/{id}', 'ProductsController@viewOrdersInvoice');
 
     // Upadate the order status
     Route::post('/admin/update-order-status','ProductsController@updateOrderStatus');
 
+    // Admin User route
+    Route::get('/admin/view-users','UsersController@viewUsers');
+    
+    // Add CMS Route
+    Route::match(['get','post'], '/admin/add-cms-page', 'CmsPagecontroller@addCmsPage');
+
+    // View CMS Page Route
+    Route::get('admin/view-cms-pages', 'CmsPageController@viewCmsPages');
     
 });
 
