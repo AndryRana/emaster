@@ -181,14 +181,29 @@ Route::group(['middleware' => ['adminlogin']], function(){
     // Add CMS Route
     Route::match(['get','post'], '/admin/add-cms-page', 'CmsPagecontroller@addCmsPage');
 
+    // EDIT CMS Route
+    Route::match(['get', 'post'],'/admin/edit-cms-page/{id}','CmsPageController@editCmsPage');
+
     // View CMS Page Route
     Route::get('admin/view-cms-pages', 'CmsPageController@viewCmsPages');
+
+    // Delete CMS Route
+    Route::get('admin/delete-cms-page/{id}', 'CmsPageController@deleteCmsPage');
     
 });
 
-Route::get('/logout', 'AdminController@logout');
 
+Route::get('/logout', 'AdminController@logout');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+// Display Contact us Form Page
+Route::match(['get','post'],'/page/contact','CmsPageController@contact');
+
+// Display CMS Page
+Route::match(['get','post'],'/page/{url}','CmsPageController@cmsPage');
+
+

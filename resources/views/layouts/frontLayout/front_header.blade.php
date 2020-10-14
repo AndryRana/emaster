@@ -129,7 +129,7 @@ use App\Cart;
                                 </ul>
                             </li>
                             <li><a href="404.html">404</a></li>
-                            <li><a href="contact-us.html">Contact</a></li>
+                            <li><a href="{{ url('/page/contact') }}">Contact</a></li>
                         </ul>
                     </div>
                 </div>

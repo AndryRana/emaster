@@ -56,12 +56,11 @@
                                         <a href="#myModal{{ $page->id }}" data-toggle="modal"
                                             class="btn btn-success btn-mini" title="Voir">Détails</a>
 
-                                        <a href="{{ url('/admin/edit-page/' .$page->id) }}"
+                                        <a href="{{ url('/admin/edit-cms-page/' .$page->id) }}"
                                             class="btn btn-primary btn-mini" title="Modifier">Modifier</a>
 
-                                        <a id="delProduct" rel="{{ $page->id }}" rel1="delete-page"
-                                            href="{{ url('/admin/delete-cms-page/'.$page->id) }}""
-                                            class="btn btn-danger btn-mini deleteRecord" title="Supprimer" >Supprimer</a>
+                                        <a href="{{ url('/admin/delete-cms-page/'.$page->id) }}""
+                                            class="btn btn-danger btn-mini" title="Supprimer" >Supprimer</a>
                                     </td>
                                 </tr>
 
