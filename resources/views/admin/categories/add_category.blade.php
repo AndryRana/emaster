@@ -23,7 +23,7 @@
                             <div class="control-group">
                                 <label class="control-label">Nom de la catégorie</label>
                                 <div class="controls">
-                                    <input type="text" name="category_name" id="category_name">
+                                    <input type="text" name="category_name" id="category_name" required>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -46,7 +46,25 @@
                             <div class="control-group">
                                 <label class="control-label">URL</label>
                                 <div class="controls">
-                                    <input type="text" name="url" id="url">
+                                    <input type="text" name="url" id="url" required>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta titre</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_title" id="meta_title">
+                                </div>
+                            </div> 
+                            <div class="control-group">
+                                <label class="control-label">Meta Description</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_description" id="meta_description">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta Mot clés</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_keywords" id="meta_keywords">
                                 </div>
                             </div>
                             <div class="control-group">

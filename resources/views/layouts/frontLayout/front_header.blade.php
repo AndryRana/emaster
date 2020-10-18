@@ -1,8 +1,8 @@
 <?php
 use App\Http\Controllers\Controller;
+use App\Product;
 $mainCategories = Controller::mainCategories();
-use App\Cart;
-
+$cartCount = Product::cartCount();
 ?>
 
 <header id="header">
@@ -73,15 +73,15 @@ use App\Cart;
                             <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                             <li><a href="{{ url('/orders') }}"><i class="fa fa-crosshairs"></i> Vos commandes</a></li>
                             <li><a href="{{ asset(url('/cart')) }}"><i class="fa fa-shopping-cart"></i> Panier
-                                    @if (Cart::count()>0)
+                                    @if ($cartCount >0)
                                     <span class=" badge badge-pill badge-secondary">
-                                        <span>{{ Cart::count() }}</span>
+                                       {{ $cartCount }}
 
                                     </span>
                                     @endif
                                 </a>
                             </li>
-                            @if (@empty(Auth::check()))
+                            @if (empty(Auth::check()))
                             <li><a href="{{ url('/login-register') }}"><i class="fa fa-lock"></i> S'identifier</a></li>
                             @else
                             <li><a href="{{ url('/account') }}"><i class="fa fa-user"></i>Mon Compte</a></li>
@@ -116,9 +116,9 @@ use App\Cart;
                             <li class="dropdown"><a href="#">Tous nos rayons<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
                                     @foreach ($mainCategories as $cat)
-                                    @if($cat->status=="1")
-                                    <li><a href="{{ asset('/products/'.$cat->url) }}">{{ $cat->name }}</a></li>
-                                    @endif
+                                        @if($cat->status=="1")
+                                        <li><a href="{{ asset('/products/'.$cat->url) }}">{{ $cat->name }}</a></li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             </li>
@@ -139,7 +139,7 @@ use App\Cart;
                         <form action="{{ url('/search-product') }}" method="post" class="flex justify-end items-center">
                             @csrf
                             <input type="text" placeholder="Rechercher un produit" value="{{ request()->input('query') }}" name="product" id="product" />
-                            <button type="submit" class=" p-3 bg-orange-400 hover:bg-orange-300 focus:outline-none "><i class="fa fa-search"></i></button>
+                            <button type="submit" class=" p-3 bg-orange-400 hover:bg-orange-300 focus:outline-none "><i class="fa fa-search text-white"></i></button>
                         </form>
                     </div>
 

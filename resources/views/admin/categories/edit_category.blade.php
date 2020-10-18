@@ -50,6 +50,24 @@
                                 </div>
                             </div>
                             <div class="control-group">
+                                <label class="control-label">Meta titre</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_title" id="meta_title" value="{{ $categoryDetails->meta_title }}">
+                                </div>
+                            </div> 
+                            <div class="control-group">
+                                <label class="control-label">Meta Description</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_description" id="meta_description" value="{{ $categoryDetails->meta_description }}"">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta Mot clés</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_keywords" id="meta_keywords" value="{{ $categoryDetails->meta_keywords }}"">
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label">Afficher</label>
                                 <div class="controls">
                                     <input type="checkbox" name="status" id="status" @if($categoryDetails->status=="1") checked

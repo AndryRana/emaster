@@ -93,6 +93,7 @@
                         @else
                         {{ $categoryDetails->name }}
                         @endif
+                       
                     </h2>
                     @foreach ($productsAll as $product)
 
@@ -131,7 +132,7 @@
         <!--features_items-->
     </div>
     </div>
-    <div align="center" class="bottom-0">{{ $productsAll->links() }}</div>
+    {{-- <div align="center" class="bottom-0">{{ $productsAll->links() }}</div> --}}
     </div>
 </section>
 

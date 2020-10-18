@@ -122,7 +122,10 @@ Route::group(['middleware' => ['frontlogin']],function(){
 // Check if user already exists
 Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
 
+// Check pincode
+Route::post('/check-pincode','ProductsController@checkPincode');
 
+// All Routea after login
 Route::group(['middleware' => ['adminlogin']], function(){
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings', 'AdminController@settings');
@@ -141,6 +144,7 @@ Route::group(['middleware' => ['adminlogin']], function(){
     Route::get('/admin/delete-product/{id}', 'ProductsController@deleteProduct');
     Route::get('/admin/view-products', 'ProductsController@viewProducts');
     Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProductImage');
+    Route::get('/admin/delete-product-video/{id}', 'ProductsController@deleteProductvideo');
     
     //  Products Attribute (Admin)
     Route::match(['get', 'post'],'/admin/add-attributes/{id}', 'ProductsController@addAttributes');

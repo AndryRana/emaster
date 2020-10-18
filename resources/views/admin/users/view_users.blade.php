@@ -63,9 +63,9 @@
                                     <td class="center">{{ $user->email }}</td>
                                     <td class="center">
                                         @if($user->status==1)
-                                          <span class=" text-green-400">Active</span>
+                                          <span class="text-success">Active</span>
                                         @else
-                                          <span class=" text-red-400">Inactive</span>
+                                          <span class="text-error">Inactive</span>
                                         @endif
                                     </td>
                                     <td class="center">{{ $user->created_at->format('d-m-Y H:i:s') }}</td>

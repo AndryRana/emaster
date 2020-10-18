@@ -86,6 +86,12 @@
                                 </div>
                             </div>
                             <div class="control-group">
+                                <label class="control-label">Video</label>
+                                <div class="controls">
+                                    <input type="file" name="video" id="video">
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label">Caractéristique</label>
                                 <div class="controls">
                                     <input type="checkbox" name="feature_item" id="feature_item" value="1">

@@ -111,7 +111,7 @@
 			</table>
 		</td></tr>
 		<tr><td>&nbsp;</td></tr>
-		<tr><td>Vous rencontrez un problème? Nous contacter <a href="mailto:info@emaster.com">info@emaster.com</a></td></tr>
+		<tr><td>Vous rencontrez un problème? Contactez-nous <a href="mailto:info@emaster.com">info@emaster.com</a></td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr><td>Merci et à bientôt sur notre site Emaster<br> Equipe Emaster</td></tr>
 		<tr><td>&nbsp;</td></tr>

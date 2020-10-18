@@ -66,8 +66,8 @@
                                 <img src="images/product-details/new.jpg" class="newarrival" alt="" />
                                 <h2>{{ $productDetails->product_name }}</h2>
                                 <p>Code: {{ $productDetails->product_code }}</p>
-                                <p >
-                                    <select id="selSize" name="size" class="attributesize h-16"  required>
+                                <p>
+                                    <select id="selSize" name="size" class="attributesize h-16" required>
                                         <option value="">Selectionner la taille</option>
                                         @foreach ($productDetails->attributes as $sizes)
                                         <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}
@@ -81,7 +81,7 @@
                                     <label>Quantité:</label>
                                     <input type="text" name="quantity" value="1" />
                                     @if ($total_stock>0)
-                                    <button type="submit" class="btn btn-fefault cart " id="cartButton">
+                                    <button type="submit" class="btn btn-default cart " id="cartButton">
                                         <i class="fa fa-shopping-cart"></i>
                                         Ajouter au panier
                                     </button>
@@ -90,6 +90,17 @@
                                 <p><b>Disponibilité:</b> <span id="Availability"> @if ($total_stock>0) En Stock @else
                                         Produit indisponible @endif </p></span>
                                 <p><b>Condition:</b> Neuf</p>
+                                <div class="login-form flex ">
+                                    <p class="mt-4"><b>Livraison:</b></p>
+                                    <input type="text" name="pincode" id="chkPincode"
+                                        placeholder="Saisir votre code postal" class="mx-10">
+                                    <button type="button"
+                                        class=" mb-10 h-15 bg-orange-400 p-4 text-white focus:outline-none hover:bg-gray-300 hover:text-black"
+                                        id="checkPincode">
+                                        Vérifier
+                                    </button>
+                                </div>
+                                <span id="pincodeResponse"></span>
                                 <a href=""><img src="images/product-details/share.png" class="share img-responsive"
                                         alt="" /></a>
                             </div>
@@ -106,6 +117,9 @@
                             <li class="active"><a href="#description" data-toggle="tab">Description</a></li>
                             <li><a href="#care" data-toggle="tab">Matériel et Entretien</a></li>
                             <li><a href="#delivery" data-toggle="tab">Option de livraison</a></li>
+                            @if (!empty($productDetails->video))
+                                <li><a href="#video" data-toggle="tab">Vidéo du produit</a></li>
+                            @endif
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade active in" id="description">
@@ -131,7 +145,16 @@
                                 </p>
                             </div>
                         </div>
+                        @if (!empty($productDetails->video))
+                            <div class="tab-pane fade" id="video">
+                                <div class="col-sm-12">
+                                    <video class=" object-contain " controls>
+                                        <source src="{{ url('videos/'. $productDetails->video) }}" type="video/mp4">
 
+                                    </video>
+                                </div>
+                            </div>
+                        @endif    
                         {{-- <div class="tab-pane fade active in" id="reviews" >
                             <div class="col-sm-12">
                                 <ul>

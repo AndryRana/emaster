@@ -18,7 +18,8 @@ class UsersController extends Controller
 
     public function userLoginRegister()
     {
-        return view('users.login_register');
+        $meta_title = "S'identifier ou Créer un compte sur Emaster.com";
+        return view('users.login_register')->with(compact('meta_title'));
     }
 
 

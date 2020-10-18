@@ -13,6 +13,12 @@
         <!--/breadcrums-->
 
         <div class="row">
+            @if (Session::has('flash_message_error'))
+            <div class="alert alert-danger alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{!! session('flash_message_error') !!}</strong>
+            </div>
+            @endif
             <div class="col-sm-3 ">
                 <div class="login-form ">
                     <h2>Détails de la facturation</h2>
@@ -163,12 +169,18 @@
                 <span>
                     <label><input type="radio" name="payment_method" id="Paypal" value="Paypal"> <strong> Paypal</strong> </label>
                 </span> --}}
-                <div>
-                    <button type="submit" name="payment_method" value="CB" class="btn btn-primary" id="selectPaymentMethod">Procéder au paiement</button>
-                </div>
-                <div class="my-10">
-                    <span> <img src="{{ asset('images/frontend_images/credit-card/site-paiement-securise.png') }}" alt="Paiement sécurisé" style="width: 250px;"></span>
-                </div>
+                
+            @if ($cbpincodeCount == 0)
+            <p class=" font-extrabold text-red-700 mb-5">Cliquer sur le bouton ci-dessous pour saisir un code postal valide pour la LIVRAISON!</p>
+            <a href="{{ url('/checkout') }} " class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 p-10 ">Code postal pour la LIVRAISON !</a> 
+            @else
+            <div>
+                <button type="submit" name="payment_method" value="CB" class="btn btn-primary" id="selectPaymentMethod">Procéder au paiement</button>
+            </div>
+            @endif
+            <div class="my-10">
+                <span> <img src="{{ asset('images/frontend_images/credit-card/site-paiement-securise.png') }}" alt="Paiement sécurisé" style="width: 250px;"></span>
+            </div>
             </div>
         </form>
     </div>

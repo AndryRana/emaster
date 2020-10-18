@@ -16,16 +16,29 @@ class CmsPageController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>";print_r($data);die;
-
+            if(empty($data[ 'meta_title'])){
+                $data[ 'meta_title'] = "";
+            }
+            if(empty($data[ 'meta_description'])){
+                $data[ 'meta_description'] = "";
+            }
+            if(empty($data[ 'meta_keywords'])){
+                $data[ 'meta_keywords'] = "";
+            }
             $cmspage = new CmsPage;
             $cmspage->title = $data['title'];
             $cmspage->url = $data['url'];
             $cmspage->description = $data['description'];
+            $cmspage->meta_title = $data['meta_title'];
+            $cmspage->meta_description = $data['meta_description'];
+            $cmspage->meta_keywords = $data['meta_keywords'];
+
             if (empty($data['status'])) {
                 $status = 0;
             } else {
                 $status = 1;
             }
+            
             $cmspage->status = $status;
             $cmspage->save();
             return redirect()->back()->with('flash_message_success', 'CMS Page a été créé avec succès');
@@ -44,7 +57,17 @@ class CmsPageController extends Controller
             } else {
                 $status = 1;
             }
-            CmsPage::where('id', $id)->update(['title' => $data['title'], 'url' => $data['url'], 'description' => $data['description'], 'status' => $status]);
+            if(empty($data[ 'meta_title'])){
+                $data[ 'meta_title'] = "";
+            }
+            if(empty($data[ 'meta_description'])){
+                $data[ 'meta_description'] = "";
+            }
+            if(empty($data[ 'meta_keywords'])){
+                $data[ 'meta_keywords'] = "";
+            }
+            CmsPage::where('id', $id)->update(['title' => $data['title'], 'url' => $data['url'], 'description' => $data['description'],
+            'meta_title' => $data['meta_title'],'meta_description' => $data['meta_description'],'meta_keywords' => $data['meta_keywords'], 'status' => $status]);
             return redirect()->back()->with('flash_message_success', 'CMS Page a été mise à jour avec succès');
         }
         $cmsPage = CmsPage::where('id', $id)->first();
@@ -78,6 +101,9 @@ class CmsPageController extends Controller
         if ($cmsPageCount > 0) {
             // Get CMS page Details
             $cmsPageDetails = CmsPage::where('url', $url)->first();
+            $meta_title = $cmsPageDetails->meta_title;
+            $meta_description = $cmsPageDetails->meta_description;
+            $meta_keywords = $cmsPageDetails->meta_keywords;
         } else {
             abort(404);
         }
@@ -85,7 +111,7 @@ class CmsPageController extends Controller
 
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
-        return view('pages.cms_page')->with(compact('cmsPageDetails', 'categories'));
+        return view('pages.cms_page')->with(compact('cmsPageDetails', 'categories','meta_title','meta_description','meta_keywords'));
     }
 
 
@@ -124,6 +150,11 @@ class CmsPageController extends Controller
         }
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
-        return view('pages.contact')->with(compact('categories'));
+
+        // Meta tags
+        $meta_title = "Contactez-nous Emaster.com - site Officiel ";
+        $meta_description = "Contactez-nous pour toutes questions sur nos produits";
+        $meta_keywords = "Contactez-nous, demandes,questions";
+        return view('pages.contact')->with(compact('categories','meta_title','meta_description','meta_keywords'));
     }
 }

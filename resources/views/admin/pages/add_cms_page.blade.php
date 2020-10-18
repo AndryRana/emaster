@@ -32,26 +32,43 @@
                     </div>
                     <div class="widget-content nopadding">
                         <form enctype="multipart/form-data" class="form-horizontal" method="post"
-                            action="{{ url('/admin/add-cms-page') }}" name="add-cms-page" id="add-cms-page"
-                            novalidate="novalidate">
+                            action="{{ url('/admin/add-cms-page') }}" name="add-cms-page" id="add-cms-page">
                             @csrf
                          
                             <div class="control-group">
                                 <label class="control-label">Titre</label>
                                 <div class="controls">
-                                    <input type="text" name="title" id="title">
+                                    <input type="text" name="title" id="title" required>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">URL</label>
                                 <div class="controls">
-                                    <input type="text" name="url" id="url">
+                                    <input type="text" name="url" id="url" required>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Description</label>
                                 <div class="controls">
-                                    <textarea name="description" id="description" rows="5"></textarea>
+                                    <textarea name="description" id="description" rows="5" required></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta titre</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_title" id="meta_title">
+                                </div>
+                            </div> 
+                            <div class="control-group">
+                                <label class="control-label">Meta Description</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_description" id="meta_description">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta Mot clés</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_keywords" id="meta_keywords">
                                 </div>
                             </div>
                             <div class="control-group">

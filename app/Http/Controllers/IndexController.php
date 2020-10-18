@@ -24,7 +24,7 @@ class IndexController extends Controller
         // $productsAll = Product::orderBy('id', 'DESC')->get();
         
         // In Random order Get all products
-        $productsAll = Product::inRandomOrder()->where('status',1)->where('feature_item', '1')->simplePaginate(3);
+        $productsAll = Product::inRandomOrder()->where('status',1)->where('feature_item', '1')->get();
     //    dump($productsAll);
 
         //  Get all Categories and Sub Categories
@@ -56,7 +56,14 @@ class IndexController extends Controller
         }*/
 
         $banners = Banner::where('status','1')->get();
-        return view('index')->with(compact('productsAll','categories','banners'));
+
+        // Meta tags
+        $meta_title = "Emaster.com site Officiel - Offres bons plans ";
+        $meta_description = "Vente en ligne de divers produits pour femmes, hommes, enfants, Accessoires cuisine, mobiliers,high-tech, maison ";
+        $meta_keywords = "bons plans,mode hommes, mode femmes, mode enfants, maison, cuisine, beauté, high-tech, Iphone, sport, jardin";
+
+
+        return view('index')->with(compact('productsAll','categories','banners','meta_title', 'meta_description', 'meta_keywords'));
     }
    
 }

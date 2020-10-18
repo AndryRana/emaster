@@ -30,7 +30,7 @@ Enjoy!
       filenameClass: 'filename',
       fileBtnClass: 'action',
       fileDefaultText: 'Pas de fichier',
-      fileBtnText: 'Choisir l\'\image',
+      fileBtnText: 'Ajouter fichier',
       checkedClass: 'checked',
       focusClass: 'focus',
       disabledClass: 'disabled',
@@ -378,7 +378,7 @@ Enjoy!
     function doFile(elem){
       //sanitize input
       var $el = $(elem);
-
+      
       var divTag = $('<div />'),
           filenameTag = $('<span>'+options.fileDefaultText+'</span>'),
           btnTag = $('<span>'+options.fileBtnText+'</span>');

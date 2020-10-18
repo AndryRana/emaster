@@ -22,6 +22,18 @@
         </div>
         @endif
     </div>
+    <form class="w-full max-w-sm">
+    <div class="md:flex md:items-center mb-6">
+        <div class="md:w-1/3">
+          <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+            Full Name
+          </label>
+        </div>
+        <div class="md:w-2/3">
+          <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" value="Jane Doe">
+        </div>
+      </div>
+    </form>
     <div class="container-fluid">
         <hr>
         <div class="row-fluid">
@@ -39,7 +51,8 @@
                             <div class="control-group">
                                 <label class="control-label">Titre</label>
                                 <div class="controls">
-                                    <input class=" w-28" type="text" name="title" id="title" value="{{ $cmsPage->title }}">
+                                    <input class=" w-28" type="text" name="title" id="title"
+                                        value="{{ $cmsPage->title }}">
                                 </div>
                             </div>
                             <div class="control-group">
@@ -49,20 +62,41 @@
                                 </div>
                             </div>
                             <div class=" control-group">
-                                    <label class="control-label">Description</label>
-                                    <div class="controls">
-                                        <textarea name="description">{{ $cmsPage->description }}</textarea>
-                                    </div>
+                                <label class="control-label">Description</label>
+                                <div class="controls">
+                                    <textarea name="description" rows="10">{{ $cmsPage->description }}</textarea>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label">Afficher</label>
-                                    <div class="controls">
-                                        <input type="checkbox" name="status" id="status" @if($cmsPage->status=="1") checked @endif value="1">
-                                    </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta titre</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_title" id="meta_title" value="{{ $cmsPage->meta_title }}">
                                 </div>
-                                <div class="form-actions">
-                                    <input type="submit" value="Ajouter un CMS Page" class="btn btn-success">
+                            </div> 
+                            <div class="control-group">
+                                <label class="control-label">Meta Description</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_description" id="meta_description" value="{{ $cmsPage->meta_description }}"">
                                 </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Meta Mot clés</label>
+                                <div class="controls">
+                                    <input type="text" name="meta_keywords" id="meta_keywords" value="{{ $cmsPage->meta_keywords }}"">
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label">Afficher</label>
+                                <div class="controls">
+                                    <input type="checkbox" name="status" id="status" @if($cmsPage->status=="1")
+                                    checked @endif value="1">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" value="Ajouter un CMS Page" class="btn btn-success">
+                            </div>
+
                         </form>
                     </div>
                 </div>

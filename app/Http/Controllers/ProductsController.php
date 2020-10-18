@@ -85,6 +85,16 @@ class ProductsController extends Controller
                 }
             }
 
+            // Upload video
+            if($request->hasFile('video')){
+                $video_tmp = $request->file('video');
+                $video_name = $video_tmp->getClientOriginalName();
+                $video_path = 'videos/';
+                $video_tmp->move($video_path,$video_name);
+                $product->video = $video_name;
+            }
+          
+
             $product->feature_item = $feature_item;
             $product->status = $status;
 
@@ -134,6 +144,18 @@ class ProductsController extends Controller
                 $filename = '';
             }
 
+            // Upload video
+            if($request->hasFile('video')){
+                $video_tmp = $request->file('video');
+                $video_name = $video_tmp->getClientOriginalName();
+                $video_path = 'videos/';
+                $video_tmp->move($video_path,$video_name);
+                $videoName = $video_name;
+            }else if (!empty($data['current_video'])) {
+                $videoName = $data['current_video'];
+            }else {
+                $videoName = '';
+            }
 
             if (empty($data['description'])) {
                 $data['description'] = '';
@@ -158,7 +180,7 @@ class ProductsController extends Controller
             Product::where(['id' => $id])->update([
                 'category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
                 'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'],
-                 'image' => $fileName, 'status' => $status, 'feature_item' => $feature_item
+                 'image' => $fileName,'video' => $videoName,  'status' => $status, 'feature_item' => $feature_item
             ]);
 
             return redirect()->back()->with('flash_message_success', 'Le produit a été modifié avec succès!');
@@ -212,7 +234,7 @@ class ProductsController extends Controller
         return view('admin.products.view_products')->with(compact('products'));
     }
 
-    public function deleteProductImage($id = null)
+    public function deleteProductImage($id)
     {
         //  Get Product Image Name
         $productImage = Product::where(['id' => $id])->first();
@@ -243,6 +265,26 @@ class ProductsController extends Controller
 
         Product::where(['id' => $id])->update(['image' => '']);
         return redirect()->back()->with('flash_message_success', 'L\'image du produit a été supprimée avec succès!');
+    }
+
+
+    public function deleteProductvideo($id)
+    {
+        //  Get Video Name
+        $productVideo = Product::select('video')->where('id',$id)->first();
+
+        // Get videoPath
+        $video_path = "videos/";
+
+        // Delete Video if esists in videos folder
+        if(file_exists($video_path.$productVideo->video)){
+            unlink($video_path.$productVideo->video);
+        }
+
+        // Delete Video from Product Table
+        Product::where('id',$id)->update(['video'=>'']);
+
+        return redirect()->back()->with('flash_message_success', 'La vidéo du produit a été supprimée avec succès!');
     }
 
 
@@ -388,12 +430,14 @@ class ProductsController extends Controller
                 $cat_ids[] = $subcat->id;
             }
 
-            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->where('status', 1)->simplePaginate(3);
+            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc')->get();
         } else {
             $productsAll = Product::where(['category_id' => $categoryDetails->id])->where('status', 1)->get();
         }
-
-        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll'));
+        $meta_title = $categoryDetails->meta_title;
+        $meta_description = $categoryDetails->meta_description;
+        $meta_keywords = $categoryDetails->meta_keywords;
+        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords'));
     }
 
 
@@ -456,7 +500,11 @@ class ProductsController extends Controller
 
         $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock');
 
-        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts'));
+        $meta_title = $productDetails->product_name;
+        $meta_description = $productDetails->description;
+        $meta_keywords = $productDetails->product_name;
+
+        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts','meta_title', 'meta_description', 'meta_keywords'));
     }
 
 
@@ -565,7 +613,10 @@ class ProductsController extends Controller
             $userCart[$key]->image = $productDetails->image;
         }
         // echo "<pre>"; print_r($userCart); die;
-        return view('products.cart')->with(compact('userCart'));
+
+        $meta_title = "Votre panier sur Emaster.com";
+        $meta_description = "Voir votre panier sur Emaster.com";
+        return view('products.cart')->with(compact('userCart','meta_title','meta_description'));
     }
 
 
@@ -732,10 +783,24 @@ class ProductsController extends Controller
                 $shipping->mobile = $data['shipping_mobile'];
                 $shipping->save();
             }
+
+
+        $pincodeCount = DB::table('pincodes')->where('pincode',$data['shipping_pincode'])->count();
+        // $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
+        // echo "<pre>";print_r($cbpincodeCount);die;
+        if($pincodeCount == 0 ){
+            return redirect()->back()->with('flash_message_error', 'Votre localisation n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
+        }
+        // if($cbpincodeCount == 0 ){
+        //     return redirect()->back()->with('flash_message_error', 'Votre CB n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
+        // }
+
+
             return redirect()->action('ProductsController@orderReview');
         }
-
-        return view('products.checkout')->with(compact('userDetails', 'countries', 'shippingDetails'));
+        $meta_title = "Votre adresse sur Emaster.com ";
+        $meta_title = "Votre adresse sur Emaster.com ";
+        return view('products.checkout')->with(compact('userDetails', 'countries', 'shippingDetails','meta_title'));
     }
 
 
@@ -759,8 +824,11 @@ class ProductsController extends Controller
             $productDetails = Product::where('id', $product->product_id)->first();
             $userCart[$key]->image = $productDetails->image;
         }
+
+        $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
+        // echo "<pre>";print_r($cbpincodeCount);die;
+        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart','cbpincodeCount'));
         // echo "<pre>";print_r($userCart);die;
-        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart'));
     }
 
 
@@ -773,6 +841,12 @@ class ProductsController extends Controller
 
             // Get shipping address of User
             $shippingDetails = DeliveryAddress::where(['user_email' => $user_email])->first();
+
+            $pincodeCount = DB::table('pincodes')->where('pincode',$shippingDetails->pincode)->count();
+            
+            if($pincodeCount == 0 ){
+                return redirect()->back()->with('flash_message_error', 'Votre localisation n\'est pas valide. Merci de saisir un autre code postal!');
+            }
             // $shippingDetails = json_decode(json_encode($shippingDetails));
             // echo "<pre>";print_r($shippingDetails);die;
             // echo "<pre>";print_r($data);die;
@@ -1045,5 +1119,21 @@ class ProductsController extends Controller
             Order::where('id', $data['order_id'])->update(['order_status' => $data['order_status']]);
             return redirect()->back()->with('flash_message_success', 'Le status de la commande a bien été mise à jour!');
         }
+    }
+
+
+    public function checkPincode(Request $request)
+    {
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>"; print_r($data);die;
+            $pincodeCount = DB::table('pincodes')->where('pincode',$data['pincode'])->count();
+            if($pincodeCount>0){
+                echo "Le code postal est valable pour la livraison";
+            }else{
+                echo "Merci de saisir un code postal valide pour la livraison";
+            }
+        }
+        
     }
 }

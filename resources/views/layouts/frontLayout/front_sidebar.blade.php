@@ -1,3 +1,4 @@
+<?php use App\Product; ?> 
 <div class="left-sidebar">
     <h2>Category</h2>
     <div class="panel-group category-products" id="accordian">
@@ -15,9 +16,11 @@
             <div id="{{ $cat->id }}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul>
-                        @foreach ($cat->categories as $subcat)
+                        @foreach ($cat->categories as $subcat) 
+                            <?php $productCount = Product::productCount($subcat->id) ?>
                             @if($subcat->status==1)
-                                <li><a href="{{ asset('products/'.$subcat->url) }}">{{$subcat->name}} </a></li>
+                                <li><a href="{{ asset('products/'.$subcat->url) }}">{{$subcat->name}} </a>   
+                                    @if ($productCount >0) ({{ $productCount }}) @endif </li>
                             @endif
                         @endforeach
 

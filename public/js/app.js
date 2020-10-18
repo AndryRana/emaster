@@ -50191,6 +50191,34 @@ $('#billtoship').click(function () {
 //     }
 // });
 
+$('#checkPincode').click(function () {
+  var pincode = $("#chkPincode").val();
+
+  if (pincode == "") {
+    alert("Merci de saisir votre code postal");
+    return false;
+  }
+
+  $.ajax({
+    type: 'post',
+    data: {
+      pincode: pincode
+    },
+    url: '/check-pincode',
+    success: function success(resp) {
+      // alert(resp);
+      if (resp == "Le code postal est valable pour la livraison") {
+        $('#pincodeResponse').html("<font color = 'green'>" + resp + "</b>");
+      } else {
+        $('#pincodeResponse').html("<font color = 'red'>" + resp + "</b>");
+      }
+    },
+    error: function error() {
+      alert("Error");
+    }
+  });
+});
+
 /***/ }),
 
 /***/ "./resources/sass/app.scss":

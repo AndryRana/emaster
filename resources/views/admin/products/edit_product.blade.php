@@ -85,15 +85,26 @@
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">Image</label>
-                                    <div class="controls">
+                                    <div class="controls flex flex-row items-center">
                                         <input type="file" name="image" id="image">
                                         @if (!empty($productDetails->image))
                                         <input type="hidden" name="current_image" value="{{ $productDetails->image }}">
                                         <img style="width: 50px;"
                                             src="{{ asset('/images/backend_images/product/small/'. $productDetails->image) }}">
-                                        |
+                                        
                                         <a
-                                            href="{{ url('/admin/delete-product-image/' . $productDetails->id) }}">Supprimer</a>
+                                            href="{{ url('/admin/delete-product-image/' . $productDetails->id) }}" class="text-white bg-red-500 px-3 py-1 hover:text-black">Supprimer</a>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Video</label>
+                                    <div class="controls ">
+                                        <input type="file" name="video" id="video">
+                                        @if (!empty($productDetails->video))
+                                            <input type="hidden" name="current_video" value="{{ $productDetails->video }}">
+                                            <a target="_blank" href="{{ url('videos/'.$productDetails->video) }}" class="text-white bg-blue-500 px-3 py-1  hover:text-black">Voir la vidéo</a>
+                                            <a href="{{ url('/admin/delete-product-video/' . $productDetails->id) }}" class="text-white bg-red-500 px-3 py-1 hover:text-black">Supprimer</a>
                                         @endif
                                     </div>
                                 </div>

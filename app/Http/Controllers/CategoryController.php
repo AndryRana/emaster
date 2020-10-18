@@ -17,11 +17,23 @@ class CategoryController extends Controller
             }else{
                 $status = 1;
             }
+            if(empty($data[ 'meta_title'])){
+                $data[ 'meta_title'] = "";
+            }
+            if(empty($data[ 'meta_description'])){
+                $data[ 'meta_description'] = "";
+            }
+            if(empty($data[ 'meta_keywords'])){
+                $data[ 'meta_keywords'] = "";
+            }
             $category = new Category;
             $category->name = $data['category_name'];
             $category->parent_id = $data['parent_id'];
             $category->description = $data['description'];
             $category->url = $data['url'];
+            $category->meta_title = $data['meta_title'];
+            $category->meta_description = $data['meta_description'];
+            $category->meta_keywords = $data['meta_keywords'];
             $category->status = $status;
             $category->save();
             return redirect('/admin/view-categories')->with('flash_message_success', 'Ajout de la catégorie avec succès!');
@@ -45,8 +57,17 @@ class CategoryController extends Controller
             }else{
                 $status = 1;
             }
-
-            Category::where(['id' => $id])->update(['name'=>$data['category_name'], 'description'=>$data['description'], 'url' =>$data['url'], 'status'=>$status]);
+            if(empty($data[ 'meta_title'])){
+                $data[ 'meta_title'] = "";
+            }
+            if(empty($data[ 'meta_description'])){
+                $data[ 'meta_description'] = "";
+            }
+            if(empty($data[ 'meta_keywords'])){
+                $data[ 'meta_keywords'] = "";
+            }
+            Category::where(['id' => $id])->update(['name'=>$data['category_name'], 'description'=>$data['description'],
+            'meta_title' => $data['meta_title'],'meta_description' => $data['meta_description'],'meta_keywords' => $data['meta_keywords'], 'url' =>$data['url'], 'status'=>$status]);
             return redirect('/admin/view-categories')->with('flash_message_success', 'La Categorie a été mise à jour !');
         }
         $categoryDetails = Category::where(['id' => $id])->first();
