@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use Stripe\Charge;
@@ -44,6 +45,18 @@ class ProductsController extends Controller
                 $product->description = $data['description'];
             } else {
                 $product->description = '';
+            }
+
+            if (!empty($data['sleeve'])) {
+                $product->sleeve = $data['sleeve'];
+            } else {
+                $product->sleeve = '';
+            }
+
+            if (!empty($data['pattern'])) {
+                $product->pattern = $data['pattern'];
+            } else {
+                $product->pattern = '';
             }
 
             if (!empty($data['care'])) {
@@ -105,7 +118,7 @@ class ProductsController extends Controller
 
         // Categories drop down start
         $categories = Category::where(['parent_id' => 0])->get();
-        $categories_drop_down = "<option value='' selected disabled>Choisir une catégorie</option>";
+        $categories_drop_down = "<option value='none' selected disabled>Choisir une catégorie</option>";
         foreach ($categories as $cat) {
             $categories_drop_down .= "<option value='" . $cat->id . "'>" . $cat->name . "</option>";
             $sub_categories = Category::where(['parent_id' => $cat->id])->get();
@@ -115,7 +128,10 @@ class ProductsController extends Controller
         }
         // Categories drop down ends
 
-        return view('admin.products.add_product')->with(compact('categories_drop_down'));
+        $sleeveArray = array('Full Sleeve','Half Sleeve', 'Short Sleeve', 'Sleeveless');
+        $patternArray = array('Checked','Plain','Printed','Self','Solid');
+
+        return view('admin.products.add_product')->with(compact('categories_drop_down','sleeveArray','patternArray'));
     }
 
 
@@ -161,6 +177,18 @@ class ProductsController extends Controller
                 $data['description'] = '';
             }
 
+            if (!empty($data['sleeve'])) {
+                $sleeve = $data['sleeve'];
+            } else {
+                $sleeve = '';
+            }
+
+            if (!empty($data['pattern'])) {
+                $pattern = $data['pattern'];
+            } else {
+                $pattern = '';
+            }
+
             if (empty($data['care'])) {
                 $data['care'] = '';
             }
@@ -180,7 +208,7 @@ class ProductsController extends Controller
             Product::where(['id' => $id])->update([
                 'category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
                 'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'],
-                 'image' => $fileName,'video' => $videoName,  'status' => $status, 'feature_item' => $feature_item
+                 'image' => $fileName,'video' => $videoName, 'sleeve' =>$sleeve,'pattern' =>$pattern, 'status' => $status, 'feature_item' => $feature_item
             ]);
 
             return redirect()->back()->with('flash_message_success', 'Le produit a été modifié avec succès!');
@@ -212,7 +240,10 @@ class ProductsController extends Controller
         }
         // Categories drop down ends
 
-        return view('admin.products.edit_product')->with(compact('productDetails', 'categories_drop_down'));
+        $sleeveArray = array('Full Sleeve','Half Sleeve', 'Short Sleeve', 'Sleeveless');
+        $patternArray = array('Checked','Plain','Printed','Self','Solid');
+
+        return view('admin.products.edit_product')->with(compact('productDetails', 'categories_drop_down','sleeveArray','patternArray'));
     }
 
     public function deleteProduct($id = null)
@@ -410,17 +441,17 @@ class ProductsController extends Controller
     }
 
 
-    public function products($url = null)
+    public function products($url=null)
     {
         // show 404 page if Category URL doesn't exist
-        $countCategory = Category::where(['url' => $url, 'status' => 1])->count();
+        $countCategory = Category::where(['url'=> $url, 'status' => 1])->count();
         // echo "<pre>";print_r($countCategory);die;
         if ($countCategory == 0) {
             abort(404);
         }
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
-        $categoryDetails = Category::where(['url' => $url])->first();
+        $categoryDetails = Category::where(['url'=>$url])->first();
         // echo $categoryDetails; die;
 
         if ($categoryDetails->parent_id == 0) {
@@ -430,16 +461,115 @@ class ProductsController extends Controller
                 $cat_ids[] = $subcat->id;
             }
 
-            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc')->get();
+            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc');
         } else {
-            $productsAll = Product::where(['category_id' => $categoryDetails->id])->where('status', 1)->get();
+            $productsAll = Product::where(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc');
         }
+
+        if(!empty($_GET['color'])){
+            $colorArray = explode('-',$_GET['color']);
+            $productsAll = $productsAll->whereIn('product_color',$colorArray);
+        }
+
+        if(!empty($_GET['sleeve'])){
+            $sleeveArray = explode('-',$_GET['sleeve']);
+            $productsAll = $productsAll->whereIn('sleeve',$sleeveArray);
+        }
+
+        if(!empty($_GET['pattern'])){
+            $patternArray = explode('-',$_GET['pattern']);
+            $productsAll = $productsAll->whereIn('pattern',$patternArray);
+        }
+
+        if(!empty($_GET['size'])){
+            $sizeArray = explode('-',$_GET['size']);
+            $productsAll = $productsAll->join('products_attributes', 'products_attributes.product_id','=', 'product_id')
+            ->select('products.*','products_attributes.product_id','products_attributes.size')
+            ->groupBy('products_attributes.product_id')
+            ->whereIn('products_attributes.size',$sizeArray);
+        }
+
+
+
+        $productsAll = $productsAll->paginate(6);
+        // $productsAll = json_decode(json_encode($productsAll));
+        // echo "<pre>"; print_r($productsAll); die;
+        // $colorArray = array('Black','Blue','Brown','Gold','Green','Orange','Pink','Purple','Red','Silver','White','Yellow');
+
+        $colorArray = Product::select('product_color')->groupBy('product_color')->get();
+        $colorArray = Arr::flatten(json_decode(json_encode($colorArray),true));
+        // echo "<pre>";print_r($colorArray);die;
+
+        $sleeveArray = Product::select('sleeve')->where('sleeve','!=','')->groupBy('sleeve')->get();
+        $sleeveArray = Arr::flatten(json_decode(json_encode($sleeveArray),true));
+        // echo "<pre>";print_r($sleeveArray);die;
+
+        $patternArray = Product::select('pattern')->where('pattern','!=','')->groupBy('pattern')->get();
+        $patternArray = Arr::flatten(json_decode(json_encode($patternArray),true));
+        // echo "<pre>";print_r($patternArray);die;
+
+        $sizesArray = ProductsAttribute::select('size')->groupBy('size')->get();
+        $sizesArray = Arr::flatten(json_decode(json_encode($sizesArray),true));
+        // echo "<pre>";print_r($sizesArray);die;
+
         $meta_title = $categoryDetails->meta_title;
         $meta_description = $categoryDetails->meta_description;
         $meta_keywords = $categoryDetails->meta_keywords;
-        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords'));
+        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords','url','colorArray','sleeveArray','patternArray', 'sizesArray'));
     }
 
+
+
+    public function filter(Request $request )
+    {
+        $data = $request->all();
+        // echo "<pre>";print_r($data);die;
+        $colorUrl="";
+        if(!empty($data['colorFilter'])){
+            foreach($data['colorFilter'] as $color){
+                if(empty($colorUrl)){
+                    $colorUrl = "&color=".$color;
+                }else{
+                    $colorUrl .= "-".$color;
+                }
+            }
+        }
+
+        $sleeveUrl="";
+        if(!empty($data['sleeveFilter'])){
+            foreach($data['sleeveFilter'] as $sleeve){
+                if(empty($sleeveUrl)){
+                    $sleeveUrl = "&sleeve=".$sleeve;
+                }else{
+                    $sleeveUrl .= "-".$sleeve;
+                }
+            }
+        }
+
+        $patternUrl="";
+        if(!empty($data['patternFilter'])){
+            foreach($data['patternFilter'] as $pattern){
+                if(empty($patternUrl)){
+                    $patternUrl = "&pattern=".$pattern;
+                }else{
+                    $patternUrl .= "-".$pattern;
+                }
+            }
+        }
+
+        $sizeUrl="";
+        if(!empty($data['sizeFilter'])){
+            foreach($data['sizeFilter'] as $size){
+                if(empty($sizeUrl)){
+                    $sizeUrl = "&size=".$size;
+                }else{
+                    $sizeUrl .= "-".$size;
+                }
+            }
+        }
+        $finalUrl = "products/".$data['url']."?".$colorUrl.$sleeveUrl.$patternUrl.$sizeUrl;
+        return redirect::to($finalUrl);
+    }
 
 
     /**
@@ -459,8 +589,17 @@ class ProductsController extends Controller
             $categories = Category::with('categories')->where(['parent_id' => 0])->get();
 
             $search_product = $data['product'];
+            // $productsAll = Product::where('product_name', 'like', '%' . $search_product . '%')->orwhere('product_code', $search_product)->where('status', 1)->get();
+             
+            $productsAll = Product::where(function($query) use($search_product){
+                $query->where('product_name','like','%'.$search_product.'%')
+                ->orWhere('product_code','like','%'.$search_product.'%' )
+                ->orWhere('description','like','%'.$search_product.'%')
+                ->orWhere('product_color','like','%'.$search_product.'%');
+            })->where('status',1)->get();
 
-            $productsAll = Product::where('product_name', 'like', '%' . $search_product . '%')->orwhere('product_code', $search_product)->where('status', 1)->get();
+
+
         }
         return view('products.listing')->with(compact('categories', 'productsAll', 'search_product'));
     }

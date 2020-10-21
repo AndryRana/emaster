@@ -42,7 +42,8 @@
                                         <?php echo $categories_drop_down; ?>
                                     </select>
                                 </div>
-                                <div class="control-group">
+                            </div>
+                            <div class="control-group">
                                     <label class="control-label">Nom du produit</label>
                                     <div class="controls">
                                         <input type="text" name="product_name" id="product_name"
@@ -71,10 +72,25 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Matériel et entretien</label>
+                                    <label class="control-label">Manches</label>
                                     <div class="controls">
-                                        <textarea type="text" name="care" id="care"
-                                            rows="5"> {{ $productDetails->care }}</textarea>
+                                        <select name="sleeve" style="width: 220px;">
+                                            <option value="none" selected disabled >Selectionner la manche</option>
+                                            @foreach ($sleeveArray as $sleeve)
+                                                <option value="{{ $sleeve }}" @if (!empty($productDetails->sleeve) && $productDetails->sleeve==$sleeve) selected @endif>{{ $sleeve }}</option>
+                                            @endforeach 
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Modèle</label>
+                                    <div class="controls">
+                                        <select name="pattern" style="width: 220px;">
+                                            <option value="none" selected disabled >Selectionner le modèle</option>
+                                            @foreach ($patternArray as $pattern)
+                                            <option value="{{ $pattern }}" @if (!empty($productDetails->pattern) && $productDetails->pattern==$pattern) selected @endif>{{ $pattern }}</option>
+                                            @endforeach 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="control-group">

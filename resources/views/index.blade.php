@@ -43,7 +43,7 @@
     <div class="container ">
         <div class="row">
             <div class="col-sm-3">
-                @include('layouts.frontLayout.front_sidebar')
+                @include('layouts.frontLayout._front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right ">

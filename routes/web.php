@@ -29,6 +29,10 @@ Route::get('/', 'IndexController@index')->name('index')  ;
 // Category / Listing Page
 Route::get('/products/{url}', 'ProductsController@products');
 
+// Products Filter Page
+Route::match(['get','post'], '/products-filter', 'ProductsController@filter');
+
+
 // Product Detail Page
 Route::get('/product/{id}', 'ProductsController@product');
 

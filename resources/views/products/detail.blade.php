@@ -12,7 +12,7 @@
             </div>
             @endif
             <div class="col-sm-3">
-                @include('layouts.frontLayout.front_sidebar')
+                @include('layouts.frontLayout._front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right">
@@ -66,6 +66,13 @@
                                 <img src="images/product-details/new.jpg" class="newarrival" alt="" />
                                 <h2>{{ $productDetails->product_name }}</h2>
                                 <p>Code: {{ $productDetails->product_code }}</p>
+                                <p>Couleur: {{ $productDetails->product_color }}</p>
+                                @if (!empty($productDetails->sleeve))
+                                <p>Manche: {{ $productDetails->sleeve }}</p>
+                                @endif
+                                @if (!empty($productDetails->pattern))
+                                <p>Modèle: {{ $productDetails->pattern }}</p>
+                                @endif
                                 <p>
                                     <select id="selSize" name="size" class="attributesize h-16" required>
                                         <option value="">Selectionner la taille</option>
@@ -101,8 +108,11 @@
                                     </button>
                                 </div>
                                 <span id="pincodeResponse"></span>
-                                <a href=""><img src="images/product-details/share.png" class="share img-responsive"
-                                        alt="" /></a>
+                               
+                                <!-- ShareThis BEGIN -->
+                                <div class="sharethis-inline-share-buttons"></div>
+                                <!-- ShareThis END -->
+            
                             </div>
                             <!--/product-information-->
                         </form>

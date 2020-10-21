@@ -1,5 +1,8 @@
 @extends('layouts.frontLayout.front_design')
 
+@section('stripe-js')
+    <script src="https://js.stripe.com/v3/"></script>
+@endsection
 @section('content')
 <section id="cart_items">
     <div class="container">
@@ -144,7 +147,7 @@ session()->forget('order_id');
                 document.querySelector('.loading-icon').classList.add('hide');
                 document.querySelector('.buttonspin').getAttribute('disabled', false);
                 document.querySelector('.btn-txt').innerHTML = 'Procéder au paiement {{ number_format(session()->get('grand_total'), 2, ',', ' ') . ' €'  }}';
-            }, 3000);
+            }, 5000);
    
         // stripe.confirmCardPayment("{{ $clientSecret ?? '' }}", {
         //     payment_method: {

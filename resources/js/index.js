@@ -68,13 +68,13 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // Replace main Image with Alternate Image
-    $(".changeImage").click(function() {
-        var image = $(this).attr("src");
-        $(".mainImage").attr("src", image);
-    });
+
+// Replace main Image with Alternate Image
+$(".changeImage").click(function() {
+    var image = $(this).attr("src");
+    $(".mainImage").attr("src", image);
 });
+
 
 // Instantiate EasyZoom instances
 var $easyzoom = $(".easyzoom").easyZoom();

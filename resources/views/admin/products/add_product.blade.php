@@ -22,6 +22,7 @@
         </div>
         @endif
     </div>
+    
     <div class="container-fluid">
         <hr>
         <div class="row-fluid">
@@ -43,10 +44,11 @@
                                     </select>
                                 </div>
                             </div>
+                         
                             <div class="control-group">
                                 <label class="control-label">Nom du produit</label>
                                 <div class="controls">
-                                    <input type="text" name="product_name" id="product_name">
+                                    <input type="text" name="product_name" id="product_name" >
                                 </div>
                             </div>
                             <div class="control-group">
@@ -71,6 +73,28 @@
                                 <label class="control-label">Matériel et entretien</label>
                                 <div class="controls">
                                     <textarea type="text" name="care" id="care" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Manches</label>
+                                <div class="controls">
+                                    <select name="sleeve" style="width: 220px;">
+                                        <option value="none" selected disabled >Selectionner la manche</option>
+                                        @foreach ($sleeveArray as $sleeve)
+                                        <option value="{{ $sleeve }}">{{ $sleeve }}</option>
+                                        @endforeach 
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Modèle</label>
+                                <div class="controls">
+                                    <select name="pattern" style="width: 220px;">
+                                        <option value="none" selected disabled >Selectionner le modèle</option>
+                                        @foreach ($patternArray as $pattern)
+                                        <option value="{{ $pattern }}">{{ $pattern }}</option>
+                                        @endforeach 
+                                    </select>
                                 </div>
                             </div>
                             <div class="control-group">
