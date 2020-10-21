@@ -62,6 +62,8 @@
                             <input type="hidden" name="price" id="price" value="{{ $productDetails->price}}" />
 
                             <div class="product-information">
+
+                                <div align="left" class=" mb-10"><?php echo $breadcrumb ?></div>
                                 <!--/product-information-->
                                 <img src="images/product-details/new.jpg" class="newarrival" alt="" />
                                 <h2>{{ $productDetails->product_name }}</h2>

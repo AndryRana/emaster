@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
 use App\Category;
 use App\Country;
 use App\Coupon;
@@ -460,25 +461,27 @@ class ProductsController extends Controller
             foreach ($subCategories as $subcat) {
                 $cat_ids[] = $subcat->id;
             }
-
-            $productsAll = Product::whereIn('category_id', $cat_ids)->orWhere(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc');
+            $productsAll = Product::whereIn('products.category_id', $cat_ids)->where('products.status', 1)->orderBy('products.id','Desc');
+            $breadcrumb = "<a href='/'>Home</a> / <a href='".$categoryDetails->url."'>".$categoryDetails->name."</a>";
         } else {
-            $productsAll = Product::where(['category_id' => $categoryDetails->id])->where('status', 1)->orderBy('id','Desc');
+            $productsAll = Product::where(['products.category_id' => $categoryDetails->id])->where('products.status', 1)->orderBy('products.id','Desc');
+            $mainCategory = Category::where('id',$categoryDetails->parent_id)->first();
+            $breadcrumb = "<a href='/'>Home</a> / <a href='".$mainCategory->url."'>".$mainCategory->name."</a> / <a href='".$categoryDetails->url."'>".$categoryDetails->name."</a>";
         }
 
         if(!empty($_GET['color'])){
             $colorArray = explode('-',$_GET['color']);
-            $productsAll = $productsAll->whereIn('product_color',$colorArray);
+            $productsAll = $productsAll->whereIn('products.product_color',$colorArray);
         }
 
         if(!empty($_GET['sleeve'])){
             $sleeveArray = explode('-',$_GET['sleeve']);
-            $productsAll = $productsAll->whereIn('sleeve',$sleeveArray);
+            $productsAll = $productsAll->whereIn('products.sleeve',$sleeveArray);
         }
 
         if(!empty($_GET['pattern'])){
             $patternArray = explode('-',$_GET['pattern']);
-            $productsAll = $productsAll->whereIn('pattern',$patternArray);
+            $productsAll = $productsAll->whereIn('products.pattern',$patternArray);
         }
 
         if(!empty($_GET['size'])){
@@ -515,7 +518,7 @@ class ProductsController extends Controller
         $meta_title = $categoryDetails->meta_title;
         $meta_description = $categoryDetails->meta_description;
         $meta_keywords = $categoryDetails->meta_keywords;
-        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords','url','colorArray','sleeveArray','patternArray', 'sizesArray'));
+        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords','url','colorArray','sleeveArray','patternArray', 'sizesArray','breadcrumb'));
     }
 
 
@@ -632,6 +635,18 @@ class ProductsController extends Controller
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
 
+
+        $categoryDetails = Category::where('id',$productDetails->category_id)->first();
+        // echo $categoryDetails; die;
+
+        if ($categoryDetails->parent_id == 0) {
+
+            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/".$categoryDetails->url."'>".$categoryDetails->name."</a> / ".$productDetails->product_name;
+        } else {
+            $mainCategory = Category::where('id',$categoryDetails->parent_id)->first();
+            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/".$mainCategory->url."'>".$mainCategory->name."</a> / <a href='/products/".$categoryDetails->url."'>".$categoryDetails->name."</a> / ".$productDetails->product_name;
+        }        
+
         // Get Product Alternate Images
         $productAltImages = ProductsImage::where('product_id', $id)->get();
         // $productAltImages = json_decode(json_encode($productAltImages));
@@ -643,7 +658,7 @@ class ProductsController extends Controller
         $meta_description = $productDetails->description;
         $meta_keywords = $productDetails->product_name;
 
-        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts','meta_title', 'meta_description', 'meta_keywords'));
+        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts','meta_title', 'meta_description', 'meta_keywords', 'breadcrumb'));
     }
 
 
@@ -978,6 +993,36 @@ class ProductsController extends Controller
             $user_id = Auth::user()->id;
             $user_email = Auth::user()->email;
 
+            // Prevent out of stock Products from ordering
+            $userCart = DB::table('carts')->where('user_email',$user_email)->get();
+            // $userCart = json_decode(json_encode($userCart));
+            foreach($userCart as $cart){
+                $getAttributeCount = Product::getAttributeCount($cart->product_id,$cart->size);
+                if($getAttributeCount==0){
+                    Product::deleteCartProduct($cart->product_id, $user_email);
+                    return redirect('/cart')->with('flash_message_error', 'Produit(s) non disponible en vente et supprimer du panier. Merci d\'essayer avec un autre produit!');
+                }
+                
+                $product_stock = Product::getProductStock($cart->product_id,$cart->size);
+                if($product_stock==0){
+                    Product::deleteCartProduct($cart->product_id, $user_email);
+                    return redirect('/cart')->with('flash_message_error', 'Produit(s) supprimer du panier suite à une rupture de sotck. Merci d\'essayer avec un autre produit!');
+                }
+                // echo "Original stock: " . $product_stock;
+                // echo "demanded stock: " . $cart->quantity;die;
+                if($cart->quantity>$product_stock){
+                    return redirect('/cart')->with('flash_message_error', 'Merci de mettre à jour la quantité du produit dans votre panier suite à une réduction de stock!');
+                }
+
+                $product_status = Product::getProductStatus($cart->product_id);
+
+                if($product_status==0){
+                    Product::deleteCartProduct($cart->product_id, $user_email);
+                    return redirect('/cart')->with('flash_message_error', 'Ce produit n\'est plus en vente et supprimer de votre panier . Merci d\'essayer avec un autre produit!');
+                }
+            }
+            // echo "<pre>";print_r($userCart);die;
+
             // Get shipping address of User
             $shippingDetails = DeliveryAddress::where(['user_email' => $user_email])->first();
 
@@ -1034,14 +1079,26 @@ class ProductsController extends Controller
                 $cartPro->product_price = $pro->price;
                 $cartPro->product_qty = $pro->quantity;
                 $cartPro->save();
+
+                // Reduce stock script starts
+                $getProductStock = ProductsAttribute::where('sku',$pro->product_code)->first();
+                // echo "Original stock:" .$getProductStock->stock;
+                // echo "Stock to reduce:" .$pro->quantity;
+                $newStock = $getProductStock->stock - $pro->quantity;
+                if($newStock<0) {
+                    $newStock=0;
+                }
+                ProductsAttribute::where('sku',$pro->product_code)->update([ 'stock'=>$newStock]);
+                // Reduce stock script ends
             }
-            session()->put('order_id', $order_id);
+            session()->put('order_id', $order_id); 
             session()->put('grand_total', $data['grand_total']);
 
             // if ($data['payment_method'] == "CB") {
-            //     //CB Redirect user to thanks page after saving order
-            //     return redirect('/thanks');
-            // } else {
+                // CB Redirect user to thanks page after saving order
+                // return redirect('/place-order');
+            // } 
+            // else {
             //     //PAYPAL Redirect user to thanks page after saving order
             //     return redirect('/paypal');
             // }

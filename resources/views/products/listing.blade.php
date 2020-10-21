@@ -95,6 +95,8 @@
                         @endif
                         ({{ count($productsAll) }})
                     </h2>
+                    <div align="left" class=" mb-10"><?php echo $breadcrumb ?></div>
+
                     @foreach ($productsAll as $product)
 
                         <div class="col-sm-4">
