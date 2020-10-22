@@ -66,9 +66,19 @@
           class="label label-important">2</span></a>
       <ul @if (preg_match("/cms-page/i", $url)) style="display: block;" class="active" @endif>
         <li @if (preg_match("/add-cms-page/i", $url)) class="active" @endif><a
-            href="{{ url('/admin/add-cms-page') }}">Ajouter  CMS Page</a></li>
+            href="{{ url('/admin/add-cms-page') }}">Ajouter CMS Page</a></li>
         <li @if (preg_match("/view-cms-pages/i", $url)) class="active" @endif><a
             href="{{ url('/admin/view-cms-pages') }}">Voir CMS Page</a></li>
+      </ul>
+    </li>
+    {{-- <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Demandes</span> <span class="label label-important">1</span></a>
+      <ul <?php if (preg_match("/enquiries/i", $url)){ ?> style="display: block;" <?php } ?>>
+        <li <?php if (preg_match("/view-enquiries/i", $url)){ ?> class="active" <?php } ?>><a href="{{ url('/admin/view-enquiries')}}">Voir les demandes</a></li>
+      </ul>
+    </li> --}}
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Livraisons</span> <span class="label label-important">1</span></a>
+      <ul <?php if (preg_match("/shipping/i", $url)){ ?> style="display: block;" <?php } ?>>
+        <li <?php if (preg_match("/view-shipping/i", $url)){ ?> class="active" <?php } ?>><a href="{{ url('/admin/view-shipping')}}">Voir les Frais de port</a></li>
       </ul>
     </li>
   </ul>

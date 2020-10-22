@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\CmsPage;
+use App\Enquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -156,5 +157,16 @@ class CmsPageController extends Controller
         $meta_description = "Contactez-nous pour toutes questions sur nos produits";
         $meta_keywords = "Contactez-nous, demandes,questions";
         return view('pages.contact')->with(compact('categories','meta_title','meta_description','meta_keywords'));
+    }
+
+
+    public function getEnquiries(){
+        $enquiries = Enquiry::orderBy('id','Desc')->get();
+        $enquiries = json_encode($enquiries);
+        return $enquiries;
+    }
+
+    public function viewEnquiries(){
+        return view('admin.enquiries.view_enquiries');
     }
 }

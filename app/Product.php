@@ -57,6 +57,11 @@ class Product extends Model
         return $getProductStatus->status;
     }
 
+    public static function getCategoryStatus($category_id){
+        $getCategoryStatus = Category::select('status')->where('id',$category_id)->first();
+        return $getCategoryStatus->status;
+    }
+
     public static function getAttributeCount($product_id,$product_size){
         $getAttributeCount = ProductsAttribute::where([ 'product_id'=>$product_id, 'size'=>$product_size])->count();
         return $getAttributeCount;

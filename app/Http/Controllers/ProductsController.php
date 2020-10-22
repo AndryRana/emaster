@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 use Stripe\Charge;
 use Stripe\Stripe;
 
@@ -1018,8 +1017,17 @@ class ProductsController extends Controller
 
                 if($product_status==0){
                     Product::deleteCartProduct($cart->product_id, $user_email);
-                    return redirect('/cart')->with('flash_message_error', 'Ce produit n\'est plus en vente et supprimer de votre panier . Merci d\'essayer avec un autre produit!');
+                    return redirect('/cart')->with('flash_message_error', 'Un de vos produits n\'est plus en vente et a été supprimé de votre panier . Merci d\'essayer avec un autre produit!');
                 }
+
+                $getCategoryId = Product::select('category_id')->where('id',$cart->product_id)->first();
+                // echo $getCategoryId->category_id; die;
+                $category_status = Product::getCategoryStatus($getCategoryId->category_id);
+                if($category_status==0){
+                    Product::deleteCartProduct($cart->product_id, $user_email);
+                    return redirect('/cart')->with('flash_message_error', 'Un de vos produits n\'est plus en vente et a été supprimé de votre panier . Merci d\'essayer avec un autre produit!');
+                }
+                
             }
             // echo "<pre>";print_r($userCart);die;
 
@@ -1332,4 +1340,7 @@ class ProductsController extends Controller
         }
         
     }
+
+
+    
 }

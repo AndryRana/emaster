@@ -197,7 +197,18 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // Delete CMS Route
     Route::get('admin/delete-cms-page/{id}', 'CmsPageController@deleteCmsPage');
+
+    	// Get Enquiries
+	Route::get('/admin/get-enquiries','CmsPageController@getEnquiries');
+
+	// View Enquiries
+    Route::get('/admin/view-enquiries','CmsPageController@viewEnquiries');
     
+    // View Shipping Charges
+    Route::get('/admin/view-shipping','ShippingController@viewShipping');
+
+    // Update shipping charges
+    Route::match([ 'get','post'],'/admin/edit-shipping/{id}', 'ShippingController@editShipping');
 });
 
 
