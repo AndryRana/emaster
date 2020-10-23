@@ -64,6 +64,9 @@ class UsersController extends Controller
                 $user->email = $data['email'];
                 $user->admin = "0";
                 $user->password = bcrypt($data['password']);
+                // date_default_timezone_set('Europe/Paris');
+                // $user->created_at = date("d-m-Y H:i:s");
+                // $user->update_at = date("d-m-Y H:i:s");
                 $user->save();
 
                 // // Send Register Email

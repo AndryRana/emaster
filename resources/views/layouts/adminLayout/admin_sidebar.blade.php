@@ -61,6 +61,15 @@
             les utilisateurs</a></li>
       </ul>
     </li>
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Admins/Sub-Admins</span> <span
+          class="label label-important">1</span></a>
+      <ul @if (preg_match("/admins/i", $url)) style="display: block;" class="active" @endif>
+        <li @if (preg_match("/add-admins/i", $url)) class="active" @endif><a href="{{ url('/admin/add-admin') }}">Ajouter
+            un Admin/Sub-Admin</a></li>
+        <li @if (preg_match("/view-admins/i", $url)) class="active" @endif><a href="{{ url('/admin/view-admins') }}">Voir
+            les Admins/Sub-Admins</a></li>
+      </ul>
+    </li>
 
     <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>CMS Pages</span> <span
           class="label label-important">2</span></a>
@@ -76,7 +85,7 @@
         <li <?php if (preg_match("/view-enquiries/i", $url)){ ?> class="active" <?php } ?>><a href="{{ url('/admin/view-enquiries')}}">Voir les demandes</a></li>
       </ul>
     </li> --}}
-    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Livraisons</span> <span class="label label-important">1</span></a>
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Frais de port</span> <span class="label label-important">1</span></a>
       <ul <?php if (preg_match("/shipping/i", $url)){ ?> style="display: block;" <?php } ?>>
         <li <?php if (preg_match("/view-shipping/i", $url)){ ?> class="active" <?php } ?>><a href="{{ url('/admin/view-shipping')}}">Voir les Frais de port</a></li>
       </ul>

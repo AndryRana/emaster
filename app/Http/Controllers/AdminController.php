@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
+use function GuzzleHttp\json_decode;
 use function GuzzleHttp\Psr7\hash;
 
 class AdminController extends Controller
@@ -85,5 +86,65 @@ class AdminController extends Controller
         // Clear off all sessions
         Session::flush();
         return redirect('/admin')->with('flash_message_success', 'Déconnecté avec succès.');
+    }
+
+
+    public function viewAdmins()
+    {
+        $admins = Admin::get();
+        // $admins = json_decode(json_encode($admins));
+        // echo "<pre>";print_r($admins);die;
+        return view('admin.admins.view_admins')->with(compact('admins'));
+    }
+
+    public function addAdmin(Request $request)
+    {
+        if($request->isMethod('post')){
+            $data = $request->all();
+            // echo "<pre>";print_r($data);die;
+            $adminCount = Admin::where('username',$data['username'])->count();
+            if($adminCount>0){
+                return redirect()->back()->with('flash_message_error', 'Le pseudo Admin / Sub Admin est déjà utilisé! Merci de choisir un autre');
+            }else{
+                if(empty($data['status'])){
+                    $data['status'] = 0;
+                }
+                if($data['type']=="Admin"){
+                    $admin = new Admin;
+                    $admin->type = $data['type'];
+                    $admin->username = $data['username'];
+                    $admin->password = md5($data[ 'password']);
+                    $admin->status = $data['status'];
+                    $admin->save();
+                    return redirect()->back()->with('flash_message_success','L\'Administrateur a été ajouté avec succès');
+                }else if($data['type']=="Sub Admin"){
+                    if(empty($data['categories_full_access'])){
+                        $data['categories_full_access'] = 0;
+                    }
+                    if(empty($data['products_access'])){
+                        $data['products_access'] = 0;
+                    }
+                    if(empty($data['orders_access'])){
+                        $data['orders_access'] = 0;
+                    }
+                    if(empty($data['users_access'])){
+                        $data['users_access'] = 0;
+                    }
+                    $admin = new Admin;
+                    $admin->type = $data['type'];
+                    $admin->username = $data['username'];
+                    $admin->password = md5($data[ 'password']);
+                    $admin->status = $data['status'];
+                    $admin->categories_access = $data['categories_access'];
+                    $admin->products_access = $data['products_access'];
+                    $admin->orders_access = $data['orders_access'];
+                    $admin->users_access = $data['users_access'];
+                    $admin->save();
+                    return redirect()->back()->with('flash_message_success','Sub-Admin a été ajouté avec succès');
+                }
+            }
+              
+        }
+        return view('admin.admins.add_admin');
     }
 }

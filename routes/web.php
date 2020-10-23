@@ -185,7 +185,13 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // Admin User route
     Route::get('/admin/view-users','UsersController@viewUsers');
-    
+
+    // Admins/Sub-Admins route
+    Route::get('/admin/view-admins','AdminController@viewAdmins');
+
+    // Add Admin/Sub-Admin Route
+    Route::match(['get','post'],'/admin/add-admin','AdminController@addAdmin');
+
     // Add CMS Route
     Route::match(['get','post'], '/admin/add-cms-page', 'CmsPagecontroller@addCmsPage');
 

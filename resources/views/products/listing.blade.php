@@ -89,7 +89,7 @@
                     <!--features_items-->
                     <h2 class="title text-center">
                         @if (!empty($search_product))
-                        {{ $productsAll->count() }} résultat(s) sur {{ $search_product }}
+                         Résultat(s) sur {{ $search_product }}
                         @else
                         {{ $categoryDetails->name }}
                         @endif
@@ -134,9 +134,9 @@
         <!--features_items-->
             </div>
         </div>
-        @if (empty($search_Product))
+        {{-- @if (empty($search_Product))
             <div align="center" class="bottom-0">{{ $productsAll->links() }}</div>
-        @endif
+        @endif --}}
     </div>
 </section>
 

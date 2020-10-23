@@ -78,7 +78,7 @@
                 
             </div>
         </div>
-        {{-- <div align="center" class="bottom-0">{{ $productsAll->links() }}</div> --}}
+        <div align="center" class="bottom-0">{{ $productsAll->links() }}</div>
     </div>
 </section>
 

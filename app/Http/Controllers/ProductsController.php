@@ -41,6 +41,11 @@ class ProductsController extends Controller
             $product->product_name = $data['product_name'];
             $product->product_code = $data['product_code'];
             $product->product_color = $data['product_color'];
+            if (!empty($data['weight'])) {
+                $product->weight = $data['weight'];
+            } else {
+                $product->weight = 0;
+            }
             if (!empty($data['description'])) {
                 $product->description = $data['description'];
             } else {
@@ -207,7 +212,7 @@ class ProductsController extends Controller
 
             Product::where(['id' => $id])->update([
                 'category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
-                'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'],
+                'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'],'weight' => $data['weight'],
                  'image' => $fileName,'video' => $videoName, 'sleeve' =>$sleeve,'pattern' =>$pattern, 'status' => $status, 'feature_item' => $feature_item
             ]);
 
@@ -600,10 +605,10 @@ class ProductsController extends Controller
                 ->orWhere('product_color','like','%'.$search_product.'%');
             })->where('status',1)->get();
 
+            $breadcrumb = "<a href='/'>Home</a> / " .$search_product;
 
-
+            return view('products.listing')->with(compact('categories', 'productsAll', 'search_product','breadcrumb'));
         }
-        return view('products.listing')->with(compact('categories', 'productsAll', 'search_product'));
     }
 
 
@@ -969,18 +974,27 @@ class ProductsController extends Controller
         $userDetails = User::where('id', $user_id)->first();
         $shippingDetails = DeliveryAddress::where('user_id', $user_id)->first();
         // $shippingDetails = json_decode(json_encode($shippingDetails));
-        // echo "<pre>";print_r($shippingDetails);die;
-        // dump($userDetails);
+        // echo "<pre>";print_r($shippingDetails);die; 
         $userCart = DB::table('carts')->where(['user_email' => $user_email])->get();
+        $total_weight = 0;
+
         foreach ($userCart as $key => $product) {
             // echo $product->product_id;
             $productDetails = Product::where('id', $product->product_id)->first();
             $userCart[$key]->image = $productDetails->image;
+            $total_weight = $total_weight + $productDetails->weight;
+
         }
+        // echo $total_weight; die;
 
         $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
         // echo "<pre>";print_r($cbpincodeCount);die;
-        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart','cbpincodeCount'));
+
+        // Fetch shipping charges
+        $shippingCharges = Product::getShippingCharges($total_weight, $shippingDetails->country);
+        session()->put('shippingCharges',$shippingCharges);
+
+        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart','cbpincodeCount','shippingCharges'));
         // echo "<pre>";print_r($userCart);die;
     }
 
@@ -1055,6 +1069,9 @@ class ProductsController extends Controller
                 $coupon_amount = session()->get('CouponAmount');
             }
 
+             // Fetch shipping charges
+            // $shippingCharges = Product::getShippingCharges($shippingDetails->country);
+
             $order = new Order;
             $order->user_id = $user_id;
             $order->user_email = $user_email;
@@ -1069,6 +1086,7 @@ class ProductsController extends Controller
             $order->coupon_amount = $coupon_amount;
             $order->order_status = "New";
             $order->payment_method = $data['payment_method'];
+            $order->shipping_charges = session()->get('shippingCharges');
             $order->grand_total = $data['grand_total'];
             $order->save();
 

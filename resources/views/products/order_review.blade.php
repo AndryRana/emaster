@@ -120,12 +120,12 @@
                                             <td>{{ number_format($total_amount , 2, ',', ' ') . ' €' }}</td>
                                         </tr>
                                         <tr>
-                                            <td>TVA</td>
+                                            <td>TVA (inclus)</td>
                                             <td>{{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</td>
                                         </tr>
                                         <tr >
                                             <td>Livraison (+)</td>
-                                            <td>{{ number_format(0 , 2, ',', ' ') . ' €'  }}</td>
+                                            <td>{{ number_format($shippingCharges , 2, ',', ' ') . ' €'  }}</td>
                                         </tr>
                                         <tr >
                                             <td>Coupon de Réduction (-)</td>
@@ -140,7 +140,7 @@
                                         </tr>
                                         <tr>
                                             <td>Total</td>
-                                            <td><span class=" text-3xl font-medium text-orange-500">{{ number_format($grand_total = $total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span>
+                                            <td><span class=" text-3xl font-medium text-orange-500">{{ number_format($grand_total = $total_amount + $shippingCharges - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span>
                                             </td>
                                         </tr>
                                     </table>

@@ -1,13 +1,13 @@
 $(document).ready(function() {
-    // $("#access").hide();
-    // $("#type").change(function(){
-    // 	var type = $("#type").val();
-    // 	if(type == "Admin"){
-    // 		$("#access").hide();
-    // 	}else{
-    // 		$("#access").show();
-    // 	}
-    // })
+    $("#access").hide();
+    $("#type").change(function(){
+        var type = $("#type").val();
+    	if(type == "Admin"){
+    		$("#access").hide();
+    	}else{
+    		$("#access").show();
+    	}
+    })
 
     $("#current_pwd").keyup(function() {
         var current_pwd = $("#current_pwd").val();
@@ -319,4 +319,6 @@ $(document).ready(function() {
             x--; //Decrement field counter
         });
     });
+
+    
 });

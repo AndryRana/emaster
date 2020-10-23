@@ -38,7 +38,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Pays</th>
-                                    <th>Frais de port</th>
+                                    <th>0g > 500g</th>
+                                    <th>501g > 1000g</th>
+                                    <th>1001g > 2000g</th>
+                                    <th>2001g > 5000g</th>
                                     <th>Date de mise à jour</th>
                                     <th>Actions</th>
                                 </tr>
@@ -48,7 +51,10 @@
                                 <tr class="gradeX">
                                     <td>{{ $shipping->id }}</td>
                                     <td>{{ $shipping->country }}</td>
-                                    <td>{{ $shipping->shipping_charges }}</td>
+                                    <td>{{ $shipping->shipping_charges0_500g }}</td>
+                                    <td>{{ $shipping->shipping_charges501_1000g }}</td>
+                                    <td>{{ $shipping->shipping_charges1001_2000g }}</td>
+                                    <td>{{ $shipping->shipping_charges2001g_5000g }}</td>
                                     <td>{{ $shipping->updated_at->format('d-m-Y H:i:s') }}</td>
                                     <td class="center">
                                         <a href="{{ url('admin/edit-shipping/'. $shipping->id) }}" class="btn btn-primary btn-mini">Modifier</a>

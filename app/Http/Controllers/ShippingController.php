@@ -20,7 +20,8 @@ class ShippingController extends Controller
        if($request->isMethod('post')){
            $data = $request->all();
         //    echo "<pre>"; print_r($data); die;
-        ShippingCharge::where('id',$id)->update(['shipping_charges'=>$data['shipping_charges']]);
+        ShippingCharge::where('id',$id)->update(['shipping_charges0_500g'=>$data['shipping_charges0_500g'],'shipping_charges501_1000g'=>$data['shipping_charges501_1000g'],
+        'shipping_charges1001_2000g'=>$data['shipping_charges1001_2000g'],'shipping_charges2001g_5000g'=>$data['shipping_charges2001g_5000g']]);
         return redirect()->back()->with('flash_message_success','Le frais de port a été mise à jour avec succès!');
        }
        $shippingDetails = ShippingCharge::where('id',$id)->first();
