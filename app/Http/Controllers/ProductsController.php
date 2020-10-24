@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Stripe\Charge;
 use Stripe\Stripe;
@@ -30,6 +31,9 @@ class ProductsController extends Controller
 {
     public function addProduct(Request $request)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         if ($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>"; print_r($data);die;
@@ -142,6 +146,9 @@ class ProductsController extends Controller
 
     public function editProduct(Request $request, $id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         if ($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>"; print_r($data);die;
@@ -260,6 +267,9 @@ class ProductsController extends Controller
 
     public function viewProducts()
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $products = Product::orderBy('id', 'DESC')->get();
         foreach ($products as $key => $value) {
             $category_name = Category::where(['id' => $value->category_id])->first();
@@ -272,6 +282,9 @@ class ProductsController extends Controller
 
     public function deleteProductImage($id)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         //  Get Product Image Name
         $productImage = Product::where(['id' => $id])->first();
         // echo $productImage->image;die;
@@ -306,6 +319,9 @@ class ProductsController extends Controller
 
     public function deleteProductvideo($id)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         //  Get Video Name
         $productVideo = Product::select('video')->where('id',$id)->first();
 
@@ -326,6 +342,9 @@ class ProductsController extends Controller
 
     public function addAttributes(Request $request, $id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $productDetails = Product::with('attributes')->where(['id' => $id])->first();
         // $productDetails = json_decode(json_encode($productDetails));
         // echo "<pre>"; print_r($productDetails);die;
@@ -373,6 +392,9 @@ class ProductsController extends Controller
 
     public function addImages(Request $request, $id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $productDetails = Product::with('attributes')->where(['id' => $id])->first();
         // $productDetails = json_decode(json_encode($productDetails));
         // echo "<pre>"; print_r($productDetails);die;
@@ -408,6 +430,9 @@ class ProductsController extends Controller
 
     public function deleteAltImage($id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         //  Get Product Image Name
         $productImage = ProductsImage::where(['id' => $id])->first();
         // echo $productImage->image;die;
@@ -441,6 +466,9 @@ class ProductsController extends Controller
 
     public function deleteAttribute($id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         ProductsAttribute::where(['id' => $id])->delete();
         return redirect()->back()->with('flash_message_success', 'Les attributs de ce produit ont été supprimés avec succès!');
     }
@@ -448,6 +476,9 @@ class ProductsController extends Controller
 
     public function products($url=null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         // show 404 page if Category URL doesn't exist
         $countCategory = Category::where(['url'=> $url, 'status' => 1])->count();
         // echo "<pre>";print_r($countCategory);die;
@@ -498,7 +529,7 @@ class ProductsController extends Controller
 
 
 
-        $productsAll = $productsAll->paginate(6);
+        $productsAll = $productsAll->get();
         // $productsAll = json_decode(json_encode($productsAll));
         // echo "<pre>"; print_r($productsAll); die;
         // $colorArray = array('Black','Blue','Brown','Gold','Green','Orange','Pink','Purple','Red','Silver','White','Yellow');
@@ -529,6 +560,7 @@ class ProductsController extends Controller
 
     public function filter(Request $request )
     {
+        
         $data = $request->all();
         // echo "<pre>";print_r($data);die;
         $colorUrl="";
@@ -614,6 +646,9 @@ class ProductsController extends Controller
 
     public function product($id = null)
     {
+        if(Session::get('adminDetails')['products_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         // show 404 page if product is disabled
         $productsCount = Product::where(['id' => $id, 'status' => 1])->count();
         if ($productsCount == 0) {
@@ -1072,6 +1107,9 @@ class ProductsController extends Controller
              // Fetch shipping charges
             // $shippingCharges = Product::getShippingCharges($shippingDetails->country);
 
+            $grand_total =  Product::getGrandTotal();
+            // session()->put('grand_total', $grand_total);
+
             $order = new Order;
             $order->user_id = $user_id;
             $order->user_email = $user_email;
@@ -1087,7 +1125,7 @@ class ProductsController extends Controller
             $order->order_status = "New";
             $order->payment_method = $data['payment_method'];
             $order->shipping_charges = session()->get('shippingCharges');
-            $order->grand_total = $data['grand_total'];
+            $order->grand_total = $grand_total;
             $order->save();
 
             $order_id = DB::getPdo()->lastInsertId();
@@ -1118,7 +1156,7 @@ class ProductsController extends Controller
                 // Reduce stock script ends
             }
             session()->put('order_id', $order_id); 
-            session()->put('grand_total', $data['grand_total']);
+            session()->put('grand_total', $grand_total);
 
             // if ($data['payment_method'] == "CB") {
                 // CB Redirect user to thanks page after saving order
@@ -1301,6 +1339,9 @@ class ProductsController extends Controller
 
     public function viewOrders()
     {
+        if(Session::get('adminDetails')['orders_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $orders = Order::with('orders')->orderBy('id', 'DESC')->get();
         // $orders = json_decode(json_encode($orders));
         // echo"<pre>";print_r($orders);die;
@@ -1310,6 +1351,9 @@ class ProductsController extends Controller
 
     public function viewOrdersDetails($order_id)
     {
+        if(Session::get('adminDetails')['orders_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $orderDetails = Order::with('orders')->where('id', $order_id)->first();
         // $orderDetails = json_decode(json_encode($orderDetails));
         // echo"<pre>";print_r($orderDetails);die;
@@ -1336,6 +1380,7 @@ class ProductsController extends Controller
 
     public function updateOrderStatus(Request $request)
     {
+        
         if ($request->isMethod('POST')) {
             $data = $request->all();
             Order::where('id', $data['order_id'])->update(['order_status' => $data['order_status']]);

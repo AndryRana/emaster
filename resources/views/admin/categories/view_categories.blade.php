@@ -51,12 +51,17 @@
                                     <td>{{ $category->parent_id }}</td>
                                     <td>{{ $category->url }}</td>
                                     <td class="center">
-                                        <a href="{{ url('/admin/edit-category/' .$category->id) }}" class="btn btn-primary btn-mini">Modifier</a>
-                                        <a  <?php /*href="/admin/delete-category/' .{{$category->id}}" */?>
-                                            class="btn btn-danger btn-mini deleteRecord" 
-                                            rel="{{ $category->id }}" rel1="delete-category"
-                                            href="javascript:">
-                                            Supprimer</a>
+                                        @if(Session::get('adminDetails')['categories_edit_access']==1)
+                                            <a href="{{ url('/admin/edit-category/' .$category->id) }}" class="btn btn-primary btn-mini">Modifier</a>
+                                        @endif
+                                        @if(Session::get('adminDetails')['categories_full_access']==1)
+                                            <a  <?php /*href="/admin/delete-category/' .{{$category->id}}" */?>
+                                                class="btn btn-danger btn-mini deleteRecord" 
+                                                rel="{{ $category->id }}" rel1="delete-category"
+                                                href="javascript:">
+                                                Supprimer
+                                            </a>
+                                        @endif
 
                                     </td>
                                 </tr>

@@ -9,6 +9,7 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 // use Illuminate\Support\Facades\Session;
@@ -281,6 +282,9 @@ class UsersController extends Controller
 
     public function viewUsers()
     {
+        if(Session::get('adminDetails')['users_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $users = User::get();
         return view('admin.users.view_users')->with(compact('users'));
     }

@@ -53,17 +53,23 @@
                                     $roles = "Tout";
                                 }else{
                                     $roles = "";
-                                    if($admin->categories_access==1){
-                                        $roles = "Categories, ";
+                                    if($admin->categories_view_access==1){
+                                        $roles .= "Voir Categories, ";
+                                    }
+                                    if($admin->categories_edit_access==1){
+                                        $roles .= "Voir et Modifier Categories, ";
+                                    }
+                                    if($admin->categories_full_access==1){
+                                        $roles .= "Voir,Modifier, et Supprimer Categories, ";
                                     }
                                     if($admin->products_access==1){
-                                        $roles = "Produits, ";
+                                        $roles .= "Produits, ";
                                     }
                                     if($admin->orders_access==1){
-                                        $roles = "Comandes, ";
+                                        $roles .= "Commandes, ";
                                     }
                                     if($admin->users_access==1){
-                                        $roles = "Utilisateurs, ";
+                                        $roles .= "Utilisateurs, ";
                                     }
 
                                 } 
@@ -82,7 +88,9 @@
                                     </td>
                                     <td class="center">{{ $admin->created_at->format('d-m-Y H:i:s') }}</td>
                                     <td class="center">{{ $admin->updated_at->format('d-m-Y H:i:s') }}</td>
-                                    <td class="center"></td>
+                                    <td class="center"><a href="{{ url('/admin/edit-admin/'.$admin->id) }}" class="btn btn-primary btn-mini" title="Modifier Admin/Sub-admin">
+                                        Modifier</a>
+                                    </td>
                                     
                                 </tr>
                                 @endforeach

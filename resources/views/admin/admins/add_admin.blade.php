@@ -59,8 +59,14 @@
                                 <div class="control-group" id="access">
                                     <label class="control-label leading-3">Accès autorisés</label>
                                     <div class="controls flex flex row">
-                                        <div class="flex flex-row mr-5"><input type="checkbox" name="categories_access"
-                                                id="categories_access" value="1"> <span class="ml-1">Categories</span>
+                                        <div class="flex flex-row mr-5"><input type="checkbox" name="categories_view_access"
+                                                id="categories_view_access" value="1"> <span class="ml-1">Voir Categories </span>
+                                        </div>
+                                        <div class="flex flex-row mr-5"><input type="checkbox" name="categories_edit_access"
+                                                id="categories_edit_access" value="1"> <span class="ml-1">Voir et Modifier Categories</span>
+                                        </div>
+                                        <div class="flex flex-row mr-5"><input type="checkbox" name="categories_full_access"
+                                                id="categories_full_access" value="1"> <span class="ml-1">Voir, Modifier et Supprimer Categories</span>
                                         </div>
                                         <div class="flex flex-row mr-5"><input type="checkbox" name="products_access"
                                                 id="products_access" value="1"> <span class="ml-1">Produits</span>

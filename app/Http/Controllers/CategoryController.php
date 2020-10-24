@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CategoryController extends Controller
 {
     public function addCategory(Request $request)
     {
+        if(Session::get('adminDetails')['categories_edit_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         if($request->isMethod('post')){
             $data = $request->all();
             // echo "<pre>"; print_r($data);die;
@@ -48,6 +52,9 @@ class CategoryController extends Controller
     
     public function editCategory(Request $request, $id = null)
     {
+        if(Session::get('adminDetails')['categories_edit_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         if($request->isMethod('post')){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
@@ -79,6 +86,9 @@ class CategoryController extends Controller
 
     public function deleteCategory($id = null)
     {
+        if(Session::get('adminDetails')['categories_edit_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         if(!empty($id)){
             Category::where(['id'=>$id])->delete();
             return redirect()->back()->with('flash_message_success', 'La catégorie a été supprimée avec succès');
@@ -88,10 +98,13 @@ class CategoryController extends Controller
 
     public function viewCategories() 
     {
-        $categories = Category::get();
-        // $categories = json_decode(json_encode($categories));
-        // echo "<pre>"; print_r($categories); die;
-        return view('admin.categories.view_categories')->with(compact('categories'));
+        if(Session::get('adminDetails')['categories_view_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
+            $categories = Category::get();
+            // $categories = json_decode(json_encode($categories));
+            // echo "<pre>"; print_r($categories); die;
+            return view('admin.categories.view_categories')->with(compact('categories'));
     }
 
 

@@ -192,6 +192,9 @@ Route::group(['middleware' => ['adminlogin']], function(){
     // Add Admin/Sub-Admin Route
     Route::match(['get','post'],'/admin/add-admin','AdminController@addAdmin');
 
+    // Add Admin/Sub-Admin Route
+    Route::match(['get','post'],'/admin/edit-admin/{id}','AdminController@editAdmin');
+
     // Add CMS Route
     Route::match(['get','post'], '/admin/add-cms-page', 'CmsPagecontroller@addCmsPage');
 
