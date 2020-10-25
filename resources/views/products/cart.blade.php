@@ -1,6 +1,8 @@
+
 @extends('layouts.frontLayout.front_design')
 
 @section('content')
+<?php use App\Product; ?>
 <section id="cart_items">
     <div class="container">
         <div class="breadcrumbs">
@@ -37,18 +39,20 @@
                 <tbody>
                     <?php $total_amount = 0; ?>
                     @foreach ($userCart as $cart)
+
                     <tr>
                         <td class="cart_product">
                             <a href=""><img class="cart_img"
                                     src="{{ asset('images/backend_images/product/small/'.$cart->image) }}" alt=""></a>
                         </td>
-                        <td class="cart_description">
+                        <td class="cart_description text-sm">
                             <h4><a href="">{{ $cart->product_name }}</a></h4>
                             <p>{{ $cart->product_code }} | {{ $cart->size }}</p>
 
                         </td>
                         <td class="cart_price">
-                            <p>{{ number_format($cart->price, 2, ',', ' ') . ' €' }}</p>
+                            <?php $product_price = Product::getProductPrice($cart->product_id,$cart->size) ?>
+                            <p>{{ number_format($product_price, 2, ',', ' ') . ' €' }}</p>
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
@@ -64,14 +68,15 @@
                         </td>
                         <td class="cart_total">
                             <p class="cart_total_price">
-                                {{ number_format($cart->price * $cart->quantity , 2, ',', ' ') . ' €' }}</p>
+                                {{ number_format($product_price * $cart->quantity , 2, ',', ' ') . ' €' }}</p>
                         </td>
-                        <td class="cart_delete">
+                        <td class="cart_delete mr-3">
                             <a class="cart_quantity_delete" href="{{ url('/cart/delete-product/' . $cart->id) }}"><i
                                     class="fa fa-times"></i></a>
                         </td>
                     </tr>
-                    <?php $total_amount = $total_amount + ($cart->price * $cart->quantity); ?>
+
+                    <?php $total_amount = $total_amount + ($product_price * $cart->quantity); ?>
                     @endforeach
 
 
@@ -96,8 +101,10 @@
                             <form action="{{ url('cart/apply-coupon') }}" method="post">
                                 @csrf
                                 <label for="code_coupon">Code du coupon</label>
-                                <input type="text" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 " name="coupon_code" placeholder="Code coupon" />
-                                <input type="submit" value="Appliquer" class="btn btn-default"/>
+                                <input type="text"
+                                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 "
+                                    name="coupon_code" placeholder="Code coupon" />
+                                <input type="submit" value="Appliquer" class="btn btn-default" />
                             </form>
                         </li>
                     </ul>
@@ -107,13 +114,16 @@
                 <div class="total_area">
                     <ul>
                         @if (!empty(session()->get('CouponAmount')))
-                            <li>Sous-total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
-                            <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
-                            <li>Coupon de réduction <span> {{ number_format(session()->get('CouponAmount') , 2, ',', ' ') . ' €'  }}</span></li>
-                            <li>Total <span> {{ number_format($total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span></li>
-                            @else
-                            <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
-                            <li>Total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>Sous-total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>Coupon de réduction <span>
+                                {{ number_format(session()->get('CouponAmount') , 2, ',', ' ') . ' €'  }}</span></li>
+                        <li>Total <span>
+                                {{ number_format($total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span>
+                        </li>
+                        @else
+                        <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>Total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
                         @endif
                     </ul>
                     <a class="btn btn-default update" href="">Update</a>

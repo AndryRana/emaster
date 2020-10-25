@@ -48,6 +48,11 @@ class Product extends Model
         return $getProductStock->stock;
     }
 
+    public static function getProductPrice($product_id,$product_size){
+        $getProductPrice = ProductsAttribute::select('price')->where(['product_id'=>$product_id,'size'=>$product_size])->first();
+        return $getProductPrice->price;
+    }
+
     public static function deleteCartProduct($product_id,$user_email){
         DB::table('carts')->where(['product_id'=>$product_id,'user_email'=>$user_email])->delete();
     }
@@ -104,4 +109,6 @@ class Product extends Model
 
         return $getGrandTotal;
     }
+
+
 }

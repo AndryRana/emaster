@@ -134,10 +134,12 @@
                 <div class="col-sm-3 col-sm-offset-1">
                     <div class="single-widget">
                         <h2>About E-Master</h2>
-                        <form action="#" class="searchform">
-                            <input type="text" placeholder="Your email address" />
-                            <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-                            <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                        <form action="javascript:void(0);" class="searchform" type="post">
+                            @csrf
+                            <input onfocus="enableSubscriber();" onfocusout="checkSubscriber();" name="subscriber_email" id="subscriber_email" type="email" placeholder="Votre adresse email" required />
+                            <button onclick="checkSubscriber(); addSubscriber();"" type="submit" class="btn btn-default" id="btnSubmit"><i class="fa fa-arrow-alt-circle-right"></i></button>
+                            <div id="statusSubscriber"></div>
+                            <p>Obtenez les dernières mises à jour de <br/> notre site et soyez mis à jour vous-même ...</p>
                         </form>
                     </div>
                 </div>
@@ -156,3 +158,57 @@
     </div>
     
 </footer><!--/Footer-->
+<script>
+    function checkSubscriber(){
+        var subscriber_email = $('#subscriber_email').val();
+        // alert(subscriber_email);
+        $.ajax({
+            type:'post',
+            url: '/check-subscriber-email',
+            data:{subscriber_email:subscriber_email},
+            success:function(resp){
+                // alert(resp);
+                if(resp=="exists"){
+                    // alert("email existe déjà");
+                    $('#statusSubscriber').show();
+                    $('#btnSubmit').hide();
+                    $('#statusSubscriber').html("<div class=' text-2xl text-red-700 mt-2 px-2 py-2'>L\' adresse email existe déjà!</div> ");
+
+                }
+            },error:function(){
+                alert("Error");
+            }
+        });
+    }
+
+    function addSubscriber(){
+        var subscriber_email = $('#subscriber_email').val();
+        // alert(subscriber_email);
+        $.ajax({
+            type:'post',
+            url: '/add-subscriber-email',
+            data:{subscriber_email:subscriber_email},
+            success:function(resp){
+                // alert(resp);
+                if(resp=="exists"){
+                    // alert("email existe déjà");
+                    $('#statusSubscriber').show();
+                    $('#btnSubmit').hide();
+                    $('#statusSubscriber').html("<div class=' text-2xl text-red-700 mt-2 px-2 py-2'>L\' adresse email existe déjà!</div> ");
+
+                }else if(resp=="saved"){
+                    $('#statusSubscriber').show();
+                    $('#statusSubscriber').html("<div class=' text-2xl text-green-700 mt-2 px-2 py-2'>Merci pour votre souscription aux Newsletters!</div> ");
+                }
+            },error:function(){
+                alert("Error");
+            }
+        });
+    }
+
+
+    function enableSubscriber(){
+        $('#btnSubmit').show();
+        $("#statusSubscribe").hide();
+    }
+</script>

@@ -76,6 +76,18 @@ Route::match(['get', 'post'],'/search-product', 'ProductsController@searchProduc
 Route::post('/user-login', 'UsersController@login');
 
 
+// Check if user already exists
+Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
+
+// Check pincode
+Route::post('/check-pincode','ProductsController@checkPincode');
+
+// Check Subscriber newsletter email
+Route::post('/check-subscriber-email', 'NewsletterSubscriberController@checkSubscriber');
+
+// Add Subscriber newsletter email
+Route::post('/add-subscriber-email', 'NewsletterSubscriberController@addSubscriber');
+
 // All Routes after login
 Route::group(['middleware' => ['frontlogin']],function(){
     // Users Account
@@ -123,11 +135,6 @@ Route::group(['middleware' => ['frontlogin']],function(){
 
 });
 
-// Check if user already exists
-Route::match([ 'get','post'],'/check-email', 'UsersController@checkEmail');
-
-// Check pincode
-Route::post('/check-pincode','ProductsController@checkPincode');
 
 // All Routea after login
 Route::group(['middleware' => ['adminlogin']], function(){
@@ -218,6 +225,10 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // Update shipping charges
     Route::match([ 'get','post'],'/admin/edit-shipping/{id}', 'ShippingController@editShipping');
+
+    // View Newsletter Subscribes
+    Route::get('admin/view-newsletter-subscribers', 'NewsletterSubscriberController@viewNewsletterSubscribers');
+
 });
 
 

@@ -476,9 +476,6 @@ class ProductsController extends Controller
 
     public function products($url=null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
-        }
         // show 404 page if Category URL doesn't exist
         $countCategory = Category::where(['url'=> $url, 'status' => 1])->count();
         // echo "<pre>";print_r($countCategory);die;
@@ -646,9 +643,6 @@ class ProductsController extends Controller
 
     public function product($id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
-        }
         // show 404 page if product is disabled
         $productsCount = Product::where(['id' => $id, 'status' => 1])->count();
         if ($productsCount == 0) {
@@ -1131,6 +1125,7 @@ class ProductsController extends Controller
             $order_id = DB::getPdo()->lastInsertId();
 
             $cartProducts = DB::table('carts')->where(['user_email' => $user_email])->get();
+
             foreach ($cartProducts as $pro) {
                 $cartPro = new OrdersProduct;
                 $cartPro->order_id = $order_id;
@@ -1140,7 +1135,8 @@ class ProductsController extends Controller
                 $cartPro->product_name = $pro->product_name;
                 $cartPro->product_color = $pro->product_color;
                 $cartPro->product_size = $pro->size;
-                $cartPro->product_price = $pro->price;
+                $product_price = Product::getProductPrice($pro->product_id,$pro->size);
+                $cartPro->product_price = $product_price;
                 $cartPro->product_qty = $pro->quantity;
                 $cartPro->save();
 

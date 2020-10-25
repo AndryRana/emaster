@@ -84,7 +84,7 @@ $cartCount = Product::cartCount();
                             @if (empty(Auth::check()))
                             <li><a href="{{ url('/login-register') }}"><i class="fa fa-lock"></i> S'identifier</a></li>
                             @else
-                            <li><a href="{{ url('/account') }}"><i class="fa fa-user"></i>Mon Compte</a></li>
+                            <li ><a href="{{ url('/account') }}"><i class="fa fa-user"></i ><span>Compte de <br/> {{ Auth::user()->name }} </span></a></li>
                             <li><a href="{{ url('/user-logout') }}"><i class="fa fa-sign-out-alt"></i>Se déconnecter</a>
                             </li>
                             @endif

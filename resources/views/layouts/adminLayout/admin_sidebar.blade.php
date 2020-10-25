@@ -79,13 +79,10 @@
     </li>
   @endif
   @if(Session::get('adminDetails')['type']=="Admin")
-    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Admins/Sub-Admins</span> <span
-          class="label label-important">2</span></a>
-      <ul @if (preg_match("/admin/i", $url)) style="display: block;" class="active" @endif>
-        <li @if (preg_match("/add-admin/i", $url)) class="active" @endif><a href="{{ url('/admin/add-admin') }}">Ajouter
-            un Admin/Sub-Admin</a></li>
-        <li @if (preg_match("/view-admins/i", $url)) class="active" @endif><a href="{{ url('/admin/view-admins') }}">Voir
-            les Admins/Sub-Admins</a></li>
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Admins/Sub-Admins</span> <span class="label label-important">2</span></a>
+      <ul  @if (preg_match("/admins/i", $url)) style="display: block;" @endif>
+        <li @if (preg_match("/add-admin/i", $url)) class="active" @endif><a href="{{ url('/admin/add-admin') }}">Ajouter un Admin/Sub-Admin</a></li>
+        <li @if (preg_match("/view-admins/i", $url)) class="active" @endif><a href="{{ url('/admin/view-admins') }}">Voir les Admins/Sub-Admins</a></li>
       </ul>
     </li>
   @endif
@@ -105,8 +102,14 @@
       </ul>
     </li> --}}
     <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Frais de port</span> <span class="label label-important">1</span></a>
-      <ul <?php if (preg_match("/shipping/i", $url)){ ?> style="display: block;" <?php } ?>>
-        <li <?php if (preg_match("/view-shipping/i", $url)){ ?> class="active" <?php } ?>><a href="{{ url('/admin/view-shipping')}}">Voir les Frais de port</a></li>
+      <ul @if(preg_match("/shipping/i", $url)) style="display: block;" @endif>
+        <li @if(preg_match("/view-shipping/i", $url)) class="active"  @endif><a href="{{ url('/admin/view-shipping')}}">Voir les Frais de port</a></li>
+      </ul>
+    </li>
+
+    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Abonnés Newsletter</span> <span class="label label-important">1</span></a>
+      <ul @if (preg_match("/newsletter-subscribers/i", $url)) style="display: block;" @endif>
+        <li @if (preg_match("/newsletter-subscribers/i", $url)) class="active" @endif><a href="{{ url('/admin/view-newsletter-subscribers')}}">Newsletters</a></li>
       </ul>
     </li>
   @endif
