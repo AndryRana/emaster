@@ -7,6 +7,7 @@ use App\Category;
 use App\Country;
 use App\Coupon;
 use App\DeliveryAddress;
+use App\Exports\productExport;
 use App\Order;
 use App\OrdersProduct;
 use App\Product;
@@ -22,8 +23,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Stripe\Charge;
 use Stripe\Stripe;
+use Dompdf\Dompdf;
 
 use function GuzzleHttp\json_decode;
 
@@ -1373,6 +1376,253 @@ class ProductsController extends Controller
         return view('admin.orders.order_invoice')->with(compact('orderDetails', 'userDetails'));
     }
 
+    
+    public function viewPDFInvoice($order_id)
+    {
+        $orderDetails = Order::with('orders')->where('id', $order_id)->first();
+        // $orderDetails = json_decode(json_encode($orderDetails));
+        // echo"<pre>";print_r($orderDetails);die;
+        $user_id = $orderDetails->user_id;
+        $userDetails = User::where('id', $user_id)->first();
+        // $userDetails = json_decode(json_encode($userDetails));
+        // echo "<pre>"; print_r($userDetails);
+
+
+        $output = '<!DOCTYPE html>
+        <html lang="fr">
+          <head>
+            <meta charset="utf-8">
+            <title>Example 1</title>
+            <style>
+            .clearfix:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+        
+        a {
+          color: #5D6975;
+          text-decoration: underline;
+        }
+        
+        body {
+          position: relative;
+          width: 21cm;  
+          height: 29.7cm; 
+          margin: 0 auto; 
+          color: #001028;
+          background: #FFFFFF; 
+          font-family: Arial, sans-serif; 
+          font-size: 12px; 
+          font-family: Arial;
+        }
+        
+        header {
+          padding: 10px 0;
+          margin-bottom: 30px;
+        }
+        
+        #logo {
+          text-align: center;
+          margin-bottom: 10px;
+        }
+        
+        #logo img {
+          width: 90px;
+        }
+        
+        h1 {
+          border-top: 1px solid  #5D6975;
+          border-bottom: 1px solid  #5D6975;
+          color: #5D6975;
+          font-size: 2.4em;
+          line-height: 1.4em;
+          font-weight: normal;
+          text-align: center;
+          margin: 0 0 20px 0;
+          background: url(dimension.png);
+        }
+        
+        #project {
+          float: left;
+        }
+        
+        #project span {
+          color: #5D6975;
+          text-align: right;
+          width: 52px;
+          margin-right: 10px;
+          display: inline-block;
+          font-size: 0.8em;
+        }
+        
+        #company {
+          float: right;
+          text-align: right;
+        }
+        
+        #project div,
+        #company div {
+          white-space: nowrap;        
+        }
+        
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          border-spacing: 0;
+          margin-bottom: 20px;
+        }
+        
+        table tr:nth-child(2n-1) td {
+          background: #F5F5F5;
+        }
+        
+        table th,
+        table td {
+          text-align: center;
+        }
+        
+        table th {
+          padding: 5px 20px;
+          color: #5D6975;
+          border-bottom: 1px solid #C1CED9;
+          white-space: nowrap;        
+          font-weight: normal;
+        }
+        
+        table .service,
+        table .desc {
+          text-align: left;
+        }
+        
+        table td {
+          padding: 20px;
+          text-align: right;
+        }
+        
+        table td.service,
+        table td.desc {
+          vertical-align: top;
+        }
+        
+        table td.unit,
+        table td.qty,
+        table td.total {
+          font-size: 1.2em;
+        }
+        
+        table td.grand {
+          border-top: 1px solid #5D6975;;
+        }
+        
+        #notices .notice {
+          color: #5D6975;
+          font-size: 1.2em;
+        }
+        
+        footer {
+          color: #5D6975;
+          width: 100%;
+          height: 30px;
+          position: absolute;
+          bottom: 0;
+          border-top: 1px solid #C1CED9;
+          padding: 8px 0;
+          text-align: center;
+        }
+            </style>
+          </head>
+          <body>
+            <header class="clearfix">
+              <div id="logo">
+                <img src="images/backend_images/logo.png">
+              </div>
+              <h1>Facture Numéro: '.$orderDetails->id.'</h1>
+              <div id="project" class="clearfix">
+                <div><span>Commande ID</span> '.$orderDetails->id.'</div>
+                <div><span>Date de la commande</span> '.$orderDetails->created_at.'</div>
+                <div><span>Montant</span> '.$orderDetails->grand_total.'</div>
+                <div><span>Statut</span> '.$orderDetails->order_status.'</div>
+                <div><span>Mode de paiement</span> '.$orderDetails->payment_method.'</div>
+              </div>
+              <div id="project" style="float:right;">
+                <div><strong>Shipping Address</strong></div>
+                <div>'.$orderDetails->name.'</div>
+                <div>'.$orderDetails->address.'</div>
+                <div>'.$orderDetails->city.', '.$orderDetails->state.'</div>
+                <div>'.$orderDetails->pincode.'</div>
+                <div>'.$orderDetails->country.'</div>
+                <div>'.$orderDetails->mobile.'</div>
+              </div>
+            </header>
+            <main>
+              <table>
+                <thead>
+                    <tr>
+                        <td style="width:18%"><strong>Code Produit</strong></td>
+                        <td style="width:18%" class="text-center"><strong>Taille</strong></td>
+                        <td style="width:18%" class="text-center"><strong>Couleur</strong></td>
+                        <td style="width:18%" class="text-center"><strong>Prix</strong></td>
+                        <td style="width:18%" class="text-center"><strong>Quantité</strong></td>
+                        <td style="width:18%" class="text-right"><strong>Total</strong></td>
+                    </tr>
+                </thead>
+                <tbody>';
+                $Subtotal = 0;
+                foreach($orderDetails->orders as $pro){
+                    $output .= '<tr>
+                        <td class="text-left">'.$pro->product_code.'</td>
+                        <td class="text-center">'.$pro->product_size.'</td>
+                        <td class="text-center">'.$pro->product_color.'</td>
+                        <td class="text-center">'.number_format($pro->product_price, 2, ',', ' ') . ' €'.'</td>
+                        <td class="text-center">'.$pro->product_qty.'</td>
+                        <td class="text-right">'.number_format($pro->product_price * $pro->product_qty, 2, ',', ' ') . ' €'.'</td>
+                    </tr>';
+                    $Subtotal = $Subtotal + ($pro->product_price * $pro->product_qty); }
+                $output .= '<tr>
+                    <td colspan="5">SOUS-TOTAL</td>
+                    <td class="total"> '.number_format($Subtotal , 2, ',', ' ') . ' €'.'</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5">FRAIS DE PORT (+)</td>
+                    <td class="total">'.number_format($orderDetails->shipping_charges, 2, ',', ' ').'</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5">COUPON DISCOUNT (-)</td>
+                    <td class="total">'.number_format($orderDetails->coupon_amount, 2, ',', ' ').'</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5">TVA(inclus)</td>
+                    <td class="total">'.number_format($orderDetails->grand_total*0.20, 2, ',', ' ').'</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="grand total">TOTAL</td>
+                    <td class="grand total">'.number_format($orderDetails->grand_total, 2, ',', ' ').'</td>
+                  </tr>
+                </tbody>
+              </table>
+            </main>
+            <footer>
+            La facture a été créée sur un ordinateur et est valide sans la signature et le sceau.
+            </footer>
+          </body>
+        </html>';
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($output);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream();
+
+    }
+
 
     public function updateOrderStatus(Request $request)
     {
@@ -1399,6 +1649,14 @@ class ProductsController extends Controller
         }
         
     }
+
+    
+    public function exportProducts()
+    {
+        return Excel::download(new productExport,'products.xlsx');
+
+    }
+
 
 
     

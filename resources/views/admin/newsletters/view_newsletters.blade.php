@@ -25,6 +25,9 @@
 
     </div>
     <div class="container-fluid">
+        <div>
+            <a href="{{ url('/admin/export-newsletter-emails') }}" class="btn btn-primary btn-mini">Export</a>
+        </div>
         <hr>
         <div class="row-fluid">
             <div class="span12">
@@ -40,6 +43,7 @@
                                     <th>Email</th>
                                     <th>statut</th>
                                     <th>Enregistré le</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,13 +53,15 @@
                                     <td class="center">{{ $newsletter->email }}</td>
                                     <td class="center">
                                         @if($newsletter->status==1)
-                                          <span class="text-success">Active</span>
+                                            <a href="{{ url('/admin/update-newsletter-status/'.$newsletter->id.'/0') }}" class="btn btn-default btn-mini"> <span class="text-success">Active</span></a>
                                         @else
-                                          <span class="text-error">Inactive</span>
+                                            <a href="{{ url('/admin/update-newsletter-status/'.$newsletter->id.'/1') }}" class="btn btn-mini"> <span class="text-error">Inactive</span></a>
                                         @endif
                                     </td>
                                     <td class="center">{{ $newsletter->created_at->format('d-m-Y H:i:s') }}</td>
-                                    
+                                    <td class="center"><a id="delNewsletter" rel="{{ $newsletter->id }}" rel1="delete-newsletter-email"
+                                        href="javascript:" class="btn btn-danger btn-mini deleteRecord" >Supprimer</td>
+                                    </a> 
                                 </tr>
                                 @endforeach
                             </tbody>

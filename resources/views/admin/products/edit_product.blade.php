@@ -68,9 +68,16 @@
                                     <label class="control-label">Description</label>
                                     <div class="controls">
                                         <textarea type="text" name="description" id="description"
-                                            rows="5"> {{ $productDetails->description }}</textarea>
+                                            rows="5" class="textarea_editor span12"> {{ $productDetails->description }}</textarea>
                                     </div>
                                 </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Matériel et entretien</label>
+                                    <div class="controls">
+                                      <textarea name="care" class="textarea_care span12">{{ $productDetails->care }}</textarea>
+                                    </div>
+                                  </div>
                                 <div class="control-group">
                                     <label class="control-label">Manches</label>
                                     <div class="controls">
@@ -115,7 +122,7 @@
                                             src="{{ asset('/images/backend_images/product/small/'. $productDetails->image) }}">
                                         
                                         <a
-                                            href="{{ url('/admin/delete-product-image/' . $productDetails->id) }}" class="text-white bg-red-500 px-3 py-1 hover:text-black">Supprimer</a>
+                                            href="{{ url('/admin/delete-product-image/' . $productDetails->id) }}" class="btn btn-warning btn-mini">Supprimer</a>
                                         @endif
                                     </div>
                                 </div>
@@ -125,8 +132,8 @@
                                         <input type="file" name="video" id="video">
                                         @if (!empty($productDetails->video))
                                             <input type="hidden" name="current_video" value="{{ $productDetails->video }}">
-                                            <a target="_blank" href="{{ url('videos/'.$productDetails->video) }}" class="text-white bg-blue-500 px-3 py-1  hover:text-black">Voir la vidéo</a>
-                                            <a href="{{ url('/admin/delete-product-video/' . $productDetails->id) }}" class="text-white bg-red-500 px-3 py-1 hover:text-black">Supprimer</a>
+                                            <a target="_blank" href="{{ url('videos/'.$productDetails->video) }}" class="btn btn-primary btn-mini">Voir la vidéo</a>
+                                            <a href="{{ url('/admin/delete-product-video/' . $productDetails->id) }}" class="btn btn-warning btn-mini">Supprimer</a>
                                         @endif
                                     </div>
                                 </div>

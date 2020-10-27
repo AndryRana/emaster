@@ -154,6 +154,7 @@ Route::group(['middleware' => ['adminlogin']], function(){
     Route::match(['get', 'post'], '/admin/edit-product/{id}', 'ProductsController@editProduct');
     Route::get('/admin/delete-product/{id}', 'ProductsController@deleteProduct');
     Route::get('/admin/view-products', 'ProductsController@viewProducts');
+    Route::get('/admin/export-products', 'ProductsController@exportProducts');
     Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProductImage');
     Route::get('/admin/delete-product-video/{id}', 'ProductsController@deleteProductvideo');
     
@@ -186,12 +187,18 @@ Route::group(['middleware' => ['adminlogin']], function(){
     
     // Admin Order Invoice Route
     Route::get('/admin/view-orders-invoice/{id}', 'ProductsController@viewOrdersInvoice');
+    
+    // Admin Order Invoice PDF Route
+    Route::get('/admin/view-pdf-invoice/{id}', 'ProductsController@viewPDFInvoice');
 
     // Upadate the order status
     Route::post('/admin/update-order-status','ProductsController@updateOrderStatus');
 
-    // Admin User route
+    // Admin Users route
     Route::get('/admin/view-users','UsersController@viewUsers');
+    
+    // Export Users route
+    Route::get('/admin/export-users','UsersController@exportUsers');
 
     // Admins/Sub-Admins route
     Route::get('/admin/view-admins','AdminController@viewAdmins');
@@ -228,6 +235,16 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // View Newsletter Subscribes
     Route::get('admin/view-newsletter-subscribers', 'NewsletterSubscriberController@viewNewsletterSubscribers');
+
+    // Update Newsletters Status
+    Route::get('/admin/update-newsletter-status/{id}/{status}','NewsletterSubscriberController@updateNewsletterStatus');
+
+    // Delete Newsletter Email
+    Route::get('/admin/delete-newsletter-email/{id}','NewsletterSubscriberController@deleteNewsletterEmail');
+
+    // Export Newsletter email
+    Route::get('/admin/export-newsletter-emails', 'NewsletterSubscriberController@exportNewsletterEmails');
+
 
 });
 

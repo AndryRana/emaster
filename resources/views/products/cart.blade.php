@@ -115,14 +115,14 @@
                     <ul>
                         @if (!empty(session()->get('CouponAmount')))
                         <li>Sous-total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
-                        <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>TVA(inclus) <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
                         <li>Coupon de réduction <span>
                                 {{ number_format(session()->get('CouponAmount') , 2, ',', ' ') . ' €'  }}</span></li>
                         <li>Total <span>
                                 {{ number_format($total_amount - session()->get('CouponAmount') , 2, ',', ' ') . ' €' }}</span>
                         </li>
                         @else
-                        <li>TVA <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
+                        <li>TVA(inclus) <span> {{ number_format($total_amount*0.20 , 2, ',', ' ') . ' €' }}</span></li>
                         <li>Total <span> {{ number_format($total_amount , 2, ',', ' ') . ' €' }}</span></li>
                         @endif
                     </ul>

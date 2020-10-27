@@ -137,7 +137,7 @@
                         <div class="tab-pane fade active in" id="description">
                             <div class="col-sm-12">
                                 <p>
-                                    {{ $productDetails->description }}
+                                    {!! $productDetails->description !!}
                                 </p>
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                         <div class="tab-pane fade" id="care">
                             <div class="col-sm-12">
                                 <p>
-                                    {{ $productDetails->care }}
+                                     {!! $productDetails->care !!}
                                 </p>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Country;
+use App\Exports\usersExport;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 // use Illuminate\Support\Facades\Session;
 
@@ -287,5 +289,10 @@ class UsersController extends Controller
         }
         $users = User::get();
         return view('admin.users.view_users')->with(compact('users'));
+    }
+
+    public function exportUsers()
+    {
+        return Excel::download(new usersExport, 'users.xlsx');
     }
 }

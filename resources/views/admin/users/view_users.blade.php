@@ -25,6 +25,9 @@
 
     </div>
     <div class="container-fluid">
+        <div>
+            <a href="{{ url('/admin/export-users') }}" class="btn btn-primary btn-mini">Export</a>
+        </div>
         <hr>
         <div class="row-fluid">
             <div class="span12">

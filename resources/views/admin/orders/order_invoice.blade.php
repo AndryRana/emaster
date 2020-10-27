@@ -87,14 +87,6 @@
                                 <?php $Subtotal = $Subtotal + ($pro->product_price * $pro->product_qty); ?>
                                 @endforeach
                                 <tr>
-        							<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-    								<td class="thick-line text-center"><strong>Sous-total</strong></td>
-    								<td class="thick-line text-right">{{ number_format($Subtotal, 2, ',', ' ') . ' €'  }}</td>
-    							</tr>
-                                <tr>
             						<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
@@ -107,8 +99,8 @@
     								<td class="thick-line"></td>
     								<td class="thick-line"></td>
     								<td class="thick-line"></td>
-    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
-    								<td class="thick-line text-right"> {{ number_format($Subtotal , 2, ',', ' ') . ' €'  }}</td>
+    								<td class="thick-line text-center"><strong>Sous-total</strong></td>
+    								<td class="thick-line text-right"> {{ number_format($Subtotal+$orderDetails->shipping_charges , 2, ',', ' ') . ' €'  }}</td>
     							</tr>
     							<tr>
                                     <td class="no-line"></td>
@@ -117,6 +109,14 @@
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Coupon de Réduction (-)</strong></td>
     								<td class="no-line text-right">{{ number_format($orderDetails->coupon_amount , 2, ',', ' ') . ' €'  }}</td>
+    							</tr>
+    							<tr>
+                                    <td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>TVA(inclus)</strong></td>
+    								<td class="no-line text-right">{{ number_format($orderDetails->grand_total*0.2  , 2, ',', ' ') . ' €'  }}</td>
     							</tr>
     							<tr>
                                     <td class="no-line"></td>

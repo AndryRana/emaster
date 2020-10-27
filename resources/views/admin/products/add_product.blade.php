@@ -66,13 +66,13 @@
                             <div class="control-group">
                                 <label class="control-label">Description</label>
                                 <div class="controls">
-                                    <textarea type="text" name="description" id="description" rows="5"></textarea>
+                                    <textarea type="text" name="description" id="description" rows="5" class="textarea_editor span12"></textarea>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Matériel et entretien</label>
                                 <div class="controls">
-                                    <textarea type="text" name="care" id="care" rows="5"></textarea>
+                                    <textarea type="text" name="care" id="care" rows="5" class="textarea_care span12"></textarea>
                                 </div>
                             </div>
                             <div class="control-group">
