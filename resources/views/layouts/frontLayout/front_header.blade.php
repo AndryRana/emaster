@@ -70,7 +70,7 @@ $cartCount = Product::cartCount();
                 <div class="col-sm-8">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
-                            <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+                            <li><a href="{{ url('/wish-list') }}"><i class="fa fa-star"></i>Liste d'envies</a></li>
                             <li><a href="{{ url('/orders') }}"><i class="fa fa-crosshairs"></i> Vos commandes</a></li>
                             <li><a href="{{ asset(url('/cart')) }}"><i class="fa fa-shopping-cart"></i> Panier
                                     @if ($cartCount >0)

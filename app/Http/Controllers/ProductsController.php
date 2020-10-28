@@ -14,6 +14,7 @@ use App\Product;
 use App\ProductsAttribute;
 use App\ProductsImage;
 use App\User;
+use Carbon\Carbon;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -721,69 +722,120 @@ class ProductsController extends Controller
         $data = $request->all();
         //  echo "<pre>";print_r($data);die;
 
-        if (empty(Auth::user()->email)) {
-            $data['user_email'] = '';
-        } else {
-            $data['user_email'] = Auth::user()->email;
-        }
+        if(!empty($data['wishListButton']) && $data['wishListButton']=="Wish List" ){
+            // echo "Wish List is selected";die;
 
-        // Check product stock is available or not
-        $product_size = explode("-", $data['size']);
-        $getProductStock = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $product_size[1]])->first();
-        // echo $getProductStock->stock;die;
+            // Check User is logged in 
+            if(!Auth::check()){
+                return redirect()->back()->with('flash_message_error','Merci de vous connecter afin d\'ajouter le produit dans votre liste');
+            }
 
-        if ($getProductStock->stock < $data['quantity']) {
-            return redirect()->back()->with('flash_message_error', 'La quantité du produit demandé n\'est pas disponible!');
-        }
+            // Check Size selected
+            if(empty($data['size'])){
+                return redirect()->back()->with('flash_message_error','Merci de selectionner la taille afin d\'ajouter le produit dans votre liste');
+            }
 
-        if (empty($data['session_id'])) {
-            $data['session_id'] = '';
-        }
+            // Get productSize
+            $sizeIDArr = explode("-", $data['size']);
+            $product_size = $sizeIDArr[1];
+            
+            // Get the product price
+            $proPrice = ProductsAttribute::where(['product_id'=>$data['product_id'],'size'=>$product_size])->first();
+            $product_price = $proPrice->price;
 
-        $session_id = session()->get('session_id');
-        if (empty($session_id)) {
-            $session_id = Str::random(40);
-            session()->put('session_id', $session_id);
-        }
+            // Get User email/Username
+            $user_email = Auth::user()->email;
 
+            // Set Quantity
+            $quantity = 1;
 
-        $sizeIDArr = explode("-", $data['size']);
-        $product_size = $sizeIDArr[1];
+            // Get current Date
+            $created_at = Carbon::now();
 
-        if (empty(Auth::check())) {
-            $countProducts = DB::table('carts')->where([
-                'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
-                'size' => $product_size, 'session_id' => $session_id
-            ])->count();
-            // echo $countProducts;die;
-            if ($countProducts > 0) {
-                return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
+            $wishListCount = DB::table('wish_list')->where(['user_email'=>$user_email,'product_id'=>$data['product_id'],
+            'product_color'=>$data['product_color'],'size'=>$product_size])->count();
+            // echo "<pre>";print_r($wishListCount);die;
+
+            if($wishListCount>0){
+                return redirect()->back()->with('flash_message_error','Le produit est déjà dans votre liste!');
+            }else{
+                // Insert Product in wish List 
+                DB::table('wish_list')->insert(['product_id'=>$data['product_id'],'product_name'=>$data['product_name'],
+                'product_code'=>$data['product_code'],'product_color'=>$data['product_color'],'price'=>$product_price,
+                'size'=>$product_size,'quantity'=>$quantity,'user_email'=>$user_email,'created_at'=>$created_at]);
+                return redirect()->back()->with('flash_message_success', 'Le produit a été ajouté à  votre liste avec succès');
             }
         }else{
-            $countProducts = DB::table('carts')->where([
-                'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
-                'size' => $product_size, 'user_email' => $data['user_email']
-            ])->count();
-            // echo $countProducts;die;
-            if ($countProducts > 0) {
-                return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
+
+            // If product added from wish list
+            if(!empty($data['cartButton']) && $data['cartButton']=="Add to Cart"){
+                $data['quantity'] = 1;
+            
             }
+    
+            // Check product stock is available or not
+            $product_size = explode("-", $data['size']);
+            $getProductStock = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $product_size[1]])->first();
+            // echo $getProductStock->stock;die;
+    
+            if ($getProductStock->stock < $data['quantity']) {
+                return redirect()->back()->with('flash_message_error', 'La quantité du produit demandé n\'est pas disponible!');
+            }
+    
+            
+            if (empty(Auth::user()->email)) {
+                $data['user_email'] = '';
+            } else {
+                $data['user_email'] = Auth::user()->email;
+            }
+
+            if (empty($data['session_id'])) {
+                $data['session_id'] = '';
+            }
+    
+            $session_id = session()->get('session_id');
+            if (empty($session_id)) {
+                $session_id = Str::random(40);
+                session()->put('session_id', $session_id);
+            }
+    
+    
+            $sizeIDArr = explode("-", $data['size']);
+            $product_size = $sizeIDArr[1];
+    
+            if (empty(Auth::check())) {
+                $countProducts = DB::table('carts')->where([
+                    'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
+                    'size' => $product_size, 'session_id' => $session_id
+                ])->count();
+                // echo $countProducts;die;
+                if ($countProducts > 0) {
+                    return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
+                }
+            }else{
+                $countProducts = DB::table('carts')->where([
+                    'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
+                    'size' => $product_size, 'user_email' => $data['user_email']
+                ])->count();
+                // echo $countProducts;die;
+                if ($countProducts > 0) {
+                    return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
+                }
+            }
+    
+    
+            // echo $product_size;
+            $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
+            echo $getSKU;die;
+            DB::table('carts')->insert([
+                'product_id' => $data['product_id'], 'product_name' => $data['product_name'],
+                'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $product_size,
+                'quantity' => $data['quantity'], 'user_email' => $data['user_email'], 'session_id' => $session_id
+            ]);
+    
+    
+            return redirect('cart')->with('flash_message_success', 'Le produit a bien été ajouté au panier!');
         }
-
-
-
-
-        // echo $product_size;
-        $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
-
-        DB::table('carts')->insert([
-            'product_id' => $data['product_id'], 'product_name' => $data['product_name'],
-            'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $product_size,
-            'quantity' => $data['quantity'], 'user_email' => $data['user_email'], 'session_id' => $session_id
-        ]);
-
-
-        return redirect('cart')->with('flash_message_success', 'Le produit a bien été ajouté au panier!');
     }
 
 
@@ -806,9 +858,38 @@ class ProductsController extends Controller
 
         $meta_title = "Votre panier sur Emaster.com";
         $meta_description = "Voir votre panier sur Emaster.com";
-        return view('products.cart')->with(compact('userCart','meta_title','meta_description'));
+        $meta_keywords = "Panier,site emaster";
+        return view('products.cart')->with(compact('userCart','meta_title','meta_description','meta_keywords'));
     }
 
+
+
+    public function wishList()
+    {
+        if(Auth::check()){
+            $user_email = Auth::user()->email;
+            $userWishList = DB::table('wish_list')->where('user_email',$user_email)->get();
+            foreach ($userWishList as $key => $product) {
+                // echo $product->product_id;
+                $productDetails = Product::where('id', $product->product_id)->first();
+                $userWishList[$key]->image = $productDetails->image;
+            }
+        }else{
+            $userWishList = array();
+        }
+        $meta_title = "Votre liste sur Emaster.com";
+        $meta_description = "Voir votre liste sur Emaster.com";
+        $meta_keywords = "Votre liste,site emaster";
+
+        return view('products.wish_list')->with(compact('userWishList','meta_title','meta_description','meta_keywords'));
+    }
+
+
+    public function deleteWishListProduct($id)
+    {
+        DB::table('wish_list')->where('id',$id)->delete();
+        return redirect()->back()->with('flash_message_success','Le produit a été supprimé de votre liste d\'envies avec succès');
+    }
 
 
     public function deleteCartProduct($id = null)
@@ -1389,158 +1470,158 @@ class ProductsController extends Controller
 
 
         $output = '<!DOCTYPE html>
-        <html lang="fr">
+        <html lang="en">
           <head>
             <meta charset="utf-8">
-            <title>Example 1</title>
+            <title>Facture</title>
             <style>
             .clearfix:after {
-          content: "";
-          display: table;
-          clear: both;
-        }
-        
-        a {
-          color: #5D6975;
-          text-decoration: underline;
-        }
-        
-        body {
-          position: relative;
-          width: 21cm;  
-          height: 29.7cm; 
-          margin: 0 auto; 
-          color: #001028;
-          background: #FFFFFF; 
-          font-family: Arial, sans-serif; 
-          font-size: 12px; 
-          font-family: Arial;
-        }
-        
-        header {
-          padding: 10px 0;
-          margin-bottom: 30px;
-        }
-        
-        #logo {
-          text-align: center;
-          margin-bottom: 10px;
-        }
-        
-        #logo img {
-          width: 90px;
-        }
-        
-        h1 {
-          border-top: 1px solid  #5D6975;
-          border-bottom: 1px solid  #5D6975;
-          color: #5D6975;
-          font-size: 2.4em;
-          line-height: 1.4em;
-          font-weight: normal;
-          text-align: center;
-          margin: 0 0 20px 0;
-          background: url(dimension.png);
-        }
-        
-        #project {
-          float: left;
-        }
-        
-        #project span {
-          color: #5D6975;
-          text-align: right;
-          width: 52px;
-          margin-right: 10px;
-          display: inline-block;
-          font-size: 0.8em;
-        }
-        
-        #company {
-          float: right;
-          text-align: right;
-        }
-        
-        #project div,
-        #company div {
-          white-space: nowrap;        
-        }
-        
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          border-spacing: 0;
-          margin-bottom: 20px;
-        }
-        
-        table tr:nth-child(2n-1) td {
-          background: #F5F5F5;
-        }
-        
-        table th,
-        table td {
-          text-align: center;
-        }
-        
-        table th {
-          padding: 5px 20px;
-          color: #5D6975;
-          border-bottom: 1px solid #C1CED9;
-          white-space: nowrap;        
-          font-weight: normal;
-        }
-        
-        table .service,
-        table .desc {
-          text-align: left;
-        }
-        
-        table td {
-          padding: 20px;
-          text-align: right;
-        }
-        
-        table td.service,
-        table td.desc {
-          vertical-align: top;
-        }
-        
-        table td.unit,
-        table td.qty,
-        table td.total {
-          font-size: 1.2em;
-        }
-        
-        table td.grand {
-          border-top: 1px solid #5D6975;;
-        }
-        
-        #notices .notice {
-          color: #5D6975;
-          font-size: 1.2em;
-        }
-        
-        footer {
-          color: #5D6975;
-          width: 100%;
-          height: 30px;
-          position: absolute;
-          bottom: 0;
-          border-top: 1px solid #C1CED9;
-          padding: 8px 0;
-          text-align: center;
-        }
+                content: "";
+                display: table;
+                clear: both;
+                }
+                
+                a {
+                color: #5D6975;
+                text-decoration: underline;
+                }
+                
+                body {
+                position: relative;
+                width: 21cm;  
+                height: 29.7cm; 
+                margin: 0 auto; 
+                color: #001028;
+                background: #FFFFFF; 
+                font-family: Arial, sans-serif; 
+                font-size: 12px; 
+                font-family: Arial;
+                }
+                
+                header {
+                padding: 10px 0;
+                margin-bottom: 30px;
+                }
+                
+                #logo {
+                text-align: center;
+                margin-bottom: 10px;
+                }
+                
+                #logo img {
+                width: 90px;
+                }
+                
+                h1 {
+                border-top: 1px solid  #5D6975;
+                border-bottom: 1px solid  #5D6975;
+                color: #5D6975;
+                font-size: 2.4em;
+                line-height: 1.4em;
+                font-weight: normal;
+                text-align: center;
+                margin: 0 0 20px 0;
+                background: url(dimension.png);
+                }
+                
+                #project {
+                float: left;
+                }
+                
+                #project span {
+                color: #5D6975;
+                text-align: right;
+                width: 52px;
+                margin-right: 10px;
+                display: inline-block;
+                font-size: 0.8em;
+                }
+                
+                #company {
+                float: right;
+                text-align: right;
+                }
+                
+                #project div,
+                #company div {
+                white-space: nowrap;        
+                }
+                
+                table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin-bottom: 20px;
+                }
+                
+                table tr:nth-child(2n-1) td {
+                background: #F5F5F5;
+                }
+                
+                table th,
+                table td {
+                text-align: center;
+                }
+                
+                table th {
+                padding: 5px 20px;
+                color: #5D6975;
+                border-bottom: 1px solid #C1CED9;
+                white-space: nowrap;        
+                font-weight: normal;
+                }
+                
+                table .service,
+                table .desc {
+                text-align: left;
+                }
+                
+                table td {
+                padding: 20px;
+                text-align: right;
+                }
+                
+                table td.service,
+                table td.desc {
+                vertical-align: top;
+                }
+                
+                table td.unit,
+                table td.qty,
+                table td.total {
+                font-size: 1.2em;
+                }
+                
+                table td.grand {
+                border-top: 1px solid #5D6975;;
+                }
+                
+                #notices .notice {
+                color: #5D6975;
+                font-size: 1.2em;
+                }
+                
+                footer {
+                color: #5D6975;
+                width: 100%;
+                height: 30px;
+                position: absolute;
+                bottom: 0;
+                border-top: 1px solid #C1CED9;
+                padding: 8px 0;
+                text-align: center;
+                }
             </style>
           </head>
           <body>
             <header class="clearfix">
-              <div id="logo">
-                <img src="images/backend_images/logo.png">
-              </div>
+            <div id="logo" >
+               <img src="images/backend_images/emasterlogo.png">
+            </div>
               <h1>Facture Numéro: '.$orderDetails->id.'</h1>
-              <div id="project" class="clearfix">
+              <div id="project" class="clearfix" style="margin-left:40px;">
                 <div><span>Commande ID</span> '.$orderDetails->id.'</div>
-                <div><span>Date de la commande</span> '.$orderDetails->created_at.'</div>
+                <div><span>Date de la commande</span> '.$orderDetails->created_at->format('d-m-Y H:i:s').'</div>
                 <div><span>Montant</span> '.$orderDetails->grand_total.'</div>
                 <div><span>Statut</span> '.$orderDetails->order_status.'</div>
                 <div><span>Mode de paiement</span> '.$orderDetails->payment_method.'</div>
@@ -1592,7 +1673,7 @@ class ProductsController extends Controller
                     <td class="total">'.number_format($orderDetails->coupon_amount, 2, ',', ' ').'</td>
                   </tr>
                   <tr>
-                    <td colspan="5">TVA(inclus)</td>
+                    <td colspan="5">TVA(20% inclus)</td>
                     <td class="total">'.number_format($orderDetails->grand_total*0.20, 2, ',', ' ').'</td>
                   </tr>
                   <tr>

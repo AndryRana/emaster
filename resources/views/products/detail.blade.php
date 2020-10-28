@@ -11,6 +11,12 @@
                 <strong>{!! session('flash_message_error') !!}</strong>
             </div>
             @endif
+            @if (Session::has('flash_message_success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>	
+                    <strong>{!! session('flash_message_success') !!}</strong>
+            </div>
+        @endif       
             <div class="col-sm-3">
                 @include('layouts.frontLayout._front_sidebar')
             </div>
@@ -76,7 +82,7 @@
                                 <p>Modèle: {{ $productDetails->pattern }}</p>
                                 @endif
                                 <p>
-                                    <select id="selSize" name="size" class="attributesize h-16" required>
+                                    <select id="selSize" name="size" class="attributesize h-16" >
                                         <option value="">Selectionner la taille</option>
                                         @foreach ($productDetails->attributes as $sizes)
                                         <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}
@@ -90,12 +96,18 @@
                                     <label>Quantité:</label>
                                     <input type="text" name="quantity" value="1" />
                                     @if ($total_stock>0)
-                                    <button type="submit" class="btn btn-default cart " id="cartButton">
+                                    <button type="submit" class="btn btn-default cart " id="cartButton" name="cartButton" value="Shopping Cart">
                                         <i class="fa fa-shopping-cart"></i>
                                         Ajouter au panier
                                     </button>
                                     @endif
                                 </span>
+                                <div class="-ml-4">
+                                    <button type="submit" class="btn btn-default cart" id="wishListButton" name="wishListButton" value="Wish List">
+                                        <i class="fa fa-briefcase"></i>
+                                        Ajouter à votre liste
+                                    </button>
+                                </div>
                                 <p><b>Disponibilité:</b> <span id="Availability"> @if ($total_stock>0) En Stock @else
                                         Produit indisponible @endif </p></span>
                                 <p><b>Condition:</b> Neuf</p>
@@ -104,7 +116,7 @@
                                     <input type="text" name="pincode" id="chkPincode"
                                         placeholder="Saisir votre code postal" class="mx-10">
                                     <button type="button"
-                                        class=" mb-10 h-15 bg-orange-400 p-4 text-white focus:outline-none hover:bg-gray-300 hover:text-black"
+                                        class="btn btn-default cart"
                                         id="checkPincode">
                                         Vérifier
                                     </button>

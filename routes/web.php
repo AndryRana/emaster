@@ -42,6 +42,7 @@ Route::match(['get', 'post'], '/add-cart', 'ProductsController@addtocart');
 // Cart Page
 Route::match(['get', 'post'], '/cart', 'ProductsController@cart');
 
+
 // Delete Product from Cart Page
 Route::get('/cart/delete-product/{id}', 'ProductsController@deleteCartProduct');
 
@@ -131,6 +132,10 @@ Route::group(['middleware' => ['frontlogin']],function(){
     // Paypal Cancel Page
     // Route::get('/paypal/cancel','ProductsController@cancelPaypal');
 
+    // Wishlist  Page
+    Route::match(['get', 'post'], '/wish-list', 'ProductsController@wishList');
+    // Delete Product from wishlist
+    Route::get('/wish-list/delete-product/{id}','ProductsController@deleteWishListProduct');
 
 
 });

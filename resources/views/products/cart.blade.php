@@ -27,7 +27,7 @@
             @endif
             <table class="table table-condensed">
                 <thead>
-                    <tr class="cart_menu">
+                    <tr class="cart_menu grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-7 items-center">
                         <td class="image">Article</td>
                         <td class="description"></td>
                         <td class="price">Prix</td>
@@ -40,7 +40,7 @@
                     <?php $total_amount = 0; ?>
                     @foreach ($userCart as $cart)
 
-                    <tr>
+                    <tr class="flex flex-row justify-between items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-7 items-center">
                         <td class="cart_product">
                             <a href=""><img class="cart_img"
                                     src="{{ asset('images/backend_images/product/small/'.$cart->image) }}" alt=""></a>
