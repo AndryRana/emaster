@@ -186,6 +186,9 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // Admin Orders Routes
     Route::get('/admin/view-orders', 'ProductsController@viewOrders');
+
+    // Admin Orders Charts route
+    Route::get('/admin/view-orders-charts','ProductsController@viewOrdersCharts');
  
     // Admin Order Details Route
     Route::get('/admin/view-orders/{id}', 'ProductsController@viewOrdersDetails');
@@ -201,6 +204,12 @@ Route::group(['middleware' => ['adminlogin']], function(){
 
     // Admin Users route
     Route::get('/admin/view-users','UsersController@viewUsers');
+
+    // Admin Users Charts route
+    Route::get('/admin/view-users-charts','UsersController@viewUsersCharts');
+
+    // Admin Users City Charts route
+    Route::get('/admin/view-users-cities-charts','UsersController@viewUsersCitiesCharts');
     
     // Export Users route
     Route::get('/admin/export-users','UsersController@exportUsers');

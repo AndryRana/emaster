@@ -50,11 +50,16 @@
     </li>
   @endif
   @if(Session::get('adminDetails')['orders_access']==1)
+  <?php 
+      $base_order_url = trim(basename($url));
+  ?>
     <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Commandes</span> <span
           class="label label-important">1</span></a>
       <ul @if (preg_match("/orders/i", $url)) style="display: block;" class="active" @endif>
-        <li @if (preg_match("/view-orders/i", $url)) class="active" @endif><a
+        <li @if ($base_order_url=="view-orders") class="active" @endif><a
             href="{{ url('/admin/view-orders') }}">Voir les Commandes</a></li>
+        <li @if ($base_order_url=="view-orders-charts") class="active" @endif><a
+            href="{{ url('/admin/view-orders-charts') }}">Graphique des Commandes</a></li>
       </ul>
     </li>
   @endif
@@ -69,12 +74,16 @@
       </ul>
     </li>
   @endif
+  <?php 
+   $base_user_url = trim(basename($url));
+  ?>
   @if(Session::get('adminDetails')['users_access']==1)
     <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Utilisateurs</span> <span
           class="label label-important">1</span></a>
       <ul @if (preg_match("/users/i", $url)) style="display: block;" class="active" @endif>
-        <li @if (preg_match("/view-users/i", $url)) class="active" @endif><a href="{{ url('/admin/view-users') }}">Voir
+        <li @if ($base_user_url=="view-users") class="active" @endif><a href="{{ url('/admin/view-users') }}">Voir
             les utilisateurs</a></li>
+        <li @if ($base_user_url=="view-users-charts") class="active" @endif><a href="{{ url('/admin/view-users-charts') }}">Graphique des utilisateurs</a></li>
       </ul>
     </li>
   @endif

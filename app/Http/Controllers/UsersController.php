@@ -7,6 +7,7 @@ use App\Exports\usersExport;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -292,7 +293,28 @@ class UsersController extends Controller
     }
 
     public function exportUsers()
-    {
+    { 
         return Excel::download(new usersExport, 'users.xlsx');
+    }
+
+
+    public function viewUsersCharts()
+    {
+         $current_month_users = User::whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->month)->count();
+         $last_month_users = User::whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->subMonth(1))->count();
+         $last_to_last_month_users = User::whereYear('created_at', Carbon::now()->year)
+        ->whereMonth('created_at', Carbon::now()->subMonth(2))->count();
+        return view('admin.users.view_users_charts')->with(compact('current_month_users','last_month_users','last_to_last_month_users'));
+    }
+
+
+    public function viewUsersCitiesCharts()
+    {
+        $getUserCities = User::select('city',DB::raw('count(city) as count'))->groupBy('city')->get();
+        // $getUserCities = json_decode(json_encode($getUserCities),true);
+        // echo "<pre>"; print_r($getUserCities); die;
+        return view('admin.users.view_users_cities_charts')->with(compact('getUserCities'));
     }
 }
