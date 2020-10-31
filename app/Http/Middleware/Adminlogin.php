@@ -37,6 +37,7 @@ class Adminlogin
             // echo Session::get('adminDetails')['categories_access'];die;
             // echo "<pre>";print_r($adminDetails); die;
             $currentPath = Route::getFacadeRoot()->current()->uri() ;
+
             if($currentPath=="admin/view-categories" && Session::get('adminDetails')['categories_view_access']==0){
                 return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
             }

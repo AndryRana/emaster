@@ -26,6 +26,7 @@ Route::match(['get', 'post'], '/admin', 'AdminController@login');
 // Index Page
 Route::get('/', 'IndexController@index')->name('index')  ;
 
+
 // Category / Listing Page
 Route::get('/products/{url}', 'ProductsController@products');
 
@@ -72,6 +73,9 @@ Route::get('/user-logout', 'UsersController@logout');
 
 // Search Products
 Route::match(['get', 'post'],'/search-product', 'ProductsController@searchProducts');
+
+// Search Algolia Products
+Route::get('/search-high-product', 'ProductsController@searchAlgolia')->name('search-algolia');
 
 // Users Login
 Route::post('/user-login', 'UsersController@login');

@@ -27,5 +27,10 @@
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12"
     },
-    "dependencies": {}
+    "dependencies": {
+        "express": "^4.17.1",
+        "vue-router": "^3.4.8",
+        "vue-server-renderer": "^2.6.12",
+        "webpack-merge": "^5.3.0"
+    }
 }

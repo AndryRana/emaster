@@ -2,13 +2,16 @@
 
 namespace App;
 
+use Cartalyst\Stripe\Api\Products;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
+    use Searchable;
     
     public function getPrice()
     {
@@ -110,5 +113,28 @@ class Product extends Model
         return $getGrandTotal;
     }
 
+
+      /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+        $products = Product::orderBy('id', 'DESC')->get();
+        foreach ($products as $key => $value) {
+            $category_name = Category::where(['id' => $value->category_id])->first();
+            $products[$key]->category_name = $category_name->name;
+            // echo "<pre>"; print_r($category_name);die;    
+            foreach($products as $pro)
+            $extraFields = [
+                'categories' => Category::all()->pluck('name')->toArray(),
+            ];
+        }
+      
+
+        return array_merge($array,$extraFields);
+    }
 
 }

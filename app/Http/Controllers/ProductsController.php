@@ -131,6 +131,7 @@ class ProductsController extends Controller
 
         // Categories drop down start
         $categories = Category::where(['parent_id' => 0])->get();
+       
         $categories_drop_down = "<option value='none' selected disabled>Choisir une catégorie</option>";
         foreach ($categories as $cat) {
             $categories_drop_down .= "<option value='" . $cat->id . "'>" . $cat->name . "</option>";
@@ -139,8 +140,8 @@ class ProductsController extends Controller
                 $categories_drop_down .= "<option value='" . $sub_cat->id . "'>&nbsp;--&nbsp;" . $sub_cat->name . "</option>";
             }
         }
-        // Categories drop down ends
 
+        // Categories drop down ends
         $sleeveArray = array('Full Sleeve','Half Sleeve', 'Short Sleeve', 'Sleeveless');
         $patternArray = array('Checked','Plain','Printed','Self','Solid');
 
@@ -275,11 +276,12 @@ class ProductsController extends Controller
             return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
         }
         $products = Product::orderBy('id', 'DESC')->get();
+        
         foreach ($products as $key => $value) {
             $category_name = Category::where(['id' => $value->category_id])->first();
             $products[$key]->category_name = $category_name->name;
-            // echo "<pre>"; print_r($category_name);die;    
         }
+        
         // echo "<pre>"; print_r($products);die;
         return view('admin.products.view_products')->with(compact('products'));
     }
@@ -530,7 +532,7 @@ class ProductsController extends Controller
 
 
 
-        $productsAll = $productsAll->get();
+        $productsAll = $productsAll->paginate(3);
         // $productsAll = json_decode(json_encode($productsAll));
         // echo "<pre>"; print_r($productsAll); die;
         // $colorArray = array('Black','Blue','Brown','Gold','Green','Orange','Pink','Purple','Red','Silver','White','Yellow');
@@ -645,6 +647,12 @@ class ProductsController extends Controller
     }
 
 
+    public function searchAlgolia(Request $request)
+    {
+        return view('products.search-results-algolia');
+    }
+
+
     public function product($id = null)
     {
         // show 404 page if product is disabled
@@ -670,8 +678,9 @@ class ProductsController extends Controller
         // die;
 
         //  Get all Categories and Sub Categories
+        
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
-
+        // echo "<pre>";print_r($categories);die;
 
         $categoryDetails = Category::where('id',$productDetails->category_id)->first();
         // echo $categoryDetails; die;
@@ -1441,19 +1450,22 @@ class ProductsController extends Controller
         $userDetails = User::where('id', $user_id)->first();
         // $userDetails = json_decode(json_encode($userDetails));
         // echo "<pre>"; print_r($userDetails);
-        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails'));
+        return view('admin.orders.order_details')->with(compact('orderDetails', 'us\erDetails'));
     }
 
 
     public function viewOrdersInvoice($order_id)
     {
+        if(Session::get('adminDetails')['orders_access']==0){
+            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        }
         $orderDetails = Order::with('orders')->where('id', $order_id)->first();
         // $orderDetails = json_decode(json_encode($orderDetails));
         // echo"<pre>";print_r($orderDetails);die;
         $user_id = $orderDetails->user_id;
         $userDetails = User::where('id', $user_id)->first();
         // $userDetails = json_decode(json_encode($userDetails));
-        // echo "<pre>"; print_r($userDetails);
+        // echo "<pre>"; print_r($userDetails);die;
         return view('admin.orders.order_invoice')->with(compact('orderDetails', 'userDetails'));
     }
 

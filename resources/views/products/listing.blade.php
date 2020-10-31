@@ -134,9 +134,9 @@
         <!--features_items-->
             </div>
         </div>
-        {{-- @if (empty($search_Product))
-            <div align="center" class="bottom-0">{{ $productsAll->links() }}</div>
-        @endif --}}
+        @if (empty($search_Product))
+            <div align="center" class="bottom-0">{{ $productsAll->appends(request()->input())->links() }}</div>
+        @endif
     </div>
 </section>
 

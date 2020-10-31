@@ -24,6 +24,9 @@
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/responsive.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend_css/passtrength.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/frontend_css/algolia.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
     <script src="{{ asset('js/frontend_js/jquery.js') }}"></script>
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -43,12 +46,13 @@
 <!--/head-->
 
 <body>
+    <div id="app">
+        @include('layouts.frontLayout.front_header')
 
-    @include('layouts.frontLayout.front_header')
+        @yield('content')
 
-    @yield('content')
-
-    @include('layouts.frontLayout.front_footer')
+        @include('layouts.frontLayout.front_footer')
+    </div>
 
     <script src="{{ asset('js/frontend_js/jquery.js') }}"></script>
     <script src="{{ asset('js/frontend_js/bootstrap.min.js') }}"></script>
@@ -60,6 +64,11 @@
     <script src="{{ asset('js/frontend_js/passtrength.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('extra-js')
+    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    <script src="{{ asset('js/frontend_js/algolia.js') }}"></script>
+    <script src="{{ asset('js/frontend_js/algolia-instantsearch.js') }}"></script>
 
 </body>
 

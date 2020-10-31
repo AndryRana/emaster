@@ -8587,3 +8587,29 @@ readers do not read off random characters that represent icons */
   font-weight: 400;
 }
 
+.search-results-container-algolia {
+  min-height: 400px;
+  margin: 40px 0;
+  display: grid;
+  grid-template-columns: 9fr;
+  grid-gap: 10px;
+}
+
+.ais-hits--item .instantsearch-result {
+  display: flex;
+  align-items: center;
+}
+
+.ais-hits--item .instantsearch-result img {
+  margin-right: 40px;
+}
+
+.ais-hits--item .result-price {
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.ais-hits--item .algolia-thumb-result {
+  max-height: 50px;
+}
+

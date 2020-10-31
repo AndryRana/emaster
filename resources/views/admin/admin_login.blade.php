@@ -30,7 +30,7 @@
 
             <form id="loginform" class="form-vertical" method="post" action="{{ url('admin') }}">
                 @csrf
-				<div class="control-group normal_text"> <h3><img src="{{ asset('images/backend_images/logo.png') }}" alt="Logo" /></h3></div>
+				<div class="control-group normal_text"> <h3><img src="{{ asset('images/backend_images/emasterlogo.png') }}" alt="Logo" /></h3></div>
                 <div class="control-group">
                     <div class="controls">
                         <div class="main_input_box">
