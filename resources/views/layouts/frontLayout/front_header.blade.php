@@ -98,7 +98,7 @@ $cartCount = Product::cartCount();
 
     <div class="header-bottom">
         <!--header-bottom-->
-        <div class="container">
+        <div class="container ">
             <div class="row">
                 <div class="col-sm-9">
                     <div class="navbar-header">
@@ -133,7 +133,7 @@ $cartCount = Product::cartCount();
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="mr-6">
                         <div class="aa-input-container pull-right " id="aa-input-container">
                             <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Recherche..." name="search"
                                 autocomplete="off" />

@@ -532,7 +532,7 @@ class ProductsController extends Controller
 
 
 
-        $productsAll = $productsAll->paginate(3);
+        $productsAll = $productsAll->paginate(6);
         // $productsAll = json_decode(json_encode($productsAll));
         // echo "<pre>"; print_r($productsAll); die;
         // $colorArray = array('Black','Blue','Brown','Gold','Green','Orange','Pink','Purple','Red','Silver','White','Yellow');
