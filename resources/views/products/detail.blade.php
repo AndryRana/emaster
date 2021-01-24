@@ -221,15 +221,15 @@
                                     <div class="product-image-wrapper">
                                         <div class="single-products">
                                             <div class="productinfo text-center">
-                                                <img style=" width:200px; "
+                                                <a href="{{ url('/product/'.$item->id) }}"> <img style=" width:200px; "
                                                     src="{{ asset('images/backend_images/product/small/'.$item->image) }}"
                                                     alt="" />
+                                                </a>
                                                 <h2>{{ $item->getprice() }}</h2>
                                                 <p>{{ $item->product_name }}</p>
                                                 <a href="{{ url('/product/'.$item->id) }}"><button type="button"
                                                         class="btn btn-default add-to-cart"><i
-                                                            class="fa fa-shopping-cart"></i>Ajouter au
-                                                        panier</button></a>
+                                                            class="fa fa-shopping-cart"></i>Voir le produit</button></a>
                                             </div>
                                         </div>
                                     </div>

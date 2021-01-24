@@ -56,26 +56,28 @@
                         <div class="product-image-wrapper ">
                             <div class="single-products">
                                 <div class="productinfo text-center">
-                                    <img src="{{ asset('images/backend_images/product/small/'. $product->image) }}"
+                                    <a href="{{ url('product/'.$product->id) }}">         
+                                        <img src="{{ asset('images/backend_images/product/small/'. $product->image) }}"
                                         alt="" />
+                                    </a>
                                     <h2>{{ $product->getPrice() }}</h2>
                                     <p>{{ $product->product_name }}</p>
                                     <a href="{{ url('product/'.$product->id) }}" class="btn btn-default add-to-cart"><i
-                                            class="fa fa-shopping-cart"></i>Ajouter au panier</a>
+                                            class="fa fa-shopping-cart"></i>Voir le produit</a>
                                 </div>
                             </div>
-                            <div class="choose " >
+                            {{-- <div class="choose ">
                                 <ul class="nav nav-pills nav-justified">
                                     <li><a href="#"><i class="fa fa-plus-square"></i>Ajouter à votre liste</a></li>
                                     <li><a href="#"><i class="fa fa-plus-square"></i>Comparer</a></li>
                                 </ul>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @endforeach
                 </div>
                 <!--features_items-->
-                
+
             </div>
         </div>
         <div align="center" class="bottom-0">{{ $productsAll->links() }}</div>

@@ -345,7 +345,14 @@ class ProductsController extends Controller
         return redirect()->back()->with('flash_message_success', 'La vidéo du produit a été supprimée avec succès!');
     }
 
-
+    
+    /**
+     * addAttributes
+     *
+     * @param  mixed $request
+     * @param  mixed $id
+     * @return void
+     */
     public function addAttributes(Request $request, $id = null)
     {
         if(Session::get('adminDetails')['products_access']==0){
@@ -382,7 +389,14 @@ class ProductsController extends Controller
         return view('admin.products.add_attributes')->with(compact('productDetails'));
     }
 
-
+    
+    /**
+     * editAttributes
+     *
+     * @param  mixed $request
+     * @param  mixed $id
+     * @return void
+     */
     public function editAttributes(Request $request, $id = null)
     {
         if ($request->isMethod('post')) {
@@ -784,6 +798,9 @@ class ProductsController extends Controller
     
             // Check product stock is available or not
             $product_size = explode("-", $data['size']);
+            if(empty($data['size'])){
+                return redirect()->back()->with('flash_message_error','Merci de selectionner la taille afin d\'ajouter le produit dans votre panier');
+            }
             $getProductStock = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $product_size[1]])->first();
             // echo $getProductStock->stock;die;
     
@@ -835,7 +852,7 @@ class ProductsController extends Controller
     
             // echo $product_size;
             $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
-            echo $getSKU;die;
+            // echo $getSKU;die;
             DB::table('carts')->insert([
                 'product_id' => $data['product_id'], 'product_name' => $data['product_name'],
                 'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $product_size,
