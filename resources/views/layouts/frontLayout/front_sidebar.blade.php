@@ -58,23 +58,23 @@
                 </div>
                 <div id="color" class="panel-collapse collapse">
                     @foreach ($colorArray as $color)
-                        @if (!empty($_GET['color']))
-                            <?php $colorArr = explode('-', $_GET['color']) ?>
-                        @if (in_array($color,$colorArr))
-                            <?php $colorcheck="checked"; ?>
-                        @else
-                            <?php $colorcheck=""; ?>
-                        @endif
-                        @else
-                            <?php $colorcheck=""; ?>
-                        @endif
-                        <div class="panel-heading">
-                            <h4 class="panel-title ">
-                                <input type="checkbox" name="colorFilter[]" onchange="javascript:this.form.submit();"
-                                    value="{{ $color }}" id="{{ $color }}" {{ $colorcheck }}>
-                                <span class="ml-3 products-colors">{{ $color }}</span>
-                            </h4>
-                        </div>
+                    @if (!empty($_GET['color']))
+                    <?php $colorArr = explode('-', $_GET['color']) ?>
+                    @if (in_array($color,$colorArr))
+                    <?php $colorcheck="checked"; ?>
+                    @else
+                    <?php $colorcheck=""; ?>
+                    @endif
+                    @else
+                    <?php $colorcheck=""; ?>
+                    @endif
+                    <div class="panel-heading">
+                        <h4 class="panel-title ">
+                            <input type="checkbox" name="colorFilter[]" onchange="javascript:this.form.submit();"
+                                value="{{ $color }}" id="{{ $color }}" {{ $colorcheck }}>
+                            <span class="ml-3 products-colors">{{ $color }}</span>
+                        </h4>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -96,23 +96,23 @@
                     </div>
                     <div id="sleeve" class="panel-collapse collapse">
                         @foreach ($sleeveArray as $sleeve)
-                            @if (!empty($_GET['sleeve']))
-                                <?php $sleeveArr = explode('-', $_GET['sleeve']) ?>
-                            @if (in_array($sleeve,$sleeveArr))
-                                <?php $sleevecheck="checked"; ?>
-                            @else
-                                <?php $sleevecheck=""; ?>
-                            @endif
-                            @else
-                                <?php $sleevecheck=""; ?>
-                            @endif
-                                <div class="panel-heading">
-                                    <h4 class="panel-title ">
-                                        <input type="checkbox" name="sleeveFilter[]" onchange="javascript:this.form.submit();"
-                                            value="{{ $sleeve }}" id="{{ $sleeve }}" {{ $sleevecheck }}>
-                                        <span class="ml-3 products-sleeves">{{ $sleeve }}</span>
-                                    </h4>
-                                </div>
+                        @if (!empty($_GET['sleeve']))
+                        <?php $sleeveArr = explode('-', $_GET['sleeve']) ?>
+                        @if (in_array($sleeve,$sleeveArr))
+                        <?php $sleevecheck="checked"; ?>
+                        @else
+                        <?php $sleevecheck=""; ?>
+                        @endif
+                        @else
+                        <?php $sleevecheck=""; ?>
+                        @endif
+                        <div class="panel-heading">
+                            <h4 class="panel-title ">
+                                <input type="checkbox" name="sleeveFilter[]" onchange="javascript:this.form.submit();"
+                                    value="{{ $sleeve }}" id="{{ $sleeve }}" {{ $sleevecheck }}>
+                                <span class="ml-3 products-sleeves">{{ $sleeve }}</span>
+                            </h4>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -134,23 +134,23 @@
                     </div>
                     <div id="pattern" class="panel-collapse collapse">
                         @foreach ($patternArray as $pattern)
-                            @if (!empty($_GET['pattern']))
-                                <?php $patternArr = explode('-', $_GET['pattern']) ?>
-                            @if (in_array($pattern,$patternArr))
-                                <?php $patterncheck="checked"; ?>
-                            @else
-                                <?php $patterncheck=""; ?>
-                            @endif
-                            @else
-                                <?php $patterncheck=""; ?>
-                            @endif
-                                <div class="panel-heading">
-                                    <h4 class="panel-title ">
-                                        <input type="checkbox" name="patternFilter[]" onchange="javascript:this.form.submit();"
-                                            value="{{ $pattern }}" id="{{ $pattern }}" {{ $patterncheck }}>
-                                        <span class="ml-3 products-patterns">{{ $pattern }}</span>
-                                    </h4>
-                                </div>
+                        @if (!empty($_GET['pattern']))
+                        <?php $patternArr = explode('-', $_GET['pattern']) ?>
+                        @if (in_array($pattern,$patternArr))
+                        <?php $patterncheck="checked"; ?>
+                        @else
+                        <?php $patterncheck=""; ?>
+                        @endif
+                        @else
+                        <?php $patterncheck=""; ?>
+                        @endif
+                        <div class="panel-heading">
+                            <h4 class="panel-title ">
+                                <input type="checkbox" name="patternFilter[]" onchange="javascript:this.form.submit();"
+                                    value="{{ $pattern }}" id="{{ $pattern }}" {{ $patterncheck }}>
+                                <span class="ml-3 products-patterns">{{ $pattern }}</span>
+                            </h4>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -172,23 +172,23 @@
                     </div>
                     <div id="size" class="panel-collapse collapse">
                         @foreach ($sizesArray as $size)
-                            @if (!empty($_GET['size']))
-                                <?php $sizeArr = explode('-', $_GET['size']) ?>
-                            @if (in_array($size,$sizeArr))
-                                <?php $sizecheck="checked"; ?>
-                            @else
-                                <?php $sizecheck=""; ?>
-                            @endif
-                            @else
-                                <?php $sizecheck=""; ?>
-                            @endif
-                                <div class="panel-heading">
-                                    <h4 class="panel-title ">
-                                        <input type="checkbox" name="sizeFilter[]" onchange="javascript:this.form.submit();"
-                                            value="{{ $size }}" id="{{ $size }}" {{ $sizecheck }}>
-                                       <span class="ml-3 ">{{ $size }}</span>
-                                    </h4>
-                                </div>
+                        @if (!empty($_GET['size']))
+                        <?php $sizeArr = explode('-', $_GET['size']) ?>
+                        @if (in_array($size,$sizeArr))
+                        <?php $sizecheck="checked"; ?>
+                        @else
+                        <?php $sizecheck=""; ?>
+                        @endif
+                        @else
+                        <?php $sizecheck=""; ?>
+                        @endif
+                        <div class="panel-heading">
+                            <h4 class="panel-title ">
+                                <input type="checkbox" name="sizeFilter[]" onchange="javascript:this.form.submit();"
+                                    value="{{ $size }}" id="{{ $size }}" {{ $sizecheck }}>
+                                <span class="ml-3 ">{{ $size }}</span>
+                            </h4>
+                        </div>
                         @endforeach
                     </div>
                 </div>

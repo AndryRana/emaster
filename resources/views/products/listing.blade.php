@@ -81,7 +81,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
-                @include('layouts.frontLayout._front_sidebar')
+                @include('layouts.frontLayout.front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right">
@@ -89,7 +89,7 @@
                     <!--features_items-->
                     <h2 class="title text-center">
                         @if (!empty($search_product))
-                         Résultat(s) sur {{ $search_product }}
+                        Résultat(s) sur {{ $search_product }}
                         @else
                         {{ $categoryDetails->name }}
                         @endif
@@ -99,46 +99,46 @@
 
                     @foreach ($productsAll as $product)
 
-                        <div class="col-sm-4">
-                            <div class="product-image-wrapper">
-                                <div class="single-products">
-                                    <div class="productinfo text-center">
-                                        <a href="{{ url('product/'.$product->id) }}">
-                                            <img src="{{ asset('images/backend_images/product/small/'. $product->image) }}"
+                    <div class="col-sm-4">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <a href="{{ url('product/'.$product->id) }}">
+                                        <img src="{{ asset('images/backend_images/product/small/'. $product->image) }}"
                                             alt="" />
-                                        </a>
-                                        <h2>{{ $product->getPrice() }}</h2>
-                                        <p>{{ $product->product_name }}</p>
-                                        <a href="{{ url('product/'.$product->id) }}" class="btn btn-default add-to-cart"><i
-                                                class="fa fa-shopping-cart"></i>Voir le produit</a>
-                                    </div>
-                                            {{-- <div class="product-overlay">
+                                    </a>
+                                    <h2>{{ $product->getPrice() }}</h2>
+                                    <p>{{ $product->product_name }}</p>
+                                    <a href="{{ url('product/'.$product->id) }}" class="btn btn-default add-to-cart"><i
+                                            class="fa fa-shopping-cart"></i>Voir le produit</a>
+                                </div>
+                                {{-- <div class="product-overlay">
                                                             <div class="overlay-content">
                                                                 <h2>{{ $product->getPrice() }}</h2>
-                                            <p>{{ $product->product_name }}</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>Ajouter au panier</a>
-                                        </div>
-                                    </div> --}}
-                                </div>
-                                {{-- <div class="choose">
+                                <p>{{ $product->product_name }}</p>
+                                <a href="#" class="btn btn-default add-to-cart"><i
+                                        class="fa fa-shopping-cart"></i>Ajouter au panier</a>
+                            </div>
+                        </div> --}}
+                    </div>
+                    {{-- <div class="choose">
                                     <ul class="nav nav-pills nav-justified">
                                         <li><a href="#"><i class="fa fa-plus-square"></i>Ajouter à votre liste</a></li>
                                         <li><a href="#"><i class="fa fa-plus-square"></i>Comparer</a></li>
                                     </ul>
                                 </div> --}}
-                            </div>
-                        </div>
-
-                        @endforeach
-
                 </div>
-        <!--features_items-->
             </div>
+
+            @endforeach
+
         </div>
-        @if (empty($search_Product))
-            <div align="center" class="bottom-0">{{ $productsAll->appends(request()->input())->links() }}</div>
-        @endif
+        <!--features_items-->
+    </div>
+    </div>
+    @if (empty($search_Product))
+    <div align="center" class="bottom-0">{{ $productsAll->appends(request()->input())->links() }}</div>
+    @endif
     </div>
 </section>
 

@@ -35,8 +35,8 @@ class ProductsController extends Controller
 {
     public function addProduct(Request $request)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -112,14 +112,14 @@ class ProductsController extends Controller
             }
 
             // Upload video
-            if($request->hasFile('video')){
+            if ($request->hasFile('video')) {
                 $video_tmp = $request->file('video');
                 $video_name = $video_tmp->getClientOriginalName();
                 $video_path = 'videos/';
-                $video_tmp->move($video_path,$video_name);
+                $video_tmp->move($video_path, $video_name);
                 $product->video = $video_name;
             }
-          
+
 
             $product->feature_item = $feature_item;
             $product->status = $status;
@@ -131,7 +131,7 @@ class ProductsController extends Controller
 
         // Categories drop down start
         $categories = Category::where(['parent_id' => 0])->get();
-       
+
         $categories_drop_down = "<option value='none' selected disabled>Choisir une catégorie</option>";
         foreach ($categories as $cat) {
             $categories_drop_down .= "<option value='" . $cat->id . "'>" . $cat->name . "</option>";
@@ -142,17 +142,17 @@ class ProductsController extends Controller
         }
 
         // Categories drop down ends
-        $sleeveArray = array('Full Sleeve','Half Sleeve', 'Short Sleeve', 'Sleeveless');
-        $patternArray = array('Checked','Plain','Printed','Self','Solid');
+        $sleeveArray = array('Full Sleeve', 'Half Sleeve', 'Short Sleeve', 'Sleeveless');
+        $patternArray = array('Checked', 'Plain', 'Printed', 'Self', 'Solid');
 
-        return view('admin.products.add_product')->with(compact('categories_drop_down','sleeveArray','patternArray'));
+        return view('admin.products.add_product')->with(compact('categories_drop_down', 'sleeveArray', 'patternArray'));
     }
 
 
     public function editProduct(Request $request, $id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -178,15 +178,15 @@ class ProductsController extends Controller
             }
 
             // Upload video
-            if($request->hasFile('video')){
+            if ($request->hasFile('video')) {
                 $video_tmp = $request->file('video');
                 $video_name = $video_tmp->getClientOriginalName();
                 $video_path = 'videos/';
-                $video_tmp->move($video_path,$video_name);
+                $video_tmp->move($video_path, $video_name);
                 $videoName = $video_name;
-            }else if (!empty($data['current_video'])) {
+            } else if (!empty($data['current_video'])) {
                 $videoName = $data['current_video'];
-            }else {
+            } else {
                 $videoName = '';
             }
 
@@ -215,7 +215,7 @@ class ProductsController extends Controller
             } else {
                 $feature_item = 1;
             }
-            
+
             if (empty($data['status'])) {
                 $status = 0;
             } else {
@@ -224,8 +224,8 @@ class ProductsController extends Controller
 
             Product::where(['id' => $id])->update([
                 'category_id' => $data['category_id'], 'product_name' => $data['product_name'], 'product_code' => $data['product_code'],
-                'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'],'weight' => $data['weight'],
-                 'image' => $fileName,'video' => $videoName, 'sleeve' =>$sleeve,'pattern' =>$pattern, 'status' => $status, 'feature_item' => $feature_item
+                'product_color' => $data['product_color'], 'description' => $data['description'], 'care' => $data['care'], 'price' => $data['price'], 'weight' => $data['weight'],
+                'image' => $fileName, 'video' => $videoName, 'sleeve' => $sleeve, 'pattern' => $pattern, 'status' => $status, 'feature_item' => $feature_item
             ]);
 
             return redirect()->back()->with('flash_message_success', 'Le produit a été modifié avec succès!');
@@ -257,10 +257,10 @@ class ProductsController extends Controller
         }
         // Categories drop down ends
 
-        $sleeveArray = array('Full Sleeve','Half Sleeve', 'Short Sleeve', 'Sleeveless');
-        $patternArray = array('Checked','Plain','Printed','Self','Solid');
+        $sleeveArray = array('Full Sleeve', 'Half Sleeve', 'Short Sleeve', 'Sleeveless');
+        $patternArray = array('Checked', 'Plain', 'Printed', 'Self', 'Solid');
 
-        return view('admin.products.edit_product')->with(compact('productDetails', 'categories_drop_down','sleeveArray','patternArray'));
+        return view('admin.products.edit_product')->with(compact('productDetails', 'categories_drop_down', 'sleeveArray', 'patternArray'));
     }
 
     public function deleteProduct($id = null)
@@ -272,24 +272,24 @@ class ProductsController extends Controller
 
     public function viewProducts()
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $products = Product::orderBy('id', 'DESC')->get();
-        
+
         foreach ($products as $key => $value) {
             $category_name = Category::where(['id' => $value->category_id])->first();
             $products[$key]->category_name = $category_name->name;
         }
-        
+
         // echo "<pre>"; print_r($products);die;
         return view('admin.products.view_products')->with(compact('products'));
     }
 
     public function deleteProductImage($id)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         //  Get Product Image Name
         $productImage = Product::where(['id' => $id])->first();
@@ -325,27 +325,27 @@ class ProductsController extends Controller
 
     public function deleteProductvideo($id)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         //  Get Video Name
-        $productVideo = Product::select('video')->where('id',$id)->first();
+        $productVideo = Product::select('video')->where('id', $id)->first();
 
         // Get videoPath
         $video_path = "videos/";
 
         // Delete Video if esists in videos folder
-        if(file_exists($video_path.$productVideo->video)){
-            unlink($video_path.$productVideo->video);
+        if (file_exists($video_path . $productVideo->video)) {
+            unlink($video_path . $productVideo->video);
         }
 
         // Delete Video from Product Table
-        Product::where('id',$id)->update(['video'=>'']);
+        Product::where('id', $id)->update(['video' => '']);
 
         return redirect()->back()->with('flash_message_success', 'La vidéo du produit a été supprimée avec succès!');
     }
 
-    
+
     /**
      * addAttributes
      *
@@ -355,8 +355,8 @@ class ProductsController extends Controller
      */
     public function addAttributes(Request $request, $id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $productDetails = Product::with('attributes')->where(['id' => $id])->first();
         // $productDetails = json_decode(json_encode($productDetails));
@@ -389,7 +389,7 @@ class ProductsController extends Controller
         return view('admin.products.add_attributes')->with(compact('productDetails'));
     }
 
-    
+
     /**
      * editAttributes
      *
@@ -412,8 +412,8 @@ class ProductsController extends Controller
 
     public function addImages(Request $request, $id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $productDetails = Product::with('attributes')->where(['id' => $id])->first();
         // $productDetails = json_decode(json_encode($productDetails));
@@ -450,8 +450,8 @@ class ProductsController extends Controller
 
     public function deleteAltImage($id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         //  Get Product Image Name
         $productImage = ProductsImage::where(['id' => $id])->first();
@@ -486,25 +486,25 @@ class ProductsController extends Controller
 
     public function deleteAttribute($id = null)
     {
-        if(Session::get('adminDetails')['products_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['products_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         ProductsAttribute::where(['id' => $id])->delete();
         return redirect()->back()->with('flash_message_success', 'Les attributs de ce produit ont été supprimés avec succès!');
     }
 
 
-    public function products($url=null)
+    public function products($url = null)
     {
         // show 404 page if Category URL doesn't exist
-        $countCategory = Category::where(['url'=> $url, 'status' => 1])->count();
+        $countCategory = Category::where(['url' => $url, 'status' => 1])->count();
         // echo "<pre>";print_r($countCategory);die;
         if ($countCategory == 0) {
             abort(404);
         }
         //  Get all Categories and Sub Categories
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
-        $categoryDetails = Category::where(['url'=>$url])->first();
+        $categoryDetails = Category::where(['url' => $url])->first();
         // echo $categoryDetails; die;
 
         if ($categoryDetails->parent_id == 0) {
@@ -513,35 +513,35 @@ class ProductsController extends Controller
             foreach ($subCategories as $subcat) {
                 $cat_ids[] = $subcat->id;
             }
-            $productsAll = Product::whereIn('products.category_id', $cat_ids)->where('products.status', 1)->orderBy('products.id','Desc');
-            $breadcrumb = "<a href='/'>Home</a> / <a href='".$categoryDetails->url."'>".$categoryDetails->name."</a>";
+            $productsAll = Product::whereIn('products.category_id', $cat_ids)->where('products.status', 1)->orderBy('products.id', 'Desc');
+            $breadcrumb = "<a href='/'>Home</a> / <a href='" . $categoryDetails->url . "'>" . $categoryDetails->name . "</a>";
         } else {
-            $productsAll = Product::where(['products.category_id' => $categoryDetails->id])->where('products.status', 1)->orderBy('products.id','Desc');
-            $mainCategory = Category::where('id',$categoryDetails->parent_id)->first();
-            $breadcrumb = "<a href='/'>Home</a> / <a href='".$mainCategory->url."'>".$mainCategory->name."</a> / <a href='".$categoryDetails->url."'>".$categoryDetails->name."</a>";
+            $productsAll = Product::where(['products.category_id' => $categoryDetails->id])->where('products.status', 1)->orderBy('products.id', 'Desc');
+            $mainCategory = Category::where('id', $categoryDetails->parent_id)->first();
+            $breadcrumb = "<a href='/'>Home</a> / <a href='" . $mainCategory->url . "'>" . $mainCategory->name . "</a> / <a href='" . $categoryDetails->url . "'>" . $categoryDetails->name . "</a>";
         }
 
-        if(!empty($_GET['color'])){
-            $colorArray = explode('-',$_GET['color']);
-            $productsAll = $productsAll->whereIn('products.product_color',$colorArray);
+        if (!empty($_GET['color'])) {
+            $colorArray = explode('-', $_GET['color']);
+            $productsAll = $productsAll->whereIn('products.product_color', $colorArray);
         }
 
-        if(!empty($_GET['sleeve'])){
-            $sleeveArray = explode('-',$_GET['sleeve']);
-            $productsAll = $productsAll->whereIn('products.sleeve',$sleeveArray);
+        if (!empty($_GET['sleeve'])) {
+            $sleeveArray = explode('-', $_GET['sleeve']);
+            $productsAll = $productsAll->whereIn('products.sleeve', $sleeveArray);
         }
 
-        if(!empty($_GET['pattern'])){
-            $patternArray = explode('-',$_GET['pattern']);
-            $productsAll = $productsAll->whereIn('products.pattern',$patternArray);
+        if (!empty($_GET['pattern'])) {
+            $patternArray = explode('-', $_GET['pattern']);
+            $productsAll = $productsAll->whereIn('products.pattern', $patternArray);
         }
 
-        if(!empty($_GET['size'])){
-            $sizeArray = explode('-',$_GET['size']);
-            $productsAll = $productsAll->join('products_attributes', 'products_attributes.product_id','=', 'product_id')
-            ->select('products.*','products_attributes.product_id','products_attributes.size')
-            ->groupBy('products_attributes.product_id')
-            ->whereIn('products_attributes.size',$sizeArray);
+        if (!empty($_GET['size'])) {
+            $sizeArray = explode('-', $_GET['size']);
+            $productsAll = $productsAll->join('products_attributes', 'products_attributes.product_id', '=', 'product_id')
+                ->select('products.*', 'products_attributes.product_id', 'products_attributes.size')
+                ->groupBy('products_attributes.product_id')
+                ->whereIn('products_attributes.size', $sizeArray);
         }
 
 
@@ -552,78 +552,78 @@ class ProductsController extends Controller
         // $colorArray = array('Black','Blue','Brown','Gold','Green','Orange','Pink','Purple','Red','Silver','White','Yellow');
 
         $colorArray = Product::select('product_color')->groupBy('product_color')->get();
-        $colorArray = Arr::flatten(json_decode(json_encode($colorArray),true));
+        $colorArray = Arr::flatten(json_decode(json_encode($colorArray), true));
         // echo "<pre>";print_r($colorArray);die;
 
-        $sleeveArray = Product::select('sleeve')->where('sleeve','!=','')->groupBy('sleeve')->get();
-        $sleeveArray = Arr::flatten(json_decode(json_encode($sleeveArray),true));
+        $sleeveArray = Product::select('sleeve')->where('sleeve', '!=', '')->groupBy('sleeve')->get();
+        $sleeveArray = Arr::flatten(json_decode(json_encode($sleeveArray), true));
         // echo "<pre>";print_r($sleeveArray);die;
 
-        $patternArray = Product::select('pattern')->where('pattern','!=','')->groupBy('pattern')->get();
-        $patternArray = Arr::flatten(json_decode(json_encode($patternArray),true));
+        $patternArray = Product::select('pattern')->where('pattern', '!=', '')->groupBy('pattern')->get();
+        $patternArray = Arr::flatten(json_decode(json_encode($patternArray), true));
         // echo "<pre>";print_r($patternArray);die;
 
         $sizesArray = ProductsAttribute::select('size')->groupBy('size')->get();
-        $sizesArray = Arr::flatten(json_decode(json_encode($sizesArray),true));
+        $sizesArray = Arr::flatten(json_decode(json_encode($sizesArray), true));
         // echo "<pre>";print_r($sizesArray);die;
 
         $meta_title = $categoryDetails->meta_title;
         $meta_description = $categoryDetails->meta_description;
         $meta_keywords = $categoryDetails->meta_keywords;
-        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll','meta_title','meta_description','meta_keywords','url','colorArray','sleeveArray','patternArray', 'sizesArray','breadcrumb'));
+        return view('products.listing')->with(compact('categories', 'categoryDetails', 'productsAll', 'meta_title', 'meta_description', 'meta_keywords', 'url', 'colorArray', 'sleeveArray', 'patternArray', 'sizesArray', 'breadcrumb'));
     }
 
 
 
-    public function filter(Request $request )
+    public function filter(Request $request)
     {
-        
+
         $data = $request->all();
         // echo "<pre>";print_r($data);die;
-        $colorUrl="";
-        if(!empty($data['colorFilter'])){
-            foreach($data['colorFilter'] as $color){
-                if(empty($colorUrl)){
-                    $colorUrl = "&color=".$color;
-                }else{
-                    $colorUrl .= "-".$color;
+        $colorUrl = "";
+        if (!empty($data['colorFilter'])) {
+            foreach ($data['colorFilter'] as $color) {
+                if (empty($colorUrl)) {
+                    $colorUrl = "&color=" . $color;
+                } else {
+                    $colorUrl .= "-" . $color;
                 }
             }
         }
 
-        $sleeveUrl="";
-        if(!empty($data['sleeveFilter'])){
-            foreach($data['sleeveFilter'] as $sleeve){
-                if(empty($sleeveUrl)){
-                    $sleeveUrl = "&sleeve=".$sleeve;
-                }else{
-                    $sleeveUrl .= "-".$sleeve;
+        $sleeveUrl = "";
+        if (!empty($data['sleeveFilter'])) {
+            foreach ($data['sleeveFilter'] as $sleeve) {
+                if (empty($sleeveUrl)) {
+                    $sleeveUrl = "&sleeve=" . $sleeve;
+                } else {
+                    $sleeveUrl .= "-" . $sleeve;
                 }
             }
         }
 
-        $patternUrl="";
-        if(!empty($data['patternFilter'])){
-            foreach($data['patternFilter'] as $pattern){
-                if(empty($patternUrl)){
-                    $patternUrl = "&pattern=".$pattern;
-                }else{
-                    $patternUrl .= "-".$pattern;
+        $patternUrl = "";
+        if (!empty($data['patternFilter'])) {
+            foreach ($data['patternFilter'] as $pattern) {
+                if (empty($patternUrl)) {
+                    $patternUrl = "&pattern=" . $pattern;
+                } else {
+                    $patternUrl .= "-" . $pattern;
                 }
             }
         }
 
-        $sizeUrl="";
-        if(!empty($data['sizeFilter'])){
-            foreach($data['sizeFilter'] as $size){
-                if(empty($sizeUrl)){
-                    $sizeUrl = "&size=".$size;
-                }else{
-                    $sizeUrl .= "-".$size;
+        $sizeUrl = "";
+        if (!empty($data['sizeFilter'])) {
+            foreach ($data['sizeFilter'] as $size) {
+                if (empty($sizeUrl)) {
+                    $sizeUrl = "&size=" . $size;
+                } else {
+                    $sizeUrl .= "-" . $size;
                 }
             }
         }
-        $finalUrl = "products/".$data['url']."?".$colorUrl.$sleeveUrl.$patternUrl.$sizeUrl;
+        $finalUrl = "products/" . $data['url'] . "?" . $colorUrl . $sleeveUrl . $patternUrl . $sizeUrl;
         return redirect::to($finalUrl);
     }
 
@@ -637,26 +637,26 @@ class ProductsController extends Controller
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
-                $request->validate([
-                    'product' => 'required|min:3',
-                ]);
+            $request->validate([
+                'product' => 'required|min:3',
+            ]);
             // echo "<pre>";print_r($data);die;
 
             $categories = Category::with('categories')->where(['parent_id' => 0])->get();
 
             $search_product = $data['product'];
             // $productsAll = Product::where('product_name', 'like', '%' . $search_product . '%')->orwhere('product_code', $search_product)->where('status', 1)->get();
-             
-            $productsAll = Product::where(function($query) use($search_product){
-                $query->where('product_name','like','%'.$search_product.'%')
-                ->orWhere('product_code','like','%'.$search_product.'%' )
-                ->orWhere('description','like','%'.$search_product.'%')
-                ->orWhere('product_color','like','%'.$search_product.'%');
-            })->where('status',1)->get();
 
-            $breadcrumb = "<a href='/'>Home</a> / " .$search_product;
+            $productsAll = Product::where(function ($query) use ($search_product) {
+                $query->where('product_name', 'like', '%' . $search_product . '%')
+                    ->orWhere('product_code', 'like', '%' . $search_product . '%')
+                    ->orWhere('description', 'like', '%' . $search_product . '%')
+                    ->orWhere('product_color', 'like', '%' . $search_product . '%');
+            })->where('status', 1)->get();
 
-            return view('products.listing')->with(compact('categories', 'productsAll', 'search_product','breadcrumb'));
+            $breadcrumb = "<a href='/'>Home</a> / " . $search_product;
+
+            return view('products.listing')->with(compact('categories', 'productsAll', 'search_product', 'breadcrumb'));
         }
     }
 
@@ -692,20 +692,20 @@ class ProductsController extends Controller
         // die;
 
         //  Get all Categories and Sub Categories
-        
+
         $categories =  Category::with('categories')->where(['parent_id' => 0])->get();
         // echo "<pre>";print_r($categories);die;
 
-        $categoryDetails = Category::where('id',$productDetails->category_id)->first();
+        $categoryDetails = Category::where('id', $productDetails->category_id)->first();
         // echo $categoryDetails; die;
 
         if ($categoryDetails->parent_id == 0) {
 
-            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/".$categoryDetails->url."'>".$categoryDetails->name."</a> / ".$productDetails->product_name;
+            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/" . $categoryDetails->url . "'>" . $categoryDetails->name . "</a> / " . $productDetails->product_name;
         } else {
-            $mainCategory = Category::where('id',$categoryDetails->parent_id)->first();
-            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/".$mainCategory->url."'>".$mainCategory->name."</a> / <a href='/products/".$categoryDetails->url."'>".$categoryDetails->name."</a> / ".$productDetails->product_name;
-        }        
+            $mainCategory = Category::where('id', $categoryDetails->parent_id)->first();
+            $breadcrumb = "<a href='/'>Home</a> / <a href='/products/" . $mainCategory->url . "'>" . $mainCategory->name . "</a> / <a href='/products/" . $categoryDetails->url . "'>" . $categoryDetails->name . "</a> / " . $productDetails->product_name;
+        }
 
         // Get Product Alternate Images
         $productAltImages = ProductsImage::where('product_id', $id)->get();
@@ -718,7 +718,7 @@ class ProductsController extends Controller
         $meta_description = $productDetails->description;
         $meta_keywords = $productDetails->product_name;
 
-        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts','meta_title', 'meta_description', 'meta_keywords', 'breadcrumb'));
+        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock', 'relatedProducts', 'meta_title', 'meta_description', 'meta_keywords', 'breadcrumb'));
     }
 
 
@@ -745,25 +745,25 @@ class ProductsController extends Controller
         $data = $request->all();
         //  echo "<pre>";print_r($data);die;
 
-        if(!empty($data['wishListButton']) && $data['wishListButton']=="Wish List" ){
+        if (!empty($data['wishListButton']) && $data['wishListButton'] == "Wish List") {
             // echo "Wish List is selected";die;
 
             // Check User is logged in 
-            if(!Auth::check()){
-                return redirect()->back()->with('flash_message_error','Merci de vous connecter afin d\'ajouter le produit dans votre liste');
+            if (!Auth::check()) {
+                return redirect()->back()->with('flash_message_error', 'Merci de vous connecter afin d\'ajouter le produit dans votre liste');
             }
 
             // Check Size selected
-            if(empty($data['size'])){
-                return redirect()->back()->with('flash_message_error','Merci de selectionner la taille afin d\'ajouter le produit dans votre liste');
+            if (empty($data['size'])) {
+                return redirect()->back()->with('flash_message_error', 'Merci de selectionner la taille afin d\'ajouter le produit dans votre liste');
             }
 
             // Get productSize
             $sizeIDArr = explode("-", $data['size']);
             $product_size = $sizeIDArr[1];
-            
+
             // Get the product price
-            $proPrice = ProductsAttribute::where(['product_id'=>$data['product_id'],'size'=>$product_size])->first();
+            $proPrice = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
             $product_price = $proPrice->price;
 
             // Get User email/Username
@@ -775,40 +775,43 @@ class ProductsController extends Controller
             // Get current Date
             $created_at = Carbon::now();
 
-            $wishListCount = DB::table('wish_list')->where(['user_email'=>$user_email,'product_id'=>$data['product_id'],
-            'product_color'=>$data['product_color'],'size'=>$product_size])->count();
+            $wishListCount = DB::table('wish_list')->where([
+                'user_email' => $user_email, 'product_id' => $data['product_id'],
+                'product_color' => $data['product_color'], 'size' => $product_size
+            ])->count();
             // echo "<pre>";print_r($wishListCount);die;
 
-            if($wishListCount>0){
-                return redirect()->back()->with('flash_message_error','Le produit est déjà dans votre liste!');
-            }else{
+            if ($wishListCount > 0) {
+                return redirect()->back()->with('flash_message_error', 'Le produit est déjà dans votre liste!');
+            } else {
                 // Insert Product in wish List 
-                DB::table('wish_list')->insert(['product_id'=>$data['product_id'],'product_name'=>$data['product_name'],
-                'product_code'=>$data['product_code'],'product_color'=>$data['product_color'],'price'=>$product_price,
-                'size'=>$product_size,'quantity'=>$quantity,'user_email'=>$user_email,'created_at'=>$created_at]);
+                DB::table('wish_list')->insert([
+                    'product_id' => $data['product_id'], 'product_name' => $data['product_name'],
+                    'product_code' => $data['product_code'], 'product_color' => $data['product_color'], 'price' => $product_price,
+                    'size' => $product_size, 'quantity' => $quantity, 'user_email' => $user_email, 'created_at' => $created_at
+                ]);
                 return redirect()->back()->with('flash_message_success', 'Le produit a été ajouté à  votre liste avec succès');
             }
-        }else{
+        } else {
 
             // If product added from wish list
-            if(!empty($data['cartButton']) && $data['cartButton']=="Add to Cart"){
+            if (!empty($data['cartButton']) && $data['cartButton'] == "Add to Cart") {
                 $data['quantity'] = 1;
-            
             }
-    
+
             // Check product stock is available or not
             $product_size = explode("-", $data['size']);
-            if(empty($data['size'])){
-                return redirect()->back()->with('flash_message_error','Merci de selectionner la taille afin d\'ajouter le produit dans votre panier');
+            if (empty($data['size'])) {
+                return redirect()->back()->with('flash_message_error', 'Merci de selectionner la taille afin d\'ajouter le produit dans votre panier');
             }
             $getProductStock = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $product_size[1]])->first();
             // echo $getProductStock->stock;die;
-    
+
             if ($getProductStock->stock < $data['quantity']) {
                 return redirect()->back()->with('flash_message_error', 'La quantité du produit demandé n\'est pas disponible!');
             }
-    
-            
+
+
             if (empty(Auth::user()->email)) {
                 $data['user_email'] = '';
             } else {
@@ -818,17 +821,17 @@ class ProductsController extends Controller
             if (empty($data['session_id'])) {
                 $data['session_id'] = '';
             }
-    
+
             $session_id = session()->get('session_id');
             if (empty($session_id)) {
                 $session_id = Str::random(40);
                 session()->put('session_id', $session_id);
             }
-    
-    
+
+
             $sizeIDArr = explode("-", $data['size']);
             $product_size = $sizeIDArr[1];
-    
+
             if (empty(Auth::check())) {
                 $countProducts = DB::table('carts')->where([
                     'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
@@ -838,7 +841,7 @@ class ProductsController extends Controller
                 if ($countProducts > 0) {
                     return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
                 }
-            }else{
+            } else {
                 $countProducts = DB::table('carts')->where([
                     'product_id' => $data['product_id'], 'product_color' => $data['product_color'],
                     'size' => $product_size, 'user_email' => $data['user_email']
@@ -848,8 +851,8 @@ class ProductsController extends Controller
                     return redirect()->back()->with('flash_message_error', 'Le produit existe déjà dans le panier!');
                 }
             }
-    
-    
+
+
             // echo $product_size;
             $getSKU = ProductsAttribute::select('sku')->where(['product_id' => $data['product_id'], 'size' => $product_size])->first();
             // echo $getSKU;die;
@@ -858,8 +861,8 @@ class ProductsController extends Controller
                 'product_code' => $getSKU->sku, 'product_color' => $data['product_color'], 'price' => $data['price'], 'size' => $product_size,
                 'quantity' => $data['quantity'], 'user_email' => $data['user_email'], 'session_id' => $session_id
             ]);
-    
-    
+
+
             return redirect('cart')->with('flash_message_success', 'Le produit a bien été ajouté au panier!');
         }
     }
@@ -885,36 +888,36 @@ class ProductsController extends Controller
         $meta_title = "Votre panier sur Emaster.com";
         $meta_description = "Voir votre panier sur Emaster.com";
         $meta_keywords = "Panier,site emaster";
-        return view('products.cart')->with(compact('userCart','meta_title','meta_description','meta_keywords'));
+        return view('products.cart')->with(compact('userCart', 'meta_title', 'meta_description', 'meta_keywords'));
     }
 
 
 
     public function wishList()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             $user_email = Auth::user()->email;
-            $userWishList = DB::table('wish_list')->where('user_email',$user_email)->get();
+            $userWishList = DB::table('wish_list')->where('user_email', $user_email)->get();
             foreach ($userWishList as $key => $product) {
                 // echo $product->product_id;
                 $productDetails = Product::where('id', $product->product_id)->first();
                 $userWishList[$key]->image = $productDetails->image;
             }
-        }else{
+        } else {
             $userWishList = array();
         }
         $meta_title = "Votre liste sur Emaster.com";
         $meta_description = "Voir votre liste sur Emaster.com";
         $meta_keywords = "Votre liste,site emaster";
 
-        return view('products.wish_list')->with(compact('userWishList','meta_title','meta_description','meta_keywords'));
+        return view('products.wish_list')->with(compact('userWishList', 'meta_title', 'meta_description', 'meta_keywords'));
     }
 
 
     public function deleteWishListProduct($id)
     {
-        DB::table('wish_list')->where('id',$id)->delete();
-        return redirect()->back()->with('flash_message_success','Le produit a été supprimé de votre liste d\'envies avec succès');
+        DB::table('wish_list')->where('id', $id)->delete();
+        return redirect()->back()->with('flash_message_success', 'Le produit a été supprimé de votre liste d\'envies avec succès');
     }
 
 
@@ -1082,22 +1085,22 @@ class ProductsController extends Controller
             }
 
 
-        $pincodeCount = DB::table('pincodes')->where('pincode',$data['shipping_pincode'])->count();
-        // $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
-        // echo "<pre>";print_r($cbpincodeCount);die;
-        if($pincodeCount == 0 ){
-            return redirect()->back()->with('flash_message_error', 'Votre localisation n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
-        }
-        // if($cbpincodeCount == 0 ){
-        //     return redirect()->back()->with('flash_message_error', 'Votre CB n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
-        // }
+            $pincodeCount = DB::table('pincodes')->where('pincode', $data['shipping_pincode'])->count();
+            // $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
+            // echo "<pre>";print_r($cbpincodeCount);die;
+            if ($pincodeCount == 0) {
+                return redirect()->back()->with('flash_message_error', 'Votre localisation n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
+            }
+            // if($cbpincodeCount == 0 ){
+            //     return redirect()->back()->with('flash_message_error', 'Votre CB n\'est pas valide. Merci de saisir un autre code postal pour la livraison!');
+            // }
 
 
             return redirect()->action('ProductsController@orderReview');
         }
         $meta_title = "Votre adresse sur Emaster.com ";
         $meta_title = "Votre adresse sur Emaster.com ";
-        return view('products.checkout')->with(compact('userDetails', 'countries', 'shippingDetails','meta_title'));
+        return view('products.checkout')->with(compact('userDetails', 'countries', 'shippingDetails', 'meta_title'));
     }
 
 
@@ -1122,18 +1125,17 @@ class ProductsController extends Controller
             $productDetails = Product::where('id', $product->product_id)->first();
             $userCart[$key]->image = $productDetails->image;
             $total_weight = $total_weight + $productDetails->weight;
-
         }
         // echo $total_weight; die;
 
-        $cbpincodeCount = DB::table('cb_pincodes')->where('pincode',$shippingDetails->pincode)->count();
+        $cbpincodeCount = DB::table('cb_pincodes')->where('pincode', $shippingDetails->pincode)->count();
         // echo "<pre>";print_r($cbpincodeCount);die;
 
         // Fetch shipping charges
         $shippingCharges = Product::getShippingCharges($total_weight, $shippingDetails->country);
-        session()->put('shippingCharges',$shippingCharges);
+        session()->put('shippingCharges', $shippingCharges);
 
-        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart','cbpincodeCount','shippingCharges'));
+        return view('products.order_review')->with(compact('userDetails', 'shippingDetails', 'userCart', 'cbpincodeCount', 'shippingCharges'));
         // echo "<pre>";print_r($userCart);die;
     }
 
@@ -1146,50 +1148,49 @@ class ProductsController extends Controller
             $user_email = Auth::user()->email;
 
             // Prevent out of stock Products from ordering
-            $userCart = DB::table('carts')->where('user_email',$user_email)->get();
+            $userCart = DB::table('carts')->where('user_email', $user_email)->get();
             // $userCart = json_decode(json_encode($userCart));
-            foreach($userCart as $cart){
-                $getAttributeCount = Product::getAttributeCount($cart->product_id,$cart->size);
-                if($getAttributeCount==0){
+            foreach ($userCart as $cart) {
+                $getAttributeCount = Product::getAttributeCount($cart->product_id, $cart->size);
+                if ($getAttributeCount == 0) {
                     Product::deleteCartProduct($cart->product_id, $user_email);
                     return redirect('/cart')->with('flash_message_error', 'Produit(s) non disponible en vente et supprimer du panier. Merci d\'essayer avec un autre produit!');
                 }
-                
-                $product_stock = Product::getProductStock($cart->product_id,$cart->size);
-                if($product_stock==0){
+
+                $product_stock = Product::getProductStock($cart->product_id, $cart->size);
+                if ($product_stock == 0) {
                     Product::deleteCartProduct($cart->product_id, $user_email);
                     return redirect('/cart')->with('flash_message_error', 'Produit(s) supprimer du panier suite à une rupture de sotck. Merci d\'essayer avec un autre produit!');
                 }
                 // echo "Original stock: " . $product_stock;
                 // echo "demanded stock: " . $cart->quantity;die;
-                if($cart->quantity>$product_stock){
+                if ($cart->quantity > $product_stock) {
                     return redirect('/cart')->with('flash_message_error', 'Merci de mettre à jour la quantité du produit dans votre panier suite à une réduction de stock!');
                 }
 
                 $product_status = Product::getProductStatus($cart->product_id);
 
-                if($product_status==0){
+                if ($product_status == 0) {
                     Product::deleteCartProduct($cart->product_id, $user_email);
                     return redirect('/cart')->with('flash_message_error', 'Un de vos produits n\'est plus en vente et a été supprimé de votre panier . Merci d\'essayer avec un autre produit!');
                 }
 
-                $getCategoryId = Product::select('category_id')->where('id',$cart->product_id)->first();
+                $getCategoryId = Product::select('category_id')->where('id', $cart->product_id)->first();
                 // echo $getCategoryId->category_id; die;
                 $category_status = Product::getCategoryStatus($getCategoryId->category_id);
-                if($category_status==0){
+                if ($category_status == 0) {
                     Product::deleteCartProduct($cart->product_id, $user_email);
                     return redirect('/cart')->with('flash_message_error', 'Un de vos produits n\'est plus en vente et a été supprimé de votre panier . Merci d\'essayer avec un autre produit!');
                 }
-                
             }
             // echo "<pre>";print_r($userCart);die;
 
             // Get shipping address of User
             $shippingDetails = DeliveryAddress::where(['user_email' => $user_email])->first();
 
-            $pincodeCount = DB::table('pincodes')->where('pincode',$shippingDetails->pincode)->count();
-            
-            if($pincodeCount == 0 ){
+            $pincodeCount = DB::table('pincodes')->where('pincode', $shippingDetails->pincode)->count();
+
+            if ($pincodeCount == 0) {
                 return redirect()->back()->with('flash_message_error', 'Votre localisation n\'est pas valide. Merci de saisir un autre code postal!');
             }
             // $shippingDetails = json_decode(json_encode($shippingDetails));
@@ -1208,7 +1209,7 @@ class ProductsController extends Controller
                 $coupon_amount = session()->get('CouponAmount');
             }
 
-             // Fetch shipping charges
+            // Fetch shipping charges
             // $shippingCharges = Product::getShippingCharges($shippingDetails->country);
 
             $grand_total =  Product::getGrandTotal();
@@ -1245,28 +1246,28 @@ class ProductsController extends Controller
                 $cartPro->product_name = $pro->product_name;
                 $cartPro->product_color = $pro->product_color;
                 $cartPro->product_size = $pro->size;
-                $product_price = Product::getProductPrice($pro->product_id,$pro->size);
+                $product_price = Product::getProductPrice($pro->product_id, $pro->size);
                 $cartPro->product_price = $product_price;
                 $cartPro->product_qty = $pro->quantity;
                 $cartPro->save();
 
                 // Reduce stock script starts
-                $getProductStock = ProductsAttribute::where('sku',$pro->product_code)->first();
+                $getProductStock = ProductsAttribute::where('sku', $pro->product_code)->first();
                 // echo "Original stock:" .$getProductStock->stock;
                 // echo "Stock to reduce:" .$pro->quantity;
                 $newStock = $getProductStock->stock - $pro->quantity;
-                if($newStock<0) {
-                    $newStock=0;
+                if ($newStock < 0) {
+                    $newStock = 0;
                 }
-                ProductsAttribute::where('sku',$pro->product_code)->update([ 'stock'=>$newStock]);
+                ProductsAttribute::where('sku', $pro->product_code)->update(['stock' => $newStock]);
                 // Reduce stock script ends
             }
-            session()->put('order_id', $order_id); 
+            session()->put('order_id', $order_id);
             session()->put('grand_total', $grand_total);
 
             // if ($data['payment_method'] == "CB") {
-                // CB Redirect user to thanks page after saving order
-                // return redirect('/place-order');
+            // CB Redirect user to thanks page after saving order
+            // return redirect('/place-order');
             // } 
             // else {
             //     //PAYPAL Redirect user to thanks page after saving order
@@ -1445,8 +1446,8 @@ class ProductsController extends Controller
 
     public function viewOrders()
     {
-        if(Session::get('adminDetails')['orders_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['orders_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $orders = Order::with('orders')->orderBy('id', 'DESC')->get();
         // $orders = json_decode(json_encode($orders));
@@ -1457,8 +1458,8 @@ class ProductsController extends Controller
 
     public function viewOrdersDetails($order_id)
     {
-        if(Session::get('adminDetails')['orders_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['orders_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $orderDetails = Order::with('orders')->where('id', $order_id)->first();
         // $orderDetails = json_decode(json_encode($orderDetails));
@@ -1467,14 +1468,14 @@ class ProductsController extends Controller
         $userDetails = User::where('id', $user_id)->first();
         // $userDetails = json_decode(json_encode($userDetails));
         // echo "<pre>"; print_r($userDetails);
-        return view('admin.orders.order_details')->with(compact('orderDetails', 'us\erDetails'));
+        return view('admin.orders.order_details')->with(compact('orderDetails', 'userDetails'));
     }
 
 
     public function viewOrdersInvoice($order_id)
     {
-        if(Session::get('adminDetails')['orders_access']==0){
-            return redirect('/admin/dashboard')->with('flash_message_error','Vous n\'avez pas accès à ce module');
+        if (Session::get('adminDetails')['orders_access'] == 0) {
+            return redirect('/admin/dashboard')->with('flash_message_error', 'Vous n\'avez pas accès à ce module');
         }
         $orderDetails = Order::with('orders')->where('id', $order_id)->first();
         // $orderDetails = json_decode(json_encode($orderDetails));
@@ -1486,7 +1487,7 @@ class ProductsController extends Controller
         return view('admin.orders.order_invoice')->with(compact('orderDetails', 'userDetails'));
     }
 
-    
+
     public function viewPDFInvoice($order_id)
     {
         $orderDetails = Order::with('orders')->where('id', $order_id)->first();
@@ -1647,22 +1648,22 @@ class ProductsController extends Controller
             <div id="logo" >
                <img src="images/backend_images/emasterlogo.png">
             </div>
-              <h1>Facture Numéro: '.$orderDetails->id.'</h1>
+              <h1>Facture Numéro: ' . $orderDetails->id . '</h1>
               <div id="project" class="clearfix" style="margin-left:40px;">
-                <div><span>Commande ID</span> '.$orderDetails->id.'</div>
-                <div><span>Date de la commande</span> '.$orderDetails->created_at->format('d-m-Y H:i:s').'</div>
-                <div><span>Montant</span> '.$orderDetails->grand_total.'</div>
-                <div><span>Statut</span> '.$orderDetails->order_status.'</div>
-                <div><span>Mode de paiement</span> '.$orderDetails->payment_method.'</div>
+                <div><span>Commande ID</span> ' . $orderDetails->id . '</div>
+                <div><span>Date de la commande</span> ' . $orderDetails->created_at->format('d-m-Y H:i:s') . '</div>
+                <div><span>Montant</span> ' . $orderDetails->grand_total . '</div>
+                <div><span>Statut</span> ' . $orderDetails->order_status . '</div>
+                <div><span>Mode de paiement</span> ' . $orderDetails->payment_method . '</div>
               </div>
               <div id="project" style="float:right;">
                 <div><strong>Shipping Address</strong></div>
-                <div>'.$orderDetails->name.'</div>
-                <div>'.$orderDetails->address.'</div>
-                <div>'.$orderDetails->city.', '.$orderDetails->state.'</div>
-                <div>'.$orderDetails->pincode.'</div>
-                <div>'.$orderDetails->country.'</div>
-                <div>'.$orderDetails->mobile.'</div>
+                <div>' . $orderDetails->name . '</div>
+                <div>' . $orderDetails->address . '</div>
+                <div>' . $orderDetails->city . ', ' . $orderDetails->state . '</div>
+                <div>' . $orderDetails->pincode . '</div>
+                <div>' . $orderDetails->country . '</div>
+                <div>' . $orderDetails->mobile . '</div>
               </div>
             </header>
             <main>
@@ -1678,36 +1679,37 @@ class ProductsController extends Controller
                     </tr>
                 </thead>
                 <tbody>';
-                $Subtotal = 0;
-                foreach($orderDetails->orders as $pro){
-                    $output .= '<tr>
-                        <td class="text-left">'.$pro->product_code.'</td>
-                        <td class="text-center">'.$pro->product_size.'</td>
-                        <td class="text-center">'.$pro->product_color.'</td>
-                        <td class="text-center">'.number_format($pro->product_price, 2, ',', ' ') . ' €'.'</td>
-                        <td class="text-center">'.$pro->product_qty.'</td>
-                        <td class="text-right">'.number_format($pro->product_price * $pro->product_qty, 2, ',', ' ') . ' €'.'</td>
+        $Subtotal = 0;
+        foreach ($orderDetails->orders as $pro) {
+            $output .= '<tr>
+                        <td class="text-left">' . $pro->product_code . '</td>
+                        <td class="text-center">' . $pro->product_size . '</td>
+                        <td class="text-center">' . $pro->product_color . '</td>
+                        <td class="text-center">' . number_format($pro->product_price, 2, ',', ' ') . ' €' . '</td>
+                        <td class="text-center">' . $pro->product_qty . '</td>
+                        <td class="text-right">' . number_format($pro->product_price * $pro->product_qty, 2, ',', ' ') . ' €' . '</td>
                     </tr>';
-                    $Subtotal = $Subtotal + ($pro->product_price * $pro->product_qty); }
-                $output .= '<tr>
+            $Subtotal = $Subtotal + ($pro->product_price * $pro->product_qty);
+        }
+        $output .= '<tr>
                     <td colspan="5">SOUS-TOTAL</td>
-                    <td class="total"> '.number_format($Subtotal , 2, ',', ' ') . ' €'.'</td>
+                    <td class="total"> ' . number_format($Subtotal, 2, ',', ' ') . ' €' . '</td>
                   </tr>
                   <tr>
                     <td colspan="5">FRAIS DE PORT (+)</td>
-                    <td class="total">'.number_format($orderDetails->shipping_charges, 2, ',', ' ').'</td>
+                    <td class="total">' . number_format($orderDetails->shipping_charges, 2, ',', ' ') . '</td>
                   </tr>
                   <tr>
                     <td colspan="5">COUPON DISCOUNT (-)</td>
-                    <td class="total">'.number_format($orderDetails->coupon_amount, 2, ',', ' ').'</td>
+                    <td class="total">' . number_format($orderDetails->coupon_amount, 2, ',', ' ') . '</td>
                   </tr>
                   <tr>
                     <td colspan="5">TVA(20% inclus)</td>
-                    <td class="total">'.number_format($orderDetails->grand_total*0.20, 2, ',', ' ').'</td>
+                    <td class="total">' . number_format($orderDetails->grand_total * 0.20, 2, ',', ' ') . '</td>
                   </tr>
                   <tr>
                     <td colspan="5" class="grand total">TOTAL</td>
-                    <td class="grand total">'.number_format($orderDetails->grand_total, 2, ',', ' ').'</td>
+                    <td class="grand total">' . number_format($orderDetails->grand_total, 2, ',', ' ') . '</td>
                   </tr>
                 </tbody>
               </table>
@@ -1730,13 +1732,12 @@ class ProductsController extends Controller
 
         // Output the generated PDF to Browser
         $dompdf->stream();
-
     }
 
 
     public function updateOrderStatus(Request $request)
     {
-        
+
         if ($request->isMethod('POST')) {
             $data = $request->all();
             Order::where('id', $data['order_id'])->update(['order_status' => $data['order_status']]);
@@ -1747,37 +1748,33 @@ class ProductsController extends Controller
 
     public function checkPincode(Request $request)
     {
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>"; print_r($data);die;
-            $pincodeCount = DB::table('pincodes')->where('pincode',$data['pincode'])->count();
-            if($pincodeCount>0){
+            $pincodeCount = DB::table('pincodes')->where('pincode', $data['pincode'])->count();
+            if ($pincodeCount > 0) {
                 echo "Le code postal est valable pour la livraison";
-            }else{
+            } else {
                 echo "Merci de saisir un code postal valide pour la livraison";
             }
         }
-        
     }
 
-    
+
     public function exportProducts()
     {
-        return Excel::download(new productExport,'products.xlsx');
-
+        return Excel::download(new productExport, 'products.xlsx');
     }
 
 
     public function viewOrdersCharts()
     {
-        $current_month_orders = Order::where('order_status','Paid')->whereYear('created_at', Carbon::now()->year)
-        ->whereMonth('created_at', Carbon::now()->month)->count();
-         $last_month_orders = Order::where('order_status','Paid')->whereYear('created_at', Carbon::now()->year)
-        ->whereMonth('created_at', Carbon::now()->subMonth(1))->count();
-         $last_to_last_month_orders = Order::where('order_status','Paid')->whereYear('created_at', Carbon::now()->year)
-        ->whereMonth('created_at', Carbon::now()->subMonth(2))->count();
-        return view('admin.products.view_orders_charts')->with(compact('current_month_orders','last_month_orders', 'last_to_last_month_orders'));
+        $current_month_orders = Order::where('order_status', 'Paid')->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)->count();
+        $last_month_orders = Order::where('order_status', 'Paid')->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->subMonth(1))->count();
+        $last_to_last_month_orders = Order::where('order_status', 'Paid')->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->subMonth(2))->count();
+        return view('admin.products.view_orders_charts')->with(compact('current_month_orders', 'last_month_orders', 'last_to_last_month_orders'));
     }
-
-    
 }

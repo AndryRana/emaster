@@ -38,7 +38,7 @@
     right: 16px;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
-    fill: #fe980f;
+    fill: #60a5fa;
 }
 .aa-hint {
     color: #e4e4e4;
@@ -48,7 +48,7 @@
     border: 2px solid rgba(228, 228, 228, 0.6);
     border-top-width: 1px;
     font-family: "Montserrat", sans-serif;
-    width:400px;
+    width: 400px;
     margin-top: 10px;
     box-shadow: 4px 4px 0 rgba(241, 241, 241, 0.35);
     font-size: 12px;

@@ -43,7 +43,7 @@
     <div class="container ">
         <div class="row">
             <div class="col-sm-3">
-                @include('layouts.frontLayout._front_sidebar')
+                @include('layouts.frontLayout.front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right ">
@@ -56,9 +56,9 @@
                         <div class="product-image-wrapper ">
                             <div class="single-products">
                                 <div class="productinfo text-center">
-                                    <a href="{{ url('product/'.$product->id) }}">         
+                                    <a href="{{ url('product/'.$product->id) }}">
                                         <img src="{{ asset('images/backend_images/product/small/'. $product->image) }}"
-                                        alt="" />
+                                            alt="" />
                                     </a>
                                     <h2>{{ $product->getPrice() }}</h2>
                                     <p>{{ $product->product_name }}</p>

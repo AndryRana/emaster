@@ -13,12 +13,12 @@
             @endif
             @if (Session::has('flash_message_success'))
             <div class="alert alert-success alert-block">
-                <button type="button" class="close" data-dismiss="alert">×</button>	
-                    <strong>{!! session('flash_message_success') !!}</strong>
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{!! session('flash_message_success') !!}</strong>
             </div>
-        @endif       
+            @endif
             <div class="col-sm-3">
-                @include('layouts.frontLayout._front_sidebar')
+                @include('layouts.frontLayout.front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right">
@@ -82,7 +82,7 @@
                                 <p>Modèle: {{ $productDetails->pattern }}</p>
                                 @endif
                                 <p>
-                                    <select id="selSize" name="size" class="attributesize h-16" >
+                                    <select id="selSize" name="size" class="attributesize h-16">
                                         <option value="">Selectionner la taille</option>
                                         @foreach ($productDetails->attributes as $sizes)
                                         <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}
@@ -96,14 +96,16 @@
                                     <label>Quantité:</label>
                                     <input type="text" name="quantity" value="1" />
                                     @if ($total_stock>0)
-                                    <button type="submit" class="btn btn-default cart " id="cartButton" name="cartButton" value="Shopping Cart">
+                                    <button type="submit" class="btn btn-default cart " id="cartButton"
+                                        name="cartButton" value="Shopping Cart">
                                         <i class="fa fa-shopping-cart"></i>
                                         Ajouter au panier
                                     </button>
                                     @endif
                                 </span>
                                 <div class="-ml-4">
-                                    <button type="submit" class="btn btn-default cart" id="wishListButton" name="wishListButton" value="Wish List">
+                                    <button type="submit" class="btn btn-default cart" id="wishListButton"
+                                        name="wishListButton" value="Wish List">
                                         <i class="fa fa-briefcase"></i>
                                         Ajouter à votre liste
                                     </button>
@@ -115,18 +117,16 @@
                                     <p class="mt-4"><b>Livraison:</b></p>
                                     <input type="text" name="pincode" id="chkPincode"
                                         placeholder="Saisir votre code postal" class="mx-10">
-                                    <button type="button"
-                                        class="btn btn-default cart"
-                                        id="checkPincode">
+                                    <button type="button" class="btn btn-default cart" id="checkPincode">
                                         Vérifier
                                     </button>
                                 </div>
                                 <span id="pincodeResponse"></span>
-                               
+
                                 <!-- ShareThis BEGIN -->
                                 <div class="sharethis-inline-share-buttons"></div>
                                 <!-- ShareThis END -->
-            
+
                             </div>
                             <!--/product-information-->
                         </form>
@@ -142,7 +142,7 @@
                             <li><a href="#care" data-toggle="tab">Matériel et Entretien</a></li>
                             <li><a href="#delivery" data-toggle="tab">Option de livraison</a></li>
                             @if (!empty($productDetails->video))
-                                <li><a href="#video" data-toggle="tab">Vidéo du produit</a></li>
+                            <li><a href="#video" data-toggle="tab">Vidéo du produit</a></li>
                             @endif
                     </div>
                     <div class="tab-content">
@@ -157,7 +157,7 @@
                         <div class="tab-pane fade" id="care">
                             <div class="col-sm-12">
                                 <p>
-                                     {!! $productDetails->care !!}
+                                    {!! $productDetails->care !!}
                                 </p>
                             </div>
                         </div>
@@ -170,15 +170,15 @@
                             </div>
                         </div>
                         @if (!empty($productDetails->video))
-                            <div class="tab-pane fade" id="video">
-                                <div class="col-sm-12">
-                                    <video class=" object-contain " controls>
-                                        <source src="{{ url('videos/'. $productDetails->video) }}" type="video/mp4">
+                        <div class="tab-pane fade" id="video">
+                            <div class="col-sm-12">
+                                <video class=" object-contain " controls>
+                                    <source src="{{ url('videos/'. $productDetails->video) }}" type="video/mp4">
 
-                                    </video>
-                                </div>
+                                </video>
                             </div>
-                        @endif    
+                        </div>
+                        @endif
                         {{-- <div class="tab-pane fade active in" id="reviews" >
                             <div class="col-sm-12">
                                 <ul>
@@ -222,8 +222,8 @@
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                 <a href="{{ url('/product/'.$item->id) }}"> <img style=" width:200px; "
-                                                    src="{{ asset('images/backend_images/product/small/'.$item->image) }}"
-                                                    alt="" />
+                                                        src="{{ asset('images/backend_images/product/small/'.$item->image) }}"
+                                                        alt="" />
                                                 </a>
                                                 <h2>{{ $item->getprice() }}</h2>
                                                 <p>{{ $item->product_name }}</p>

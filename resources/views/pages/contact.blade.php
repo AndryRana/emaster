@@ -6,11 +6,11 @@
     <div class="container ">
         <div class="row">
             <div class="col-sm-3">
-                @include('layouts.frontLayout._front_sidebar')
+                @include('layouts.frontLayout.front_sidebar')
             </div>
 
             <div class="col-sm-9 padding-right ">
-         
+
                 <div class="features_items ">
                     <!--features_items-->
                     <h2 class="title text-center">Contactez-nous</h2>
@@ -25,30 +25,27 @@
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                            <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
-                @endif
+                    @endif
                     <div class="contact-form">
                         <div class="status alert alert-success" style="display: none"></div>
                         <form action="{{ url('/page/contact') }}" id="main-contact-form" class="contact-form row"
                             name="contact-form" method="post">
                             @csrf
                             <div class="form-group col-md-6">
-                                <input type="text" name="name" class="form-control" 
-                                    placeholder="Nom">
+                                <input type="text" name="nom" class="form-control" placeholder="Nom">
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="email" name="email" class="form-control" 
-                                    placeholder="Email">
+                                <input type="email" name="email" class="form-control" placeholder="Email">
                             </div>
                             <div class="form-group col-md-12">
-                                <input type="text" name="subject" class="form-control" 
-                                    placeholder="Sujet">
+                                <input type="text" name="sujet" class="form-control" placeholder="Sujet">
                             </div>
                             <div class="form-group col-md-12">
-                                <textarea name="message" id="message"  class="form-control" rows="8"
+                                <textarea name="message" id="message" class="form-control" rows="8"
                                     placeholder="Votre message"></textarea>
                             </div>
                             <div class="form-group col-md-12">
