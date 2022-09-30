@@ -11,7 +11,7 @@
         "php": "^7.2.5",
         "algolia/algoliasearch-client-php": "^2.2",
         "cartalyst/stripe-laravel": "v12.0.0",
-        "dompdf/dompdf": "^0.8.6",
+        "dompdf/dompdf": "^2.0.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
